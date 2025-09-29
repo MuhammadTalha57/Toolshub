@@ -9,7 +9,7 @@
         <field name="arch" type="xml">
             <list string="Plans">
                 <field name="name"/>
-                <field name="tool_id.name"/>
+                <field name="tool_id"/>
                 <field name="total_users"/>
                 <field name="price"/>
             </list>
@@ -23,25 +23,45 @@
         <field name="arch" type="xml">
             <form string="Plans">
                 <sheet>
-                    <h1>
-                        <field name="tool_id.name"/>
-                    </h1>
-                    <h3>
-                        <field name="name"/>
-                    </h3>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
                     <group>
+                        <field name="tool_id" options="{'no_create': True}"/>
                         <field name="total_users"/>
                         <field name="price"/>
+
+                        <!-- For Monetary Widget -->
+                        <field name="currency_id" invisible="True"/> 
+
+                        <!-- For Duration Page -->
+                        <field name="is_unlimited"/> 
+                        <notebook>
+                            <page string="Duration" invisible="is_unlimited">
+                                <!-- <label for="duration_years" string="Year(s)"/>
+                                <label for="duration_months" string="Month(s)"/>
+                                <label for="duration_days" string="Day(s)"/> -->
+                                <group>
+                                    <field name="duration_years"></field>
+                                    <field name="duration_months"></field>
+                                    <field name="duration_days"></field>
+                                </group>
+                                
+                            </page>
+                            <page string="Features">
+                                <field name="feature_ids"></field>
+                            </page>
+                        </notebook>
                     </group>
                 </sheet>
             </form>
         </field>
     </record>
 
-    <!-- Tools Action -->
-    <record id="toolshub_tools_action" model="ir.actions.act_window">
-        <field name="name">Tools</field>
-        <field name="res_model">toolshub.tools</field>
+    <!-- Tool Plans Action -->
+    <record id="toolshub_tool_plans_action" model="ir.actions.act_window">
+        <field name="name">Plans</field>
+        <field name="res_model">toolshub.tool.plans</field>
         <field name="view_mode">list,form</field>
     </record>
 

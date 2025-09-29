@@ -1,2 +1,4 @@
 id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
-access_toolshub_tools,access.estate.property,model_toolshub_tools,base.group_user,1,1,1,1
+access_toolshub_tools,access.toolshub.tools,model_toolshub_tools,base.group_user,1,1,1,1
+access_toolshub_tool_plans,access.toolshub.tool.plans,model_toolshub_tool_plans,base.group_user,1,1,1,1
+access_toolshub_tool_plan_features,access.toolshub.tool.plan.features,model_toolshub_tool_plan_features,base.group_user,1,1,1,1

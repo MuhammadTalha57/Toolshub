@@ -9,6 +9,6 @@
     <menuitem id="toolshub_tools_menu" name="Tools" parent="toolshub_root_menu" action="toolshub_tools_action" />
 
     <!-- Tool Plans menu -->
-    <menuitem id="toolshub_tool_plans_menu" name="Plans" parent="toolshub_plan_menu" action="toolshub_tools_action" />
+    <menuitem id="toolshub_tool_plans_menu" name="Plans" parent="toolshub_root_menu" action="toolshub_tool_plans_action" />
 
 </odoo>

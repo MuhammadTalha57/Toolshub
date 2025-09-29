@@ -9,7 +9,7 @@
         <field name="arch" type="xml">
             <list string="Tools">
                 <field name="name"/>
-                <field name="icon" widget="image" width="64px"/>
+                <field name="icon" widget="image" width="64"/>
                 <field name="url"/>
             </list>
         </field>
@@ -26,7 +26,7 @@
                         <field name="name"/>
                     </h1>
                     <group>
-                        <field name="icon" widget="image" width="64px"/>
+                        <field name="icon" widget="image" width="64"/>
                         <field name="url"/>
                     </group>
                 </sheet>
