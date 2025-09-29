@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+
+    <!-- Tool Plans List View -->
+    <record id="toolshub_tool_plans_list_view" model="ir.ui.view">
+        <field name="name">toolshub.tool.plans.list.view</field>
+        <field name="model">toolshub.tool.plans</field>
+        <field name="arch" type="xml">
+            <list string="Plans">
+                <field name="name"/>
+                <field name="tool_id.name"/>
+                <field name="total_users"/>
+                <field name="price"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Tool Plans Form View -->
+    <record id="toolshub_tool_plans_form_view" model="ir.ui.view">
+        <field name="name">toolshub.tool.plans.form.view</field>
+        <field name="model">toolshub.tool.plans</field>
+        <field name="arch" type="xml">
+            <form string="Plans">
+                <sheet>
+                    <h1>
+                        <field name="tool_id.name"/>
+                    </h1>
+                    <h3>
+                        <field name="name"/>
+                    </h3>
+                    <group>
+                        <field name="total_users"/>
+                        <field name="price"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tools Action -->
+    <record id="toolshub_tools_action" model="ir.actions.act_window">
+        <field name="name">Tools</field>
+        <field name="res_model">toolshub.tools</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

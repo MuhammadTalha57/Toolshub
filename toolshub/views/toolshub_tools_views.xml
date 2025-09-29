@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+
+    <!-- Tools List View -->
+    <record id="toolshub_tools_list_view" model="ir.ui.view">
+        <field name="name">toolshub.tools.list.view</field>
+        <field name="model">toolshub.tools</field>
+        <field name="arch" type="xml">
+            <list string="Tools">
+                <field name="name"/>
+                <field name="icon" widget="image" width="64px"/>
+                <field name="url"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Tools Form View -->
+    <record id="toolshub_tools_form_view" model="ir.ui.view">
+        <field name="name">toolshub.tools.form.view</field>
+        <field name="model">toolshub.tools</field>
+        <field name="arch" type="xml">
+            <form string="Tools">
+                <sheet>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <group>
+                        <field name="icon" widget="image" width="64px"/>
+                        <field name="url"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tools Action -->
+    <record id="toolshub_tools_action" model="ir.actions.act_window">
+        <field name="name">Tools</field>
+        <field name="res_model">toolshub.tools</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

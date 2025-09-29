@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+
+    <!-- Root Menu -->
+    <menuitem id="toolshub_root_menu" name="Toolshub" />
+
+    <!-- Tools menu -->
+    <menuitem id="toolshub_tools_menu" name="Tools" parent="toolshub_root_menu" action="toolshub_tools_action" />
+
+    <!-- Tool Plans menu -->
+    <menuitem id="toolshub_tool_plans_menu" name="Plans" parent="toolshub_plan_menu" action="toolshub_tools_action" />
+
+</odoo>
