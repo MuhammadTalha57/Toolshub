@@ -7,7 +7,6 @@ class ToolshubToolPlanFeatures(models.Model):
     # Fields
     name = fields.Char(string="Name", required=True)
     description = fields.Char(string="Description")
-    tool_id = fields.Many2one(string="Tool", comodel_name="toolshub.tools", ondelete="cascade", required=True)
     plan_id = fields.Many2one(string="Plan", comodel_name="toolshub.tool.plans", ondelete="cascade", required=True, domain="[('tool_id', '=', tool_id)]")
 
 
@@ -15,6 +14,5 @@ class ToolshubToolPlanFeatures(models.Model):
     _sql_constraints = [
         ("unique_name", "unique(name, tool_id, plan_id)", "Name, Tool and the Plan of the feature should be unique."),
         ('name_not_null', 'CHECK(name IS NOT NULL AND name <> \'\')', 'Name cannot be null or empty.'),
-        ('tool_id_not_null', 'CHECK(tool_id IS NOT NULL)', 'Tool must be set.'),
-        ('plain_id_not_null', 'CHECK(plan_id IS NOT NULL)', 'Plan must be set.'),
+        ('plain_id_not_null', 'CHECK(plan_id IS NOT NULL)', 'Plan must be set when creating Feature.'),
     ]
