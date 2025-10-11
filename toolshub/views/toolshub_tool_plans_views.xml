@@ -28,7 +28,8 @@
                     </div>
                     <group>
                         <field name="tool_id" options="{'no_create': True}"/>
-                        <field name="total_users"/>
+                        <field name="unlimited_users"/>
+                        <field name="total_users" invisible="unlimited_users"/>
                         <field name="price"/>
 
                         <!-- For Monetary Widget -->

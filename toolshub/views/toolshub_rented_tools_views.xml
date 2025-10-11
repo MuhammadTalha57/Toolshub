@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+
+    <!-- Rented Tools Form View -->
+    <record id="toolshub_rented_tools_form_view" model="ir.ui.view">
+        <field name="name">toolshub.rented.tools.form.view</field>
+        <field name="model">toolshub.rented.tools</field>
+        <field name="arch" type="xml">
+            <form string="Rent Listing">
+                <sheet>
+                    <group>
+                        <field name="rent_listing_id"/>
+                        <field name="tool_id"/>
+                        <field name="plan_id"/>
+                        <field name="owner_id"/>
+                        <field name="lender_id"/>
+                        <field name="price"/>
+                        <field name="owner_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Rented Tools Action -->
+    <record id="toolshub_rented_tools_action" model="ir.actions.act_window">
+        <field name="name">Rented Tools</field>
+        <field name="res_model">toolshub.rented.tools</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

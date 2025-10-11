@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+
+    <!-- Tools Rent Listings Form View -->
+    <record id="toolshub_tool_rent_listings_form_view" model="ir.ui.view">
+        <field name="name">toolshub.tool.rent.listings.form.view</field>
+        <field name="model">toolshub.tool.rent.listings</field>
+        <field name="arch" type="xml">
+            <form string="Rent Listing">
+                <sheet>
+                    <group>
+                        <field name="tool_id"/>
+                        <field name="plan_id"/>
+                        <field name="subscribers_count"/>
+                        <field name="unlimited_users"/>
+                        <field name="available_users" invisible="unlimited_users"/>
+                        <field name="price"/>
+                        <field name="owner_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tools Rent Listing Action -->
+    <record id="toolshub_tool_rent_listings_action" model="ir.actions.act_window">
+        <field name="name">Rent Listings</field>
+        <field name="res_model">toolshub.tool.rent.listings</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>
