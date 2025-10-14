@@ -7,16 +7,11 @@
         <field name="name">toolshub.rented.tools.form.view</field>
         <field name="model">toolshub.rented.tools</field>
         <field name="arch" type="xml">
-            <form string="Rent Listing">
+            <form string="Rented Tools">
                 <sheet>
                     <group>
                         <field name="rent_listing_id"/>
-                        <field name="tool_id"/>
-                        <field name="plan_id"/>
-                        <field name="owner_id"/>
                         <field name="lender_id"/>
-                        <field name="price"/>
-                        <field name="owner_id"/>
                     </group>
                 </sheet>
             </form>

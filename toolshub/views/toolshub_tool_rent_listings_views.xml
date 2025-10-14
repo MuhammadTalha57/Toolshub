@@ -8,6 +8,9 @@
         <field name="model">toolshub.tool.rent.listings</field>
         <field name="arch" type="xml">
             <form string="Rent Listing">
+                <header>
+                    <button name="action_open_rent_wizard" type="object" string="Rent" class="btn-primary"/>
+                </header>
                 <sheet>
                     <group>
                         <field name="tool_id"/>

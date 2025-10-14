@@ -4,3 +4,4 @@ access_toolshub_tool_plans,access.toolshub.tool.plans,model_toolshub_tool_plans,
 access_toolshub_tool_plan_features,access.toolshub.tool.plan.features,model_toolshub_tool_plan_features,base.group_user,1,1,1,1
 access_toolshub_rented_tools,access.toolshub.rented.tools,model_toolshub_rented_tools,base.group_user,1,1,1,1
 access_toolshub_tool_rent_listings,access.toolshub.tool.rent.listings,model_toolshub_tool_rent_listings,base.group_user,1,1,1,1
+access_toolshub_rent_wizard,access.toolshub.rent.wizard,model_toolshub_rent_wizard,base.group_user,1,1,1,1

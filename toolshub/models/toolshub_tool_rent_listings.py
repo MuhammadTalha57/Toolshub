@@ -50,3 +50,16 @@ class ToolshubToolRentListings(models.Model):
     def _compute_subscribers_count(self):
         for record in self:
             record.subscribers_count = len(record.rented_tools_ids)
+
+    
+
+
+    def action_open_rent_wizard(self):
+        return {
+            'name': 'Rent Wizard',
+            'type': 'ir.actions.act_window',
+            'res_model': 'toolshub.rent.wizard',
+            'view_mode': 'form',
+            'target': 'new',  # this makes it a popup
+            'context': {'default_rent_listing_id': self.id}  # pass current listing
+        }

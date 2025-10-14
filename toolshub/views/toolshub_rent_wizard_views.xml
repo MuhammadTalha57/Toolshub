@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="toolshub_rent_wizard_form_view" model="ir.ui.view">
+        <field name="name">toolshub.rent.wizard.form.view</field>
+        <field name="model">toolshub.rent.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Rent Tool">
+                <group>
+                    <field name="buyer_id"/>
+                    <field name="price"/>
+                </group>
+                <div class="o_stripe_elements" style="margin-top: 15px;"></div>
+                <footer>
+                    <button string="Pay &amp; Rent" type="object" name="action_pay_and_rent" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
