@@ -12,3 +12,18 @@ class ToolshubRentedTools(models.Model):
     # price = fields.Monetary(string="Price", related="rent_listing_id.price", currency_field="currency_id")
     # tool_id = fields.Many2one(string="Tool", related="rent_listing_id.tool_id")
     # plan_id = fields.Many2one(string="Plan", related="rent_listing_id.plan_id")
+
+    payment_intent_id = fields.Char(
+        string="Stripe PaymentIntent ID",
+        readonly=True,
+        copy=False,
+        help="ID of the Stripe PaymentIntent (pi_...)"
+    )
+
+
+    payment_status = fields.Char(
+        string="Payment Status",
+        readonly=True,
+        copy=False,
+        help="Stripe PaymentIntent status"
+    )
