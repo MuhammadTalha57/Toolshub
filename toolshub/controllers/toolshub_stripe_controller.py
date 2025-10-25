@@ -1,4 +1,5 @@
-from odoo import http, fields, request
+from odoo import http, fields
+from odoo.http import request
 from odoo.exceptions import AccessError, ValidationError
 import stripe
 import logging
