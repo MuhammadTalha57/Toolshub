@@ -8,5 +8,5 @@ class OwlPlayground(http.Controller):
         Renders the owl playground page
         """
         print("Controller hit")
-        return request.render('toolshub.homepage')
+        return request.render('toolshub.frontend_template')
 

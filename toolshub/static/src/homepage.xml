@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
-    <t t-name="toolshub.homepage">
-        <div class="p-3">
+    <t t-name="toolshub.frontend_template">
+        <!-- <t t-call-assets="toolshub.frontend_assets"/> -->
+        <div class="p-10 border bg-primary">
             hello world
         </div>
     </t>

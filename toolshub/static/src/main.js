@@ -1,4 +1,4 @@
-import { whenReady } from "@odoo/owl";
+import { whenReady, mount} from "@odoo/owl";
 import { mountComponent } from "@web/env";
 import { Homepage } from "./homepage";
 

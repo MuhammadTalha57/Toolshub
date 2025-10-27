@@ -1,13 +1,14 @@
 <odoo>
     <data>
-          <template id="toolshub.homepage" name="Toolshub Homepage">
+          <template id="toolshub.frontend_template" name="Toolshub Frontend Template">
             <html>
                 <head>
-                    <link type="image/x-icon" rel="shortcut icon" href="/web/static/img/favicon.ico"/>
+                    <!-- <link type="image/x-icon" rel="shortcut icon" href="/web/static/img/favicon.ico"/> -->
                     <t t-call-assets="toolshub.frontend_assets"/>
                 </head>
 
                 <body>
+                    <!-- <div id="app"></div> -->
                 </body>
             </html>
           </template>

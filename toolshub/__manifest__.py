@@ -18,6 +18,7 @@
     # },
 
     'assets': {
+
         'toolshub.frontend_assets': [
             ('include', 'web._assets_helpers'),
             'web/static/src/scss/pre_variables.scss',
@@ -79,11 +80,6 @@
         ],
     },
 
-
-    # "controllers": [
-    #     "controllers/toolshub_stripe_controller.py",
-    #     "controllers/toolshub_frontend_controller.py"
-    # ],
     "data": [
         "security/ir.model.access.csv",
         "views/toolshub_tools_views.xml",
