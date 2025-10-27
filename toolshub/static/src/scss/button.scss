@@ -1,0 +1,34 @@
+button {
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.bg-primary {
+  background-color: #2563eb;
+}
+.bg-primary-90 {
+  background-color: #1d4ed8;
+}
+
+.bg-red {
+  background-color: #dc2626;
+}
+.bg-red-90 {
+  background-color: #b91c1c;
+}
+
+.bg-secondary {
+  background-color: #6b7280;
+}
+.bg-secondary-80 {
+  background-color: #4b5563;
+}
+
+.hover\:bg-accent:hover {
+  background-color: #f3f4f6;
+}
+
+.text-primary {
+  color: #2563eb;
+}

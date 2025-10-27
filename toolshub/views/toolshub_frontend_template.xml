@@ -1,37 +1,11 @@
 <odoo>
     <data>
-          <template id="toolshub.frontend_template" name="Toolshub Frontend Template">
-            <html>
-                <head>
-                    <!-- <link type="image/x-icon" rel="shortcut icon" href="/web/static/img/favicon.ico"/> -->
-                    <t t-call-assets="toolshub.frontend_assets"/>
-                </head>
+        <template id="toolshub.frontend_template" name="Toolshub Frontend Template">
+            <t t-call="web.frontend_layout">
+                <owl-component name="toolshub.owl_button"/>
+            </t>
 
-                <body>
-                    <!-- <div id="app"></div> -->
-                </body>
-            </html>
-          </template>
+
+        </template>
     </data>
 </odoo>
-<!-- <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <template id="toolshub.toolshub_app">&lt;!DOCTYPE html&gt;
-        <html>
-            <head>
-                <script type="text/javascript">
-                    var odoo = {
-                        csrf_token: "<t t-nocache="The csrf token must always be up to date." t-esc="request.csrf_token(None)"/>",
-                        debug: "<t t-out="debug"/>",
-                        __session_info__: <t t-esc="json.dumps(session_info)"/>,
-                    };
-                </script>
-                <t t-call-assets="toolshub.assets" />
-            </head>
-            <body/>
-        </html>
-    </template>
-</odoo> -->
-
-
-

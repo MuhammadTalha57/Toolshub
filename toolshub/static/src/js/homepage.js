@@ -1,5 +1,5 @@
 import { Component } from "@odoo/owl";
 
 export class Homepage extends Component {
-    static template = "toolshub.frontend_template";
+    static template = "toolshub.owl_homepage";
 }

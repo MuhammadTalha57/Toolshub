@@ -1,7 +1,7 @@
 {
     "name": "Toolshub",
     "depends": [
-        "base", "web"
+        "base", "web", "website"
     ],
     "application": True,
     "installable": True,
@@ -19,6 +19,11 @@
 
     'assets': {
 
+        'web.assets_frontend': [
+            'toolshub/static/src/xml/*',
+            'toolshub/static/src/js/*'
+        ],
+
         'toolshub.frontend_assets': [
             ('include', 'web._assets_helpers'),
             'web/static/src/scss/pre_variables.scss',
@@ -28,7 +33,8 @@
             ('include', 'web._assets_bootstrap'),
             ('include', 'web._assets_core'),
             'web/static/src/libs/fontawesome/css/font-awesome.css',
-            'toolshub/static/src/**/*',
+            #'toolshub/static/src/**/*',
+            #'toolshub/static/src/xml/*',
 
 
             # Bootstrap core partials

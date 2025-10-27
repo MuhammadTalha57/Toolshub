@@ -8,4 +8,4 @@ const config = {
 };
 
 // Mount the Playground component when the document.body is ready
-whenReady(() => mountComponent(Homepage, document.body, config));
+// whenReady(() => mountComponent(Homepage, document.body, config));
