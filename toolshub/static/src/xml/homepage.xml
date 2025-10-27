@@ -3,7 +3,7 @@
 
     <t t-name="toolshub.frontend_template">
         <!-- <t t-call-assets="toolshub.frontend_assets"/> -->
-        <div class="p-10 border bg-primary">
+        <div class="p-10 border bg-green"> 
             hello world
         </div>
     </t>
