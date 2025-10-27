@@ -7,12 +7,6 @@ class OwlPlayground(http.Controller):
         """
         Renders the owl playground page
         """
-        website = request.env['website'].sudo().get_current_website()
-            #values = self._prepare_home_portal_values({})
-        values = {
-            'website': website,
-            'preview_object': False,
-        }
         print("Controller hit")
-        return request.render('toolshub.frontend_template', values)
+        return request.render('toolshub.frontend_template')
 
