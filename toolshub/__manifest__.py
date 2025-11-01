@@ -97,6 +97,6 @@
         "views/toolshub_rented_tools_views.xml",
         "views/toolshub_rent_payment_wizard_views.xml",
         "views/toolshub_menus.xml",
-        "views/toolshub_login_template.xml",
+        "views/toolshub_main_template.xml",
     ]
 }

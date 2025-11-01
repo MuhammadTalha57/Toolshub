@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <!-- Main App Template -->
+    <t t-name="toolshub.ToolshubApp">
+        <div class="toolshub-app">
+            <t t-if="!state.isAuthenticated">
+                <Login onLoginSuccess.bind="handleLoginSuccess" />
+            </t>
+            <!-- <t t-else="">
+                <Navbar 
+                    currentPage="state.currentPage"
+                    onNavigate.bind="handleNavigate"
+                    user="state.user"
+                    onLogout.bind="handleLogout"
+                />
+                <div class="toolshub-main">
+                    <t t-if="state.currentPage === 'rent'">
+                        <RentListings user="state.user" />
+                    </t>
+                    <t t-elif="state.currentPage === 'groupbuy'">
+                        <GroupBuyListings user="state.user" />
+                    </t>
+                    <t t-elif="state.currentPage === 'addtool'">
+                        <AddTool />
+                    </t>
+                </div>
+            </t> -->
+        </div>
+    </t>
+    
+</templates>

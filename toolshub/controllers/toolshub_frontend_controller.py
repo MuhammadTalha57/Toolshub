@@ -13,5 +13,5 @@ class OwlPlayground(http.Controller):
             'preview_object': False,
         }
         print("Controller hit")
-        return request.render('toolshub.login_template', values)
+        return request.render('toolshub.main_app', values)
 

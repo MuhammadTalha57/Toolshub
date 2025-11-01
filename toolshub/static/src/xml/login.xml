@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <!-- Login Component Template -->
+    <t t-name="toolshub.Login">
+        <div class="auth-container fade-in">
+            <div class="auth-card scale-in">
+                <div class="auth-header">
+                    <h1>
+                        <i class="fa fa-tools"></i> Toolshub
+                    </h1>
+                    <p t-if="state.isLogin">Welcome back! Sign in to continue</p>
+                    <p t-else="">Create your account to get started</p>
+                </div>
+
+                <form t-on-submit="handleSubmit">
+                    <t t-if="state.error">
+                        <div class="badge badge-danger mb-3 w-full" style="display: block; text-align: center;">
+                            <i class="fa fa-exclamation-circle"></i>
+                            <t t-esc="state.error"/>
+                        </div>
+                    </t>
+
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input
+                            type="text"
+                            id="username"
+                            class="form-input"
+                            placeholder="Enter your username"
+                            t-model="state.username"
+                            t-on-input="(ev) => this.updateField('username', ev)"
+                            required="required"
+                        />
+                    </div>
+
+                    <t t-if="!state.isLogin">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input
+                                type="email"
+                                id="email"
+                                class="form-input"
+                                placeholder="Enter your email"
+                                t-model="state.email"
+                                t-on-input="(ev) => this.updateField('email', ev)"
+                                required="required"
+                            />
+                        </div>
+                    </t>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input
+                            type="password"
+                            id="password"
+                            class="form-input"
+                            placeholder="Enter your password"
+                            t-model="state.password"
+                            t-on-input="(ev) => this.updateField('password', ev)"
+                            required="required"
+                        />
+                    </div>
+
+                    <t t-if="!state.isLogin">
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                class="form-input"
+                                placeholder="Confirm your password"
+                                t-model="state.confirmPassword"
+                                t-on-input="(ev) => this.updateField('confirmPassword', ev)"
+                                required="required"
+                            />
+                        </div>
+                    </t>
+
+                    <button type="submit" class="btn-primary" t-att-disabled="state.loading">
+                        <t t-if="state.loading">
+                            <i class="fa fa-spinner fa-spin"></i> Processing...
+                        </t>
+                        <t t-else="">
+                            <t t-if="state.isLogin">
+                                <i class="fa fa-sign-in-alt"></i> Sign In
+                            </t>
+                            <t t-else="">
+                                <i class="fa fa-user-plus"></i> Sign Up
+                            </t>
+                        </t>
+                    </button>
+
+                    <div class="auth-divider">or</div>
+
+                    <div class="auth-switch">
+                        <t t-if="state.isLogin">
+                            Don't have an account? 
+                            <a href="#" class="auth-switch-link" t-on-click.prevent="toggleMode">
+                                Sign up here
+                            </a>
+                        </t>
+                        <t t-else="">
+                            Already have an account? 
+                            <a href="#" class="auth-switch-link" t-on-click.prevent="toggleMode">
+                                Sign in here
+                            </a>
+                        </t>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </t>
+</templates>
