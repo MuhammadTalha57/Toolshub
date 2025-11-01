@@ -21,29 +21,30 @@
                         </div>
                     </t>
 
+                    
+
                     <div class="form-group">
-                        <label for="username">Username</label>
+                        <label for="email">Email</label>
                         <input
-                            type="text"
-                            id="username"
+                            type="email"
+                            id="email"
                             class="form-input"
-                            placeholder="Enter your username"
-                            t-model="state.username"
-                            t-on-input="(ev) => this.updateField('username', ev)"
+                            placeholder="Enter your email"
+                            t-model="state.email"
+                            t-on-input="(ev) => this.updateField('email', ev)"
                             required="required"
                         />
                     </div>
-
                     <t t-if="!state.isLogin">
                         <div class="form-group">
-                            <label for="email">Email</label>
+                            <label for="username">Username</label>
                             <input
-                                type="email"
-                                id="email"
+                                type="text"
+                                id="username"
                                 class="form-input"
-                                placeholder="Enter your email"
-                                t-model="state.email"
-                                t-on-input="(ev) => this.updateField('email', ev)"
+                                placeholder="Enter your username"
+                                t-model="state.username"
+                                t-on-input="(ev) => this.updateField('username', ev)"
                                 required="required"
                             />
                         </div>

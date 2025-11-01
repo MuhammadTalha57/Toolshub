@@ -3,6 +3,7 @@
 import { Component, useState, onWillStart } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { Login } from "./login";
+import { Dashboard } from "./dashboard";
 // import { Navbar } from "./components/navbar";
 // import { AddTool } from "./components/add_tool";
 // import { RentListings } from "./components/rent_listings";
@@ -16,6 +17,7 @@ export class ToolshubApp extends Component {
     static template = "toolshub.ToolshubApp";
     static components = {
         Login,
+        Dashboard,
         // Navbar,
         // AddTool,
         // RentListings,
@@ -31,34 +33,42 @@ export class ToolshubApp extends Component {
 
         onWillStart(async () => {
             // Check if user is already logged in
+            console.log("Checking User Session");
 
-            // try {
+            try {
 
-            //     const response = await fetch(`${BASE_URL}/api/auth/check`, {
-            //         method: 'POST',
-            //         headers: {
-            //             'Content-Type': 'application/json',
-            //         },
-            //         credentials: 'include', // Important for session cookies
-            //         body: JSON.stringify({
-            //             jsonrpc: '2.0',
-            //             method: 'call',
-            //             params: {}
-            //         })
-            //     });
-            // } catch (error) {
-            //     console.log("API Error")
-            //     this.state.error = "Can't Reach API"
-            //     return;
-            // } 
+                const response = await fetch(`${BASE_URL}/api/auth/check`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include', // Important for session cookies
+                    body: JSON.stringify({
+                        jsonrpc: '2.0',
+                        method: 'call',
+                        params: {}
+                    })
+                });
+
+                const data = await response.json();
+                const result = data.result;
+                console.log(result);
+                console.log(result.user);
+
+                if(result.success) {
+                    this.state.isAuthenticated = true;
+                    this.state.user = result.user;
+                    this.handleLoginSuccess(this.state.user);
+                }
+
+
+            } catch (error) {
+                console.log("API Error")
+                this.state.error = "Can't Reach API"
+                return;
+            } 
             
-            // const data = await response.json();
-
-            // if(data.success) {
-            //     this.state.isAuthenticated = true;
-            //     this.state.user = data.user;
-            // }
-
+            
             // const user = api.getCurrentUser();
             // if (user) {
             //     this.state.isAuthenticated = true;
@@ -68,9 +78,10 @@ export class ToolshubApp extends Component {
     }
 
     handleLoginSuccess(user) {
+        console.log("HANDLING LOGIN SUCCESS", user);
         this.state.isAuthenticated = true;
         this.state.user = user;
-        this.state.currentPage = 'rent';
+        this.state.currentPage = 'dashboard';
     }
 
     handleLogout() {

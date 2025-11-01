@@ -50,16 +50,15 @@ class AuthAPI(http.Controller):
             })
             
             # Authenticate the newly created user
-            request.session.authenticate(request.db, email, password)
+            # request.session.authenticate(request.db, email, password)
+
+            # credential = {'login': email, 'password': password, 'type': 'password'}
+            # uid = request.session.authenticate(request.db, credential)
             
             return {
                 'success': True,
                 'message': 'User created successfully',
-                'user': {
-                    'id': user.id,
-                    'name': user.name,
-                    'email': user.email,
-                },
+                'user': user,
                 'session_id': request.session.sid
             }
             
@@ -92,7 +91,8 @@ class AuthAPI(http.Controller):
                 }
             
             # Authenticate user
-            uid = request.session.authenticate(request.db, email, password)
+            credential = {'login': email, 'password': password, 'type': 'password'}
+            uid = request.session.authenticate(request.db, credential)
             
             if not uid:
                 return {
@@ -101,16 +101,19 @@ class AuthAPI(http.Controller):
                 }
             
             # Get user information
-            user = request.env['res.users'].sudo().browse(uid)
+            user_id = request.session.uid
+            user = request.env["res.users"].sudo().browse(user_id)
+
+            if not user.exists():
+                return {
+                    'success': False,
+                    'message': 'User not found'
+                }
             
-            return {
+            return { 
                 'success': True,
                 'message': 'Login successful',
-                'user': {
-                    'id': user.id,
-                    'name': user.name,
-                    'email': user.email,
-                },
+                'user': user,
                 'session_id': request.session.sid
             }
             
@@ -157,7 +160,11 @@ class AuthAPI(http.Controller):
             
             return {
                 'success': True,
-                'user': user,
+                'user': {
+                    'id': user.id,
+                    'name': user.name,
+                    'email': user.email,
+                },
             }
         except Exception as e:
             return {

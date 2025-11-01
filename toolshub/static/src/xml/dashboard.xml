@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <!-- Dashboard -->
+    <t t-name="toolshub.Dashboard">
+        <div>
+            <p> Welcome <t t-esc="props.user.name" /></p>
+        </div>
+    </t>
+</templates>

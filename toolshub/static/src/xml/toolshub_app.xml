@@ -7,8 +7,11 @@
             <t t-if="!state.isAuthenticated">
                 <Login onLoginSuccess.bind="handleLoginSuccess" />
             </t>
-            <!-- <t t-else="">
-                <Navbar 
+            <t t-else="">
+
+                <Dashboard user="state.user" />
+
+                <!-- <Navbar 
                     currentPage="state.currentPage"
                     onNavigate.bind="handleNavigate"
                     user="state.user"
@@ -24,8 +27,8 @@
                     <t t-elif="state.currentPage === 'addtool'">
                         <AddTool />
                     </t>
-                </div>
-            </t> -->
+                </div> -->
+            </t>
         </div>
     </t>
     

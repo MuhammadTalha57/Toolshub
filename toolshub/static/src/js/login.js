@@ -8,9 +8,9 @@ import { registry } from "@web/core/registry"
 
 export class Login extends Component {
     static template = "toolshub.Login";
-    // static props = {
-    //     onLoginSuccess: { type: Function }
-    // };
+    static props = {
+        onLoginSuccess: { type: Function }
+    };
 
     setup() {
         this.state = useState({
@@ -49,7 +49,7 @@ export class Login extends Component {
     }
 
     async handleLogin() {
-        if (!this.state.username || !this.state.password) {
+        if (!this.state.email || !this.state.password) {
             this.state.error = 'Please fill in all fields';
             return;
         }
@@ -68,14 +68,26 @@ export class Login extends Component {
                     jsonrpc: '2.0',
                     method: 'call',
                     params: {
-                        email: email,
-                        password: password
+                        email: this.state.email,
+                        password: this.state.password
                     }
                 })
             });
+
+            const data = await response.json();
+            const result = data.result;
+
+            if(result.success) {
+                console.log("Successfully Logged in");
+                console.log(result);
+                this.props.onLoginSuccess(result.user);
+            }
+            else {
+                this.state.error = result.message;
+            }
         } catch (error) {
             console.log("API Error")
-            this.state.error = "Can't Reach API"
+            this.state.error = error;
             return;
         } finally {
             this.state.loading = false;
@@ -83,15 +95,7 @@ export class Login extends Component {
         
 
 
-        const data = await response.json();
-
-        if(data.result.success) {
-            console.log("Successfully Logged in");
-            console.log(data);
-        }
-        else {
-            this.state.error = data.result.message;
-        }
+        
 
 
         // try {
@@ -144,6 +148,22 @@ export class Login extends Component {
                     }
                 })
             });
+
+
+            const data = await response.json();
+            const result = data.result;
+
+            if(result.success) {
+                console.log("Successfully Signed up");
+                console.log(result);
+
+                // Auto Login after signup
+                this.handleLogin();
+            }
+            else {
+                this.state.error = data.result.message;
+            }
+
         } catch (error) {
             console.log("API Error")
             this.state.error = "Can't Reach API"
@@ -154,23 +174,7 @@ export class Login extends Component {
         
 
 
-        const data = await response.json();
-
-        if(data.result.success) {
-            console.log("Successfully Signed up");
-            console.log(data);
-
-            // Auto Login after signup
-            this.handleLogin();
-
-        }
-        else {
-            this.state.error = data.result.message;
-        }
-
-
-
-
+        
 
         // try {
         //     const result = await api.signup({
