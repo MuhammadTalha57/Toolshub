@@ -7,6 +7,11 @@ class OwlPlayground(http.Controller):
         """
         Renders the owl playground page
         """
+        website = request.env['website'].sudo().get_current_website()
+        values = {
+            'website': website,
+            'preview_object': False,
+        }
         print("Controller hit")
-        return request.render('toolshub.frontend_template')
+        return request.render('toolshub.login_template', values)
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="login_template" name="Toolshub Login Template">
+        <t t-call="web.frontend_layout">
+            <t t-set="head">
+                <!-- <link rel="preload" href="/web/static/src/libs/fontawesome/fonts/fontawesome-webfont.woff2?v=4.7.0" as="font" crossorigin=""/> -->
+            </t>
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            
+            <main class="toolshub-main">
+                <owl-component name="toolshub.login_page"/>
+            </main>
+        </t>
+    </template>
+</odoo>

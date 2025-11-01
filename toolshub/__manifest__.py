@@ -21,7 +21,8 @@
 
         'web.assets_frontend': [
             'toolshub/static/src/xml/*',
-            'toolshub/static/src/js/*'
+            'toolshub/static/src/js/*',
+            'toolshub/static/src/scss/*',
         ],
 
         'toolshub.frontend_assets': [
@@ -33,8 +34,8 @@
             ('include', 'web._assets_bootstrap'),
             ('include', 'web._assets_core'),
             'web/static/src/libs/fontawesome/css/font-awesome.css',
-            #'toolshub/static/src/**/*',
-            #'toolshub/static/src/xml/*',
+            'toolshub/static/src/**/*',
+            'toolshub/static/src/xml/*',
 
 
             # Bootstrap core partials
@@ -96,6 +97,6 @@
         "views/toolshub_rented_tools_views.xml",
         "views/toolshub_rent_payment_wizard_views.xml",
         "views/toolshub_menus.xml",
-        "views/toolshub_frontend_template.xml",
+        "views/toolshub_login_template.xml",
     ]
 }
