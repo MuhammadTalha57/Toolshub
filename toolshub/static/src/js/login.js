@@ -142,9 +142,9 @@ export class Login extends Component {
                     jsonrpc: '2.0',
                     method: 'call',
                     params: {
-                        name: name,
-                        email: email,
-                        password: password
+                        name: this.state.username,
+                        email: this.state.email,
+                        password: this.state.password
                     }
                 })
             });
@@ -160,9 +160,8 @@ export class Login extends Component {
                 // Auto Login after signup
                 this.handleLogin();
             }
-            else {
-                this.state.error = data.result.message;
-            }
+            
+            this.state.error = data.result.message;
 
         } catch (error) {
             console.log("API Error")

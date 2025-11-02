@@ -1,0 +1,35 @@
+<!-- Navbar Template -->
+    <t t-name="toolshub.Navbar">
+        <nav class="toolshub-navbar">
+            <div class="navbar-container">
+                <a href="#" class="navbar-logo">
+                    <i class="fa fa-tools"></i>
+                    <span>Toolshub</span>
+                </a>
+
+                <ul class="navbar-nav">
+                    <t t-foreach="pages" t-as="page" t-key="page.id">
+                        <li 
+                            class="nav-item"
+                            t-att-class="{ 'active': isActive(page.id) }"
+                            t-on-click="() => this.handleNavigate(page.id)"
+                        >
+                            <i t-att-class="'fa ' + page.icon"></i>
+                            <t t-esc="page.label"/>
+                        </li>
+                    </t>
+                </ul>
+
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="color: var(--text-secondary);">
+                        <i class="fa fa-user-circle"></i>
+                        <t t-esc="props.user?.name || 'User'"/>
+                    </div>
+                    <ThemeToggle />
+                    <button class="btn btn-secondary" t-on-click="handleLogout" style="padding: 0.5rem 1rem;">
+                        <i class="fa fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </t>

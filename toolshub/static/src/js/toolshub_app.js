@@ -4,6 +4,7 @@ import { Component, useState, onWillStart } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { Login } from "./login";
 import { Dashboard } from "./dashboard";
+import { Navbar } from "./navbar";
 // import { Navbar } from "./components/navbar";
 // import { AddTool } from "./components/add_tool";
 // import { RentListings } from "./components/rent_listings";
@@ -18,7 +19,7 @@ export class ToolshubApp extends Component {
     static components = {
         Login,
         Dashboard,
-        // Navbar,
+        Navbar
         // AddTool,
         // RentListings,
         // GroupBuyListings
@@ -84,11 +85,46 @@ export class ToolshubApp extends Component {
         this.state.currentPage = 'dashboard';
     }
 
-    handleLogout() {
-        api.logout();
-        this.state.isAuthenticated = false;
-        this.state.user = null;
-        this.state.currentPage = 'rent';
+    async handleLogout() {
+        
+            try {
+
+                const response = await fetch(`${BASE_URL}/api/auth/logout`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include', // Important for session cookies
+                    body: JSON.stringify({
+                        jsonrpc: '2.0',
+                        method: 'call',
+                        params: {}
+                    })
+                });
+
+                const data = await response.json();
+                const result = data.result;
+                console.log(result);
+                // console.log(result.user);
+
+                if(result.success) {
+                    // this.state.isAuthenticated = true;
+                    // this.state.user = result.user;
+                    // this.handleLoginSuccess(this.state.user);
+                    this.state.isAuthenticated = false;
+                    this.state.user = null;
+                    this.state.currentPage = 'rent';
+                }
+
+
+            } catch (error) {
+                console.log("API Error")
+                this.state.error = "Logout Faied (Can't Reach API)"
+                return;
+            } 
+
+
+        
     }
 
     handleNavigate(page) {

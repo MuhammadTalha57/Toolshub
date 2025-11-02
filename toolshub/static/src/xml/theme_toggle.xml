@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <!-- Theme Toggle Template -->
+    <t t-name="toolshub.ThemeToggle">
+        <button class="theme-toggle" t-on-click="toggleTheme" title="Toggle theme">
+            <i t-if="state.isDark" class="fa fa-sun"></i>
+            <i t-else="" class="fa fa-moon"></i>
+        </button>
+    </t>
+
+</templates>

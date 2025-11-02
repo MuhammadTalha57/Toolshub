@@ -8,16 +8,14 @@
                 <Login onLoginSuccess.bind="handleLoginSuccess" />
             </t>
             <t t-else="">
-
-                <Dashboard user="state.user" />
-
-                <!-- <Navbar 
+                <Navbar 
                     currentPage="state.currentPage"
                     onNavigate.bind="handleNavigate"
                     user="state.user"
                     onLogout.bind="handleLogout"
                 />
-                <div class="toolshub-main">
+                <Dashboard user="state.user" />
+                <!-- <div class="toolshub-main">
                     <t t-if="state.currentPage === 'rent'">
                         <RentListings user="state.user" />
                     </t>

@@ -179,7 +179,8 @@
     display: flex;
     gap: 2rem;
     list-style: none;
-    align-items: center;
+    // align-items: center;
+    flex-direction: row;
 }
 
 .nav-item {

@@ -46,7 +46,7 @@ class AuthAPI(http.Controller):
                 'login': email,
                 'email': email,
                 'password': password,
-                'groups_id': [(6, 0, [request.env.ref('base.group_user').id])]
+                'groups_id': [(6, 0, [request.env.ref('base.group_portal').id])]
             })
             
             # Authenticate the newly created user
@@ -64,6 +64,7 @@ class AuthAPI(http.Controller):
             
         except Exception as e:
             _logger.error(f"Signup error: {str(e)}")
+            print("Signup Error ")
             return {
                 'success': False,
                 'message': str(e)
