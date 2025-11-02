@@ -2,17 +2,11 @@
 
 import { Component, useState, onWillStart } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { session } from "@web/session";
+import { rpc } from "@web/core/network/rpc";
 import { Login } from "./login";
 import { Dashboard } from "./dashboard";
 import { Navbar } from "./navbar";
-// import { Navbar } from "./components/navbar";
-// import { AddTool } from "./components/add_tool";
-// import { RentListings } from "./components/rent_listings";
-// import { GroupBuyListings } from "./components/group_buy_listings";
-// import { api } from "./services/api_service";
-
-
-const BASE_URL = "http://192.168.100.45:8069";
 
 export class ToolshubApp extends Component {
     static template = "toolshub.ToolshubApp";
@@ -20,9 +14,6 @@ export class ToolshubApp extends Component {
         Login,
         Dashboard,
         Navbar
-        // AddTool,
-        // RentListings,
-        // GroupBuyListings
     };
 
     setup() {
@@ -33,98 +24,79 @@ export class ToolshubApp extends Component {
         });
 
         onWillStart(async () => {
-            // Check if user is already logged in
-            console.log("Checking User Session");
-
-            try {
-
-                const response = await fetch(`${BASE_URL}/api/auth/check`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include', // Important for session cookies
-                    body: JSON.stringify({
-                        jsonrpc: '2.0',
-                        method: 'call',
-                        params: {}
-                    })
-                });
-
-                const data = await response.json();
-                const result = data.result;
-                console.log(result);
-                console.log(result.user);
-
-                if(result.success) {
-                    this.state.isAuthenticated = true;
-                    this.state.user = result.user;
-                    this.handleLoginSuccess(this.state.user);
-                }
-
-
-            } catch (error) {
-                console.log("API Error")
-                this.state.error = "Can't Reach API"
-                return;
-            } 
-            
-            
-            // const user = api.getCurrentUser();
-            // if (user) {
-            //     this.state.isAuthenticated = true;
-            //     this.state.user = user;
-            // }
+            await this.checkUserSession();
         });
     }
 
+    async checkUserSession() {
+        try {
+            console.log("=== Checking User Session ===");
+            console.log("Session UID:", session.uid);
+            console.log("Session name:", session.name);
+            
+            // Check if user is logged in
+            // session.uid will be false or null if not logged in
+            // session.uid will be a number (user id) if logged in
+            if (session.uid && typeof session.uid === 'number') {
+                console.log("✓ User already logged in from session");
+                console.log("Full session info:", session);
+                
+                this.state.isAuthenticated = true;
+                this.state.user = {
+                    id: session.uid,
+                    name: session.name,
+                    username: session.username,
+                    email: session.user_context?.email || session.username,
+                    partner_id: session.partner_id,
+                    is_admin: session.is_admin || false,
+                    is_system: session.is_system || false
+                };
+                
+                this.state.currentPage = 'dashboard';
+            } else {
+                console.log("✗ No active session - user not logged in");
+                this.state.isAuthenticated = false;
+                this.state.user = null;
+                this.state.currentPage = 'rent';
+            }
+            
+        } catch (error) {
+            console.error("Session check error:", error);
+            // If error, assume not logged in
+            this.state.isAuthenticated = false;
+            this.state.user = null;
+        }
+    }
+
     handleLoginSuccess(user) {
-        console.log("HANDLING LOGIN SUCCESS", user);
+        console.log("=== HANDLING LOGIN SUCCESS ===");
+        
         this.state.isAuthenticated = true;
         this.state.user = user;
         this.state.currentPage = 'dashboard';
+
     }
 
     async handleLogout() {
+        try {
+            console.log("=== Logging out ===");
+            
+            // Use Odoo's official logout endpoint
+            await rpc('/web/session/destroy');
+            console.log("✓ Successfully logged out");
         
-            try {
-
-                const response = await fetch(`${BASE_URL}/api/auth/logout`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include', // Important for session cookies
-                    body: JSON.stringify({
-                        jsonrpc: '2.0',
-                        method: 'call',
-                        params: {}
-                    })
-                });
-
-                const data = await response.json();
-                const result = data.result;
-                console.log(result);
-                // console.log(result.user);
-
-                if(result.success) {
-                    // this.state.isAuthenticated = true;
-                    // this.state.user = result.user;
-                    // this.handleLoginSuccess(this.state.user);
-                    this.state.isAuthenticated = false;
-                    this.state.user = null;
-                    this.state.currentPage = 'rent';
-                }
-
-
-            } catch (error) {
-                console.log("API Error")
-                this.state.error = "Logout Faied (Can't Reach API)"
-                return;
-            } 
-
-
-        
+            // Reload page to clear all session data
+            window.location.reload();
+            
+        } catch (error) {
+            console.error("Logout Error:", error);
+            
+            // Even if API fails, still clear local state and reload
+            this.state.isAuthenticated = false;
+            this.state.user = null;
+            this.state.currentPage = 'rent';
+            window.location.reload();
+        }
     }
 
     handleNavigate(page) {
@@ -145,6 +117,4 @@ export class ToolshubApp extends Component {
     }
 }
 
-// Register the main app as a client action
-// registry.category("actions").add("toolshub_main_app", ToolshubApp);
 registry.category("public_components").add("toolshub.ToolshubApp", ToolshubApp);
