@@ -7,13 +7,15 @@ import { rpc } from "@web/core/network/rpc";
 import { Login } from "./login";
 import { Dashboard } from "./dashboard";
 import { Navbar } from "./navbar";
+import { RentListings } from "./rent_listings";
 
 export class ToolshubApp extends Component {
     static template = "toolshub.ToolshubApp";
     static components = {
         Login,
         Dashboard,
-        Navbar
+        Navbar,
+        RentListings
     };
 
     setup() {

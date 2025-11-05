@@ -155,56 +155,65 @@ export class Login extends Component {
 
             const text = await response.text();
 
+            // console.log(response, text);
+
             if (!response.ok) {
-                console.log("=== ERROR RESPONSE ===");
-                
-                // Parse HTML to extract error
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(text, 'text/html');
-                
-                // Try multiple selectors to find the error
-                const errorSelectors = [
-                    '.alert-danger',
-                    '.text-danger', 
-                    'div.error',
-                    'p.text-danger',
-                    'div[role="alert"]',
-                    '.o_error_detail',
-                    'h1', // Sometimes the error is in h1
-                ];
-                
-                let errorMessage = null;
-                for (const selector of errorSelectors) {
-                    const element = doc.querySelector(selector);
-                    if (element) {
-                        errorMessage = element.textContent.trim();
-                        console.log(`Found error in ${selector}:`, errorMessage);
-                        if (errorMessage.length > 5) { // Valid error message
-                            break;
-                        }
-                    }
-                }
 
-                // Log the full HTML for debugging (you can remove this later)
-                console.log("Full HTML response:", text);
 
-                // Set appropriate error message
-                if (errorMessage) {
-                    this.state.error = errorMessage;
-                } else if (text.includes('not found') || text.includes('NotFound') || text.includes('404')) {
-                    this.state.error = 'Signup is not available. Please enable "Free sign up" in Settings → General Settings';
-                } else if (text.includes('werkzeug.exceptions.NotFound')) {
-                    this.state.error = 'Signup endpoint not found. Ensure auth_signup module is installed and signup is enabled.';
-                } else {
-                    this.state.error = 'Signup failed. Please contact administrator to enable signup.';
-                }
-                
+                this.state.error = "Signup Failed";
                 return;
+
+
+
+                // console.log("=== ERROR RESPONSE ===");
+                
+                // // Parse HTML to extract error
+                // const parser = new DOMParser();
+                // const doc = parser.parseFromString(text, 'text/html');
+                
+                // // Try multiple selectors to find the error
+                // const errorSelectors = [
+                //     '.alert-danger',
+                //     '.text-danger', 
+                //     'div.error',
+                //     'p.text-danger',
+                //     'div[role="alert"]',
+                //     '.o_error_detail',
+                //     'h1', // Sometimes the error is in h1
+                // ];
+                
+                // let errorMessage = null;
+                // for (const selector of errorSelectors) {
+                //     const element = doc.querySelector(selector);
+                //     if (element) {
+                //         errorMessage = element.textContent.trim();
+                //         console.log(`Found error in ${selector}:`, errorMessage);
+                //         if (errorMessage.length > 5) { // Valid error message
+                //             break;
+                //         }
+                //     }
+                // }
+
+                // // Log the full HTML for debugging (you can remove this later)
+                // console.log("Full HTML response:", text);
+
+                // // Set appropriate error message
+                // if (errorMessage) {
+                //     this.state.error = errorMessage;
+                // } else if (text.includes('not found') || text.includes('NotFound') || text.includes('404')) {
+                //     this.state.error = 'Signup is not available. Please enable "Free sign up" in Settings → General Settings';
+                // } else if (text.includes('werkzeug.exceptions.NotFound')) {
+                //     this.state.error = 'Signup endpoint not found. Ensure auth_signup module is installed and signup is enabled.';
+                // } else {
+                //     this.state.error = 'Signup failed. Please contact administrator to enable signup.';
+                // }
+                
+                // return;
             }
 
             // Success
             console.log("✓ Signup successful");
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            // await new Promise(resolve => setTimeout(resolve, 1000));
             await this.handleLogin();
             
         } catch (error) {

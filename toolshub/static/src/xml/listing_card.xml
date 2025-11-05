@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <!-- Listing Card Template -->
+    <t t-name="toolshub.ListingCard">
+        <div class="listing-card scale-in" t-att-class="{ 'own-listing': isOwnListing }">
+            <div class="listing-image">
+                <t t-if="props.listing.icon">
+                    <img t-att-src="props.listing.image_url" alt="Tool" style="width: 100%; height: 100%; object-fit: cover;"/>
+                </t>
+                <t t-else="">
+                    <i class="fa fa-tools"></i>
+                </t>
+            </div>
+
+            <div class="listing-content">
+                <h3 class="listing-tool-name">
+                    <t t-esc="props.listing.tool_name"/>
+                </h3>
+                <span class="listing-plan-name">
+                    <t t-esc="props.listing.plan_name"/>
+                </span>
+
+                <div class="listing-details">
+                    <t t-if="props.type === 'rent'">
+                        <div class="listing-detail-item">
+                            <i class="fa fa-user"></i>
+                            <span>
+                                Owner: <t t-esc="props.listing.owner_name"/>
+                            </span>
+                        </div>
+                        <div class="listing-detail-item">
+                            <i class="fa fa-users"></i>
+
+                            <t t-if="props.listing.unlimited_users">
+                                <span>Unlimited Users</span>
+                            </t>
+                            <t t-else="">
+                                <span>
+                                    <t t-esc="props.listing.available_users"/> / <t t-esc="props.listing.available_users + props.listing.subscribers_count"/> slots available
+                                </span>
+                            </t>
+
+                        </div>
+                        <div class="listing-detail-item">
+                            <i class="fa fa-clock"></i>
+
+                            <t t-if="props.listing.unlimited_access">
+                                <span>Unlimited Access</span>
+                            </t>
+                            <t t-else="">
+                                <span>
+                                    <t t-if="props.listing.duration_years"><t t-esc="props.listing.duration_years"/> Years </t>
+                                    <t t-if="props.listing.duration_months"><t t-esc="props.listing.duration_months"/> Months </t>
+                                    <t t-if="props.listing.duration_days"><t t-esc="props.listing.duration_days"/> Days </t>
+                                </span>
+                            </t>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="listing-detail-item">
+                            <i class="fa fa-user"></i>
+                            <span>
+                                Initiator: <t t-esc="props.listing.initiator_name"/>
+                            </span>
+                        </div>
+                        <div class="listing-detail-item">
+                            <i class="fa fa-users"></i>
+                            <span>
+                                <t t-esc="props.listing.subscribed_users"/> / <t t-esc="props.listing.total_required_users"/> joined
+                            </span>
+                        </div>
+                        <t t-if="daysLeft !== null">
+                            <div class="listing-detail-item">
+                                <i class="fa fa-calendar"></i>
+                                <span>
+                                    <t t-esc="daysLeft"/> days left
+                                </span>
+                            </div>
+                        </t>
+                    </t>
+                </div>
+
+                <t t-if="props.type === 'groupbuy'">
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-label">
+                            <span>Progress</span>
+                            <span><t t-esc="Math.round(progress)"/>%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill" t-att-style="'width: ' + progress + '%'"></div>
+                        </div>
+                    </div>
+                </t>
+
+                <div class="listing-price">
+                    $<t t-esc="props.type === 'rent' ? props.listing.price : props.listing.price_per_user"/>
+                    <t t-if="props.type === 'groupbuy'">
+                        <span style="font-size: 0.8rem; color: var(--text-secondary);">/user</span>
+                    </t>
+                </div>
+
+                <div class="listing-actions">
+                    <button class="btn btn-secondary" t-on-click="handleView">
+                        <i class="fa fa-eye"></i> View Details
+                    </button>
+                    <button 
+                        class="btn btn-primary"
+                        t-att-class="{ 'btn-secondary': isOwnListing || isFull }"
+                        t-att-disabled="isOwnListing || isFull"
+                        t-on-click="handleAction"
+                    >
+                        <i t-att-class="isOwnListing ? 'fa fa-check' : (isFull ? 'fa fa-ban' : (props.type === 'rent' ? 'fa fa-shopping-cart' : 'fa fa-user-plus'))"></i>
+                        <t t-esc="getActionLabel()"/>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

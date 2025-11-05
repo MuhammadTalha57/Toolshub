@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <!-- Rent Listings Template -->
+    <t t-name="toolshub.RentListings">
+        <div class="fade-in">
+            <div class="page-header">
+                <div style="display: flex; flex-direction: column; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h1><i class="fa fa-store"></i> Rent Tools</h1>
+                        <p>Browse and rent software tools from other users</p>
+                    </div>
+                    <button class="btn btn-primary btn-lg" t-on-click="openCreateModal">
+                        <i class="fa fa-plus-circle"></i> Create Rent Listing
+                    </button>
+                </div>
+            </div>
+
+            <t t-if="state.loading">
+                <div class="empty-state">
+                    <i class="fa fa-spinner fa-spin"></i>
+                    <h3>Loading listings...</h3>
+                </div>
+            </t>
+            <t t-elif="state.listings.length === 0">
+                <div class="empty-state">
+                    <i class="fa fa-inbox"></i>
+                    <h3>No listings available</h3>
+                    <p>Be the first to create a rent listing!</p>
+                    <button class="btn btn-primary" t-on-click="openCreateModal">
+                        <i class="fa fa-plus-circle"></i> Create Listing
+                    </button>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="listings-grid">
+                    <t t-foreach="state.listings" t-as="listing" t-key="listing.id">
+                        <ListingCard 
+                            listing="listing"
+                            type="'rent'"
+                            currentUserId="props.user?.id"
+                            onView.bind="viewListing"
+                            onAction.bind="rentListing"
+                        />
+                    </t>
+                </div>
+            </t>
+
+            
+            <!-- Create Listing Modal -->
+            <!-- <t t-if="state.showCreateModal"> -->
+            <t t-if="0">
+                <div class="modal-overlay" t-on-click.self="closeCreateModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title">
+                                <i class="fa fa-plus-circle"></i> Create Rent Listing
+                            </h2>
+                            <button class="modal-close" t-on-click="closeCreateModal">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </div>
+
+                        <form class="modal-body" t-on-submit="handleCreateListing">
+                            <div class="form-group">
+                                <label>Select Tool</label>
+                                <select 
+                                    class="form-input"
+                                    t-model="state.newListing.tool_id"
+                                    t-on-change="(ev) => this.updateField('tool_id', ev)"
+                                    required="required"
+                                >
+                                    <option value="">Choose a tool...</option>
+                                    <t t-foreach="state.tools" t-as="tool" t-key="tool.id">
+                                        <option t-att-value="tool.id">
+                                            <t t-esc="tool.name"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Select Plan</label>
+                                <select 
+                                    class="form-input"
+                                    t-model="state.newListing.plan_id"
+                                    t-on-change="(ev) => this.updateField('plan_id', ev)"
+                                    required="required"
+                                    t-att-disabled="!selectedTool"
+                                >
+                                    <option value="">Choose a plan...</option>
+                                    <t t-foreach="availablePlans" t-as="plan" t-key="plan.id">
+                                        <option t-att-value="plan.id">
+                                            <t t-esc="plan.name"/> - $<t t-esc="plan.price_per_user"/>/user
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Price ($)</label>
+                                    <input 
+                                        type="number"
+                                        class="form-input"
+                                        placeholder="10.00"
+                                        step="0.01"
+                                        min="0"
+                                        t-model="state.newListing.price"
+                                        t-on-input="(ev) => this.updateField('price', ev)"
+                                        required="required"
+                                    />
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Available Users</label>
+                                    <input 
+                                        type="number"
+                                        class="form-input"
+                                        placeholder="5"
+                                        min="1"
+                                        t-model="state.newListing.available_users"
+                                        t-on-input="(ev) => this.updateField('available_users', ev)"
+                                        required="required"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Duration (Days)</label>
+                                <input 
+                                    type="number"
+                                    class="form-input"
+                                    placeholder="30"
+                                    min="1"
+                                    t-model="state.newListing.duration_days"
+                                    t-on-input="(ev) => this.updateField('duration_days', ev)"
+                                    required="required"
+                                />
+                            </div>
+
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea 
+                                    class="form-input"
+                                    rows="3"
+                                    placeholder="Add details about your listing..."
+                                    t-model="state.newListing.description"
+                                    t-on-input="(ev) => this.updateField('description', ev)"
+                                ></textarea>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" t-on-click="closeCreateModal">
+                                    Cancel
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-check"></i> Create Listing
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </t>
+
+            <!-- Details Modal -->
+            <!-- <t t-if="state.showDetailsModal and state.selectedListing"> -->
+            <t t-if="0 and 0">
+                <div class="modal-overlay" t-on-click.self="closeDetailsModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title">
+                                <t t-esc="state.selectedListing.tool_name"/>
+                            </h2>
+                            <button class="modal-close" t-on-click="closeDetailsModal">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="listing-image" style="margin-bottom: 1.5rem; border-radius: 1rem; overflow: hidden;">
+                                <t t-if="state.selectedListing.image_url">
+                                    <img t-att-src="state.selectedListing.image_url" alt="Tool" style="width: 100%; height: 250px; object-fit: cover;"/>
+                                </t>
+                            </div>
+
+                            <div class="mb-3">
+                                <span class="listing-plan-name">
+                                    <t t-esc="state.selectedListing.plan_name"/>
+                                </span>
+                            </div>
+
+                            <div class="listing-details mb-3">
+                                <div class="listing-detail-item">
+                                    <i class="fa fa-user"></i>
+                                    <span>Owner: <strong><t t-esc="state.selectedListing.owner_name"/></strong></span>
+                                </div>
+                                <div class="listing-detail-item">
+                                    <i class="fa fa-dollar-sign"></i>
+                                    <span>Price: <strong>$<t t-esc="state.selectedListing.price"/></strong></span>
+                                </div>
+                                <div class="listing-detail-item">
+                                    <i class="fa fa-users"></i>
+                                    <span>
+                                        Available: <strong><t t-esc="state.selectedListing.available_users - state.selectedListing.subscribed_users"/> / <t t-esc="state.selectedListing.available_users"/> slots</strong>
+                                    </span>
+                                </div>
+                                <div class="listing-detail-item">
+                                    <i class="fa fa-clock"></i>
+                                    <span>Duration: <strong><t t-esc="state.selectedListing.duration_days"/> days</strong></span>
+                                </div>
+                            </div>
+
+                            <t t-if="state.selectedListing.description">
+                                <div class="mb-3">
+                                    <h4 style="margin-bottom: 0.5rem;">Description</h4>
+                                    <p style="color: var(--text-secondary);">
+                                        <t t-esc="state.selectedListing.description"/>
+                                    </p>
+                                </div>
+                            </t>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" t-on-click="closeDetailsModal">
+                                Close
+                            </button>
+                            <t t-if="state.selectedListing.owner_id !== props.user?.id">
+                                <!-- <button 
+                                    class="btn btn-primary"
+                                    t-on-click="() => this.rentListing(state.selectedListing)"
+                                    t-att-disabled="(state.selectedListing.available_users - state.selectedListing.subscribed_users) <= 0"
+                                >
+                                    <i class="fa fa-shopping-cart"></i> Rent Now
+                                </button> -->
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+
+
+
+        </div>
+    </t>
+</templates>
