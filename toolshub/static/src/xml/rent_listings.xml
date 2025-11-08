@@ -27,8 +27,8 @@
                     <i class="fa fa-inbox"></i>
                     <h3>No listings available</h3>
                     <p>Be the first to create a rent listing!</p>
-                    <button class="btn btn-primary" t-on-click="openCreateModal">
-                        <i class="fa fa-plus-circle"></i> Create Listing
+                    <button class="btn btn-primary btn-lg" t-on-click="openCreateModal">
+                        <i class="fa fa-plus-circle"></i> Create Rent Listing
                     </button>
                 </div>
             </t>
@@ -48,7 +48,6 @@
 
             
             <!-- Create Listing Modal -->
-            <!-- <t t-if="state.showCreateModal"> -->
             <t t-if="state.showCreateModal">
                 <div class="modal-overlay" t-on-click.self="closeCreateModal">
                     <div class="modal-content">
@@ -70,7 +69,9 @@
                                     t-on-change="(ev) => this.updateField('tool_id', ev)"
                                     required="required"
                                 >
-                                    <option value="">Choose a tool...</option>
+                                    <t t-if="!state.newListing.tool_id">
+                                        <option value="">Choose a tool...</option>
+                                    </t>
                                     <t t-foreach="state.tools" t-as="tool" t-key="tool.id">
                                         <option t-att-value="tool.id">
                                             <t t-esc="tool.name"/>
@@ -91,42 +92,59 @@
                                     <option value="">Choose a plan...</option>
                                     <t t-foreach="availablePlans" t-as="plan" t-key="plan.id">
                                         <option t-att-value="plan.id">
-                                            <t t-esc="plan.name"/> - $<t t-esc="plan.price_per_user"/>/user
+                                            <t t-esc="plan.name"/> - $<t t-esc="plan.price"/>/user
                                         </option>
                                     </t>
                                 </select>
                             </div>
 
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Price ($)</label>
+                            <!-- Price Input with Prefix -->
+                            <div class="form-group">
+                                <label>Price <span class="required">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-prefix">$</span>
                                     <input 
-                                        type="number"
-                                        class="form-input"
+                                        type="text"
+                                        class="form-input no-spinner"
                                         placeholder="10.00"
-                                        step="0.01"
-                                        min="0"
                                         t-model="state.newListing.price"
                                         t-on-input="(ev) => this.updateField('price', ev)"
-                                        required="required"
-                                    />
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Available Users</label>
-                                    <input 
-                                        type="number"
-                                        class="form-input"
-                                        placeholder="5"
-                                        min="1"
-                                        t-model="state.newListing.available_users"
-                                        t-on-input="(ev) => this.updateField('available_users', ev)"
+                                        
                                         required="required"
                                     />
                                 </div>
                             </div>
 
+
+                            <!-- Unlimited Users Toggle - Toggle Switch -->
                             <div class="form-group">
+                                <label style="display: block; margin-bottom: 0.5rem;">Unlimited Users</label>
+                                <label class="toggle-switch">
+                                    <input 
+                                        type="checkbox"
+                                        t-model="state.newListing.unlimited_users"
+                                        t-on-change="onUnlimitedUsersChange"
+                                    />
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <!-- Total Users (Conditional) -->
+                            <div class="form-group conditional" t-att-class="{ 'hidden': state.newListing.unlimited_users }">
+                                <label>Total Users <span class="required">*</span></label>
+                                <input 
+                                    type="number"
+                                    class="form-input"
+                                    placeholder="5"
+                                    min="1"
+                                    t-model="state.newListing.total_users"
+                                    t-on-input="(ev) => this.updateField('total_users', ev)"
+                                    t-att-disabled="state.newListing.unlimited_users"
+                                    required="required"
+                                />
+                            </div>
+
+                            <!-- <div class="form-group">
                                 <label>Duration (Days)</label>
                                 <input 
                                     type="number"
@@ -137,9 +155,9 @@
                                     t-on-input="(ev) => this.updateField('duration_days', ev)"
                                     required="required"
                                 />
-                            </div>
+                            </div> -->
 
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label>Description</label>
                                 <textarea 
                                     class="form-input"
@@ -148,13 +166,13 @@
                                     t-model="state.newListing.description"
                                     t-on-input="(ev) => this.updateField('description', ev)"
                                 ></textarea>
-                            </div>
+                            </div> -->
 
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" t-on-click="closeCreateModal">
                                     Cancel
                                 </button>
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary" t-att-disabled="state.creating">
                                     <i class="fa fa-check"></i> Create Listing
                                 </button>
                             </div>

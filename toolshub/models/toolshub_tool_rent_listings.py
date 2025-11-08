@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 class ToolshubToolRentListings(models.Model):
     _name = "toolshub.tool.rent.listings"
@@ -36,21 +37,21 @@ class ToolshubToolRentListings(models.Model):
     def _check_unlimited_users(self):
         for record in self:
             if (not record.plan_id.unlimited_users) and record.unlimited_users:
-                raise models.ValidationError("Selected Plan doesn't allow Unlimited Users.")
+                raise ValidationError("ERR: Selected Plan doesn't allow Unlimited Users.")
 
     @api.constrains("subscribers_count", "plan_id", "unlimited_users")
     def _check_subscribers_count(self):
         for record in self:
             if not record.unlimited_users:
                 if record.subscribers_count > record.plan_id.total_users:
-                    raise models.ValidationError("Subscribers Count cannot exceed total available users.")
+                    raise ValidationError("Subscribers Count cannot exceed total available users.")
 
     @api.constrains("total_users")
     def _check_total_users_count(self):
         for record in self:
             if not record.unlimited_users:
                 if record.total_users > record.plan_id.total_users:
-                    raise models.ValidationError("Total Users cannot exceed plan's total available users.")
+                    raise ValidationError("Total Users cannot exceed plan's total available users.")
 
 
 

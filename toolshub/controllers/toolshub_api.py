@@ -79,135 +79,453 @@ class ToolshubAPI(http.Controller):
                 'error': str(e)
             }
 
-    @http.route('toolshub/api/createRentListing', type='json', auth='user', methods=['POST'])
+    @http.route(['/toolshub/api/getTools'], type='json', auth='user', methods=['POST'])
+    def get_tools(self, filters=None, limit=None, offset=0):
+        """
+        Get tools with optional filters
+
+        :param filters: dict of filters (e.g., {'name': 'GitHub', 'search': 'git'})
+        :param limit: int, limit number of results
+        :param offset: int, offset for pagination
+        :return: dict with tools data
+        """
+        print("Getting Tools")
+        try:
+            domain = []
+            
+            # Apply filters if provided
+            if filters:
+                # Filter by name (exact match)
+                if filters.get('name'):
+                    domain.append(('name', '=', filters['name']))
+                
+                # Filter by URL (exact match)
+                if filters.get('url'):
+                    domain.append(('url', '=', filters['url']))
+                
+                # Search filter (searches in name and url)
+                if filters.get('search'):
+                    search_term = filters['search']
+                    domain.append('|')
+                    domain.append(('name', 'ilike', search_term))
+                    domain.append(('url', 'ilike', search_term))
+                
+                # Filter by IDs (useful for getting specific tools)
+                if filters.get('ids'):
+                    tool_ids = filters['ids']
+                    if isinstance(tool_ids, list):
+                        domain.append(('id', 'in', tool_ids))
+                    else:
+                        domain.append(('id', '=', int(tool_ids)))
+            
+            # Query tools
+            Tool = request.env['toolshub.tools'].sudo()
+            
+            # Get total count
+            total_count = Tool.search_count(domain)
+            
+            # Get tools with pagination
+            tools = Tool.search(domain, limit=limit, offset=offset, order='name asc')
+            
+            print(f"Found {total_count} tools, returning {len(tools)}")
+            
+            # Format data
+            tools_data = []
+            for tool in tools:
+                 # Serialize plan_ids properly
+                plans_data = []
+                for plan in tool.plan_ids:
+                    plans_data.append({
+                        'id': plan.id,
+                        'name': plan.name,
+                        'price': plan.price,
+                        'total_users': plan.total_users,
+                        'unlimited_users': plan.unlimited_users,
+                        'currency_symbol': plan.currency_id.symbol if plan.currency_id else '$',
+                        'duration_years': plan.duration_years,
+                        'duration_months': plan.duration_months,
+                        'duration_days': plan.duration_days,
+                        'is_unlimited': plan.is_unlimited,
+                    })
+                
+                tools_data.append({
+                    'id': tool.id,
+                    'name': tool.name,
+                    'icon': tool.icon,  # Base64 encoded image
+                    'url': tool.url,
+                    'plan_ids': plans_data,  # Now it's a proper list of dicts
+                    'plans_count': len(plans_data)
+                })
+            
+            return {
+                'success': True,
+                'data': tools_data,
+                'total_count': total_count,
+                'limit': limit,
+                'offset': offset
+            }
+            
+        except Exception as e:
+            print(f"Error getting tools: {str(e)}")
+            return {
+                'success': False,
+                'error': str(e),
+                'message': 'Failed to fetch tools'
+            }
+
+    @http.route(['/toolshub/api/getPlans'], type='json', auth='user', methods=['POST'])
+    def get_plans(self, filters=None, limit=None, offset=0):
+        """
+        Get tool plans with optional filters
+        
+        :param filters: dict of filters (e.g., {'tool_id': 1, 'search': 'premium', 'unlimited_users': True})
+        :param limit: int, limit number of results
+        :param offset: int, offset for pagination
+        :return: dict with plans data
+        """
+        print("Getting Plans")
+        try:
+            domain = []
+            
+            # Apply filters if provided
+            if filters:
+                # Filter by tool_id (most common filter)
+                if filters.get('tool_id'):
+                    domain.append(('tool_id', '=', int(filters['tool_id'])))
+                
+                # Filter by name (exact match)
+                if filters.get('name'):
+                    domain.append(('name', '=', filters['name']))
+                
+                # Search filter (searches in name)
+                if filters.get('search'):
+                    search_term = filters['search']
+                    domain.append(('name', 'ilike', search_term))
+                
+                # Filter by unlimited users
+                if filters.get('unlimited_users') is not None:
+                    domain.append(('unlimited_users', '=', filters['unlimited_users']))
+                
+                # Filter by unlimited access
+                if filters.get('is_unlimited') is not None:
+                    domain.append(('is_unlimited', '=', filters['is_unlimited']))
+                
+                # Filter by price range
+                if filters.get('min_price'):
+                    domain.append(('price', '>=', float(filters['min_price'])))
+                if filters.get('max_price'):
+                    domain.append(('price', '<=', float(filters['max_price'])))
+                
+                # Filter by total users range
+                if filters.get('min_users'):
+                    domain.append(('total_users', '>=', int(filters['min_users'])))
+                if filters.get('max_users'):
+                    domain.append(('total_users', '<=', int(filters['max_users'])))
+                
+                # Filter by IDs (useful for getting specific plans)
+                if filters.get('ids'):
+                    plan_ids = filters['ids']
+                    if isinstance(plan_ids, list):
+                        domain.append(('id', 'in', plan_ids))
+                    else:
+                        domain.append(('id', '=', int(plan_ids)))
+            
+            # Query plans
+            Plan = request.env['toolshub.tool.plans'].sudo()
+            
+            # Get total count
+            total_count = Plan.search_count(domain)
+            
+            # Get plans with pagination
+            plans = Plan.search(domain, limit=limit, offset=offset, order='tool_id asc, price asc')
+            
+            print(f"Found {total_count} plans, returning {len(plans)}")
+            
+            # Format data
+            plans_data = []
+            for plan in plans:
+                # Get features for this plan
+                features = []
+                for feature in plan.feature_ids:
+                    features.append({
+                        'id': feature.id,
+                        'name': feature.name if hasattr(feature, 'name') else '',
+                        # Add other feature fields as needed
+                    })
+                
+                plans_data.append({
+                    'id': plan.id,
+                    'name': plan.name,
+                    'tool_id': plan.tool_id.id if plan.tool_id else None,
+                    'tool_name': plan.tool_id.name if plan.tool_id else '',
+                    'tool_icon': plan.tool_id.icon if plan.tool_id else None,
+                    'total_users': plan.total_users,
+                    'unlimited_users': plan.unlimited_users,
+                    'price': plan.price,
+                    'currency_id': plan.currency_id.id if plan.currency_id else None,
+                    'currency_symbol': plan.currency_id.symbol if plan.currency_id else '$',
+                    'currency_name': plan.currency_id.name if plan.currency_id else 'USD',
+                    'duration_years': plan.duration_years,
+                    'duration_months': plan.duration_months,
+                    'duration_days': plan.duration_days,
+                    'is_unlimited': plan.is_unlimited,
+                    'features': features,
+                    'features_count': len(features)
+                })
+            
+            return {
+                'success': True,
+                'data': plans_data,
+                'total_count': total_count,
+                'limit': limit,
+                'offset': offset
+            }
+            
+        except Exception as e:
+            print(f"Error getting plans: {str(e)}")
+            return {
+                'success': False,
+                'error': str(e),
+                'message': 'Failed to fetch plans'
+            }
+
+    # @http.route('/toolshub/api/createRentListing', type='json', auth='user', methods=['POST'])
+    # def create_rent_listing(self, **kwargs):
+    #     """
+    #     Create a new rental listing
+    #     Expected params: tool_id, plan_id, unlimited_users, total_users, price
+    #     """
+    #     try:
+    #         # Validate required fields
+    #         required_fields = ['tool_id', 'plan_id', 'price', 'unlimited_users', 'total_users']
+    #         missing_fields = [field for field in required_fields if field not in kwargs]
+            
+    #         if missing_fields:
+    #             return {
+    #                 'success': False,
+    #                 'error': 'missing_fields',
+    #                 'message': f"Missing required fields: {', '.join(missing_fields)}",
+    #                 'missing_fields': missing_fields
+    #             }
+            
+    #         # Validate data types and values
+    #         try:
+    #             tool_id = int(kwargs.get('tool_id'))
+    #             plan_id = int(kwargs.get('plan_id'))
+    #             price = float(kwargs.get('price'))
+    #             unlimited_users = kwargs.get('unlimited_users', False)
+    #             total_users = int(kwargs.get('total_users'))
+                
+    #             # Convert string 'true'/'false' to boolean if needed
+    #             if isinstance(unlimited_users, str):
+    #                 unlimited_users = unlimited_users.lower() == 'true'
+                
+    #             # Only validate total_users if not unlimited
+    #             if not unlimited_users:
+    #                 total_users = kwargs.get('total_users')
+    #                 if total_users is None:
+    #                     return {
+    #                         'success': False,
+    #                         'error': 'validation_error',
+    #                         'message': 'total_users is required when unlimited_users is False'
+    #                     }
+    #                 total_users = int(total_users)
+    #                 if total_users <= 0:
+    #                     return {
+    #                         'success': False,
+    #                         'error': 'validation_error',
+    #                         'message': 'total_users must be greater than 0'
+    #                     }
+    #             else:
+    #                 total_users = 0  # Set to 0 or None for unlimited
+                    
+    #         except (ValueError, TypeError) as e:
+    #             return {
+    #                 'success': False,
+    #                 'error': 'validation_error',
+    #                 'message': f'Invalid data format: {str(e)}'
+    #             }
+            
+    #         # Check if tool exists
+    #         tool = request.env['toolshub.tools'].browse(tool_id)
+    #         if not tool.exists():
+    #             return {
+    #                 'success': False,
+    #                 'error': 'not_found',
+    #                 'message': f'Tool with ID {tool_id} not found'
+    #             }
+            
+    #         # Check if plan exists and belongs to the tool
+    #         plan = request.env['toolshub.tool.plans'].browse(plan_id)
+    #         if not plan.exists():
+    #             return {
+    #                 'success': False,
+    #                 'error': 'not_found',
+    #                 'message': f'Plan with ID {plan_id} not found'
+    #             }
+            
+    #         if plan.tool_id.id != tool_id:
+    #             return {
+    #                 'success': False,
+    #                 'error': 'validation_error',
+    #                 'message': 'Selected plan does not belong to the selected tool'
+    #             }
+            
+    #         # Prepare values for creation
+    #         vals = {
+    #             'tool_id': tool_id,
+    #             'plan_id': plan_id,
+    #             'unlimited_users': unlimited_users,
+    #             'total_users': total_users if not unlimited_users else 0,
+    #             'price': price,
+    #             # owner_id will be set automatically via default lambda
+    #         }
+            
+    #         # Create the record
+    #         print("API Creating Rent Listing")
+    #         rental_listing = request.env['toolshub.tool.rent.listings'].create(vals)
+            
+    #         # Check if record was created successfully
+    #         if rental_listing and rental_listing.exists():
+    #             print(f"Rental listing created successfully: ID {rental_listing.id}")
+                
+    #             # Read the created record to return complete data
+    #             listing_data = rental_listing.read()[0]
+                
+    #             return {
+    #                 'success': True,
+    #                 'message': 'Rental listing created successfully',
+    #                 'data': listing_data,
+    #                 'listing_id': rental_listing.id
+    #             }
+    #         else:
+    #             print("Failed to create rental listing - record does not exist after creation")
+    #             return {
+    #                 'success': False,
+    #                 'error': 'creation_failed',
+    #                 'message': 'Failed to create rental listing'
+    #             }
+                
+    #     except ValueError as e:
+    #         print(f"Validation error creating rental listing: {str(e)}")
+    #         return {
+    #             'success': False,
+    #             'error': 'validation_error',
+    #             'message': str(e)
+    #         }
+            
+    #     except Exception as e:
+    #         print(f"Error creating rental listing: {str(e)}")
+    #         return {
+    #             'success': False,
+    #             'error': 'server_error',
+    #             'message': f'An error occurred: {str(e)}'
+    #         }
+
+
+    @http.route('/toolshub/api/createRentListing', type='json', auth='user', methods=['POST'])
     def create_rent_listing(self, **kwargs):
         """
         Create a new rental listing
         Expected params: tool_id, plan_id, unlimited_users, total_users, price
         """
-        try:
-            # Validate required fields
-            required_fields = ['tool_id', 'plan_id', 'price', 'unlimited_users', 'total_users']
-            missing_fields = [field for field in required_fields if field not in kwargs]
-            
-            if missing_fields:
-                return {
-                    'success': False,
-                    'error': 'missing_fields',
-                    'message': f"Missing required fields: {', '.join(missing_fields)}",
-                    'missing_fields': missing_fields
-                }
-            
-            # Validate data types and values
-            try:
-                tool_id = int(kwargs.get('tool_id'))
-                plan_id = int(kwargs.get('plan_id'))
-                price = float(kwargs.get('price'))
-                unlimited_users = kwargs.get('unlimited_users', False)
-                total_users = int(kwargs.get('total_users'))
-                
-                # Convert string 'true'/'false' to boolean if needed
-                if isinstance(unlimited_users, str):
-                    unlimited_users = unlimited_users.lower() == 'true'
-                
-                # Only validate total_users if not unlimited
-                if not unlimited_users:
-                    total_users = kwargs.get('total_users')
-                    if total_users is None:
-                        return {
-                            'success': False,
-                            'error': 'validation_error',
-                            'message': 'total_users is required when unlimited_users is False'
-                        }
-                    total_users = int(total_users)
-                    if total_users <= 0:
-                        return {
-                            'success': False,
-                            'error': 'validation_error',
-                            'message': 'total_users must be greater than 0'
-                        }
-                else:
-                    total_users = 0  # Set to 0 or None for unlimited
-                    
-            except (ValueError, TypeError) as e:
-                return {
-                    'success': False,
-                    'error': 'validation_error',
-                    'message': f'Invalid data format: {str(e)}'
-                }
-            
-            # Check if tool exists
-            tool = request.env['toolshub.tools'].browse(tool_id)
-            if not tool.exists():
-                return {
-                    'success': False,
-                    'error': 'not_found',
-                    'message': f'Tool with ID {tool_id} not found'
-                }
-            
-            # Check if plan exists and belongs to the tool
-            plan = request.env['toolshub.tool.plans'].browse(plan_id)
-            if not plan.exists():
-                return {
-                    'success': False,
-                    'error': 'not_found',
-                    'message': f'Plan with ID {plan_id} not found'
-                }
-            
-            if plan.tool_id.id != tool_id:
-                return {
-                    'success': False,
-                    'error': 'validation_error',
-                    'message': 'Selected plan does not belong to the selected tool'
-                }
-            
-            # Prepare values for creation
-            vals = {
-                'tool_id': tool_id,
-                'plan_id': plan_id,
-                'unlimited_users': unlimited_users,
-                'total_users': total_users if not unlimited_users else 0,
-                'price': price,
-                # owner_id will be set automatically via default lambda
+        # Validate required fields
+        required_fields = ['tool_id', 'plan_id', 'price', 'unlimited_users', 'total_users']
+        missing_fields = [field for field in required_fields if field not in kwargs]
+        
+        if missing_fields:
+            return {
+                'success': False,
+                'error': 'missing_fields',
+                'message': f"Missing required fields: {', '.join(missing_fields)}",
+                'missing_fields': missing_fields
             }
+        
+        # Validate data types and values
+        try:
+            tool_id = int(kwargs.get('tool_id'))
+            plan_id = int(kwargs.get('plan_id'))
+            price = float(kwargs.get('price'))
+            unlimited_users = kwargs.get('unlimited_users', False)
+            total_users = int(kwargs.get('total_users'))
             
-            # Create the record
-            rental_listing = request.env['toolshub.tool.rent.listings'].create(vals)
+            # Convert string 'true'/'false' to boolean if needed
+            if isinstance(unlimited_users, str):
+                unlimited_users = unlimited_users.lower() == 'true'
             
-            # Check if record was created successfully
-            if rental_listing and rental_listing.exists():
-                print(f"Rental listing created successfully: ID {rental_listing.id}")
-                
-                # Read the created record to return complete data
-                listing_data = rental_listing.read()[0]
-                
-                return {
-                    'success': True,
-                    'message': 'Rental listing created successfully',
-                    'data': listing_data,
-                    'listing_id': rental_listing.id
-                }
+            # Only validate total_users if not unlimited
+            if not unlimited_users:
+                if total_users is None:
+                    return {
+                        'success': False,
+                        'error': 'validation_error',
+                        'message': 'total_users is required when unlimited_users is False'
+                    }
+                if total_users <= 0:
+                    return {
+                        'success': False,
+                        'error': 'validation_error',
+                        'message': 'total_users must be greater than 0'
+                    }
             else:
-                print("Failed to create rental listing - record does not exist after creation")
-                return {
-                    'success': False,
-                    'error': 'creation_failed',
-                    'message': 'Failed to create rental listing'
-                }
+                total_users = 0
                 
-        except ValueError as e:
-            print(f"Validation error creating rental listing: {str(e)}")
+        except (ValueError, TypeError) as e:
             return {
                 'success': False,
                 'error': 'validation_error',
-                'message': str(e)
+                'message': f'Invalid data format: {str(e)}'
             }
-            
-        except Exception as e:
-            print(f"Error creating rental listing: {str(e)}", exc_info=True)
+        
+        # Check if tool exists
+        tool = request.env['toolshub.tools'].browse(tool_id)
+        if not tool.exists():
             return {
                 'success': False,
-                'error': 'server_error',
-                'message': f'An error occurred: {str(e)}'
+                'error': 'not_found',
+                'message': f'Tool with ID {tool_id} not found'
             }
-
+        
+        # Check if plan exists and belongs to the tool
+        plan = request.env['toolshub.tool.plans'].browse(plan_id)
+        if not plan.exists():
+            return {
+                'success': False,
+                'error': 'not_found',
+                'message': f'Plan with ID {plan_id} not found'
+            }
+        
+        if plan.tool_id.id != tool_id:
+            return {
+                'success': False,
+                'error': 'validation_error',
+                'message': 'Selected plan does not belong to the selected tool'
+            }
+        
+        # Prepare values for creation
+        vals = {
+            'tool_id': tool_id,
+            'plan_id': plan_id,
+            'unlimited_users': unlimited_users,
+            'total_users': total_users if not unlimited_users else 0,
+            'price': price,
+        }
+        
+        # Create the record
+        # ValidationError will propagate to frontend automatically
+        # Odoo will handle the rollback and error response
+        print("API Creating Rent Listing")
+        rental_listing = request.env['toolshub.tool.rent.listings'].create(vals)
+        
+        # If we reach here, record was created successfully
+        print(f"Rental listing created successfully: ID {rental_listing.id}")
+        
+        # Read the created record to return complete data
+        listing_data = rental_listing.read()[0]
+        
+        return {
+            'success': True,
+            'message': 'Rental listing created successfully',
+            'data': listing_data,
+            'listing_id': rental_listing.id
+        }

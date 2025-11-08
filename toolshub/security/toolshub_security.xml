@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ========================================
+         PORTAL USER RECORD RULES
+         Portal users can only access their own records
+         ======================================== -->
+    
+    <!-- Portal: Read all tools (public/marketplace data) -->
+    <record id="toolshub_tools_portal_rule" model="ir.rule">
+        <field name="name">Portal: All Tools</field>
+        <field name="model_id" ref="model_toolshub_tools"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <!-- Portal: Read all plans (public/marketplace data) -->
+    <record id="toolshub_tool_plans_portal_rule" model="ir.rule">
+        <field name="name">Portal: All Plans</field>
+        <field name="model_id" ref="model_toolshub_tool_plans"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <!-- Portal: Read all plan features (public/marketplace data) -->
+    <record id="toolshub_tool_plan_features_portal_rule" model="ir.rule">
+        <field name="name">Portal: All Plan Features</field>
+        <field name="model_id" ref="model_toolshub_tool_plan_features"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <!-- Portal: Read all listings (marketplace browsing) but only manage own -->
+    <record id="toolshub_rent_listings_portal_read_all_rule" model="ir.rule">
+        <field name="name">Portal: Read All Listings</field>
+        <field name="model_id" ref="model_toolshub_tool_rent_listings"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Portal: Write/Create/Delete ONLY own listings -->
+    <record id="toolshub_rent_listings_portal_own_rule" model="ir.rule">
+        <field name="name">Portal: Own Listings Only</field>
+        <field name="model_id" ref="model_toolshub_tool_rent_listings"/>
+        <field name="domain_force">[('owner_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Portal: Only access own rented tools (as lender) -->
+    <record id="toolshub_rented_tools_portal_lender_rule" model="ir.rule">
+        <field name="name">Portal: Own Subscriptions</field>
+        <field name="model_id" ref="model_toolshub_rented_tools"/>
+        <field name="domain_force">[('lender_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Portal: View subscribers of their own listings -->
+    <record id="toolshub_rented_tools_portal_owner_rule" model="ir.rule">
+        <field name="name">Portal: View Own Listing Subscribers</field>
+        <field name="model_id" ref="model_toolshub_rented_tools"/>
+        <field name="domain_force">[('rent_listing_id.owner_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+</odoo>
