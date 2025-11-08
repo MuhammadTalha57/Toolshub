@@ -2,7 +2,7 @@
 
 import { Component, useState, onWillStart } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { session } from "@web/session";
+// import { session } from "@web/session";
 import { rpc } from "@web/core/network/rpc";
 import { Login } from "./login";
 import { Dashboard } from "./dashboard";
@@ -32,6 +32,7 @@ export class ToolshubApp extends Component {
 
     async checkUserSession() {
         try {
+            const session = await rpc("/web/session/get_session_info");
             console.log("=== Checking User Session ===");
             console.log("Session UID:", session.uid);
             console.log("Session name:", session.name);
@@ -54,7 +55,7 @@ export class ToolshubApp extends Component {
                     is_system: session.is_system || false
                 };
                 
-                this.state.currentPage = 'dashboard';
+                this.state.currentPage = 'rent';
             } else {
                 console.log("✗ No active session - user not logged in");
                 this.state.isAuthenticated = false;
@@ -63,8 +64,10 @@ export class ToolshubApp extends Component {
             }
             
         } catch (error) {
-            console.error("Session check error:", error);
-            // If error, assume not logged in
+
+            if(error.message !== "Session expired") {
+                console.error("Session check error:", error);
+            }
             this.state.isAuthenticated = false;
             this.state.user = null;
         }
