@@ -5,8 +5,8 @@
     <t t-name="toolshub.ListingCard">
         <div class="listing-card scale-in" t-att-class="{ 'own-listing': isOwnListing }">
             <div class="listing-image">
-                <t t-if="props.listing.icon">
-                    <img t-att-src="props.listing.image_url" alt="Tool" style="width: 100%; height: 100%; object-fit: cover;"/>
+                <t t-if="props.listing.tool_img">
+                    <img t-att-src="'data:image/png;base64,' + props.listing.tool_img" alt="image"/>
                 </t>
                 <t t-else="">
                     <i class="fa fa-tools"></i>

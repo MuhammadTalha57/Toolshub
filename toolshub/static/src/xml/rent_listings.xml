@@ -49,7 +49,7 @@
             
             <!-- Create Listing Modal -->
             <!-- <t t-if="state.showCreateModal"> -->
-            <t t-if="0">
+            <t t-if="state.showCreateModal">
                 <div class="modal-overlay" t-on-click.self="closeCreateModal">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -164,8 +164,8 @@
             </t>
 
             <!-- Details Modal -->
-            <!-- <t t-if="state.showDetailsModal and state.selectedListing"> -->
-            <t t-if="0 and 0">
+            <!-- <t t-if="0 and 0"> -->
+            <t t-if="state.showDetailsModal and state.selectedListing">
                 <div class="modal-overlay" t-on-click.self="closeDetailsModal">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -179,8 +179,8 @@
 
                         <div class="modal-body">
                             <div class="listing-image" style="margin-bottom: 1.5rem; border-radius: 1rem; overflow: hidden;">
-                                <t t-if="state.selectedListing.image_url">
-                                    <img t-att-src="state.selectedListing.image_url" alt="Tool" style="width: 100%; height: 250px; object-fit: cover;"/>
+                                <t t-if="state.selectedListing.tool_img">
+                                    <img t-att-src="'data:image/png;base64,' + state.selectedListing.tool_img" alt="image"/>
                                 </t>
                             </div>
 
@@ -201,13 +201,30 @@
                                 </div>
                                 <div class="listing-detail-item">
                                     <i class="fa fa-users"></i>
-                                    <span>
-                                        Available: <strong><t t-esc="state.selectedListing.available_users - state.selectedListing.subscribed_users"/> / <t t-esc="state.selectedListing.available_users"/> slots</strong>
-                                    </span>
+
+                                    <t t-if="state.selectedListing.unlimited_users">
+                                        <span>Unlimited Users</span>
+                                    </t>
+                                    <t t-else="">
+                                        <span>
+                                            <t t-esc="state.selectedListing.available_users"/> / <t t-esc="state.selectedListing.available_users + state.selectedListing.subscribers_count"/> slots available
+                                        </span>
+                                    </t>
+
                                 </div>
                                 <div class="listing-detail-item">
                                     <i class="fa fa-clock"></i>
-                                    <span>Duration: <strong><t t-esc="state.selectedListing.duration_days"/> days</strong></span>
+
+                                    <t t-if="state.selectedListing.unlimited_access">
+                                        <span>Unlimited Access</span>
+                                    </t>
+                                    <t t-else="">
+                                        <span>
+                                            <t t-if="state.selectedListing.duration_years"><t t-esc="state.selectedListing.duration_years"/> Years </t>
+                                            <t t-if="state.selectedListing.duration_months"><t t-esc="state.selectedListing.duration_months"/> Months </t>
+                                            <t t-if="state.selectedListing.duration_days"><t t-esc="state.selectedListing.duration_days"/> Days </t>
+                                        </span>
+                                    </t>
                                 </div>
                             </div>
 
