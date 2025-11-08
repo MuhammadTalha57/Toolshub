@@ -40,7 +40,7 @@ export class RentListings extends Component {
         this.state.loading = true;
         try {
 
-            const listingResult = await rpc("/toolshub/getRentListings")
+            const listingResult = await rpc("/toolshub/api/getRentListings")
 
             console.log("Rent Listings Got: ", listingResult)
 
