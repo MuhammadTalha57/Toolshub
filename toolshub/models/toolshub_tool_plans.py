@@ -41,7 +41,7 @@ class ToolshubToolPlans(models.Model):
     @api.constrains('unlimited_users', 'total_users')
     def _check_total_users(self):
         for record in self:
-            if not record.unlimited_users and record.total_users <= 0:
+            if (not record.unlimited_users) and record.total_users <= 0:
                 raise models.ValidationError("Total Users must be greater than 0 if Unlimited Users is not enabled.")
     
     # Total Users should be greater than or equal to subscribers

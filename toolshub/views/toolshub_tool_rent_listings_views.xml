@@ -16,8 +16,9 @@
                     <group>
                         <field name="tool_id"/>
                         <field name="plan_id"/>
-                        <field name="subscribers_count"/>
                         <field name="unlimited_users"/>
+                        <field name="total_users" invisible="unlimited_users"/>
+                        <field name="subscribers_count"/>
                         <field name="available_users" invisible="unlimited_users"/>
                         <field name="price"/>
                         <field name="owner_id"/>
