@@ -72,8 +72,7 @@ class ToolshubToolRentListings(models.Model):
     @api.onchange('unlimited_users')
     def _onchange_unlimited_users(self):
         self.total_users = 0
-
-    
+        
 
 
     def action_open_rent_wizard(self):
