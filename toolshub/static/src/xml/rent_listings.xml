@@ -46,6 +46,46 @@
                 </div>
             </t>
 
+            <!-- Get Connect ID -->
+            <t t-if="state.showConnectIDModal">
+                <div class="modal-overlay" t-on-click.self="closeConnectIDModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title">
+                                <i class="fa fa-plus-circle"></i>Stripe Connect Account ID
+                            </h2>
+                            <button class="modal-close" t-on-click="closeConnectIDModal">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </div>
+
+                        <form class="modal-body" t-on-submit="handleConnectIDSubmit">
+
+                            <!-- Input -->
+                            <div class="form-group">
+                                <label>Stripe Connect Account ID<span class="required">*</span></label>
+                                <div class="input-group">
+                                    <input 
+                                        type="text"
+                                        class="form-input"
+                                        t-model="state.connectAccountID"
+                                        required="required"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" t-on-click="closeCreateModal">
+                                    Cancel
+                                </button>
+                                <button type="submit" class="btn btn-primary" t-att-disabled="state.validatingConnectACcountID">
+                                    <i class="fa fa-check"></i> Validate
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </t>
             
             <!-- Create Listing Modal -->
             <t t-if="state.showCreateModal">
@@ -144,30 +184,6 @@
                                 />
                             </div>
 
-                            <!-- <div class="form-group">
-                                <label>Duration (Days)</label>
-                                <input 
-                                    type="number"
-                                    class="form-input"
-                                    placeholder="30"
-                                    min="1"
-                                    t-model="state.newListing.duration_days"
-                                    t-on-input="(ev) => this.updateField('duration_days', ev)"
-                                    required="required"
-                                />
-                            </div> -->
-
-                            <!-- <div class="form-group">
-                                <label>Description</label>
-                                <textarea 
-                                    class="form-input"
-                                    rows="3"
-                                    placeholder="Add details about your listing..."
-                                    t-model="state.newListing.description"
-                                    t-on-input="(ev) => this.updateField('description', ev)"
-                                ></textarea>
-                            </div> -->
-
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" t-on-click="closeCreateModal">
                                     Cancel
@@ -182,7 +198,6 @@
             </t>
 
             <!-- Details Modal -->
-            <!-- <t t-if="0 and 0"> -->
             <t t-if="state.showDetailsModal and state.selectedListing">
                 <div class="modal-overlay" t-on-click.self="closeDetailsModal">
                     <div class="modal-content">

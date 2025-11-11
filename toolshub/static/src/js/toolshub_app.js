@@ -8,6 +8,7 @@ import { Login } from "./login";
 import { Dashboard } from "./dashboard";
 import { Navbar } from "./navbar";
 import { RentListings } from "./rent_listings";
+import { useService } from "@web/core/utils/hooks";
 
 export class ToolshubApp extends Component {
     static template = "toolshub.ToolshubApp";
@@ -19,6 +20,8 @@ export class ToolshubApp extends Component {
     };
 
     setup() {
+        this.notification = useService("notification");
+
         this.state = useState({
             currentPage: 'rent',
             isAuthenticated: false,
@@ -53,9 +56,10 @@ export class ToolshubApp extends Component {
                     partner_id: session.partner_id,
                     is_admin: session.is_admin || false,
                     is_system: session.is_system || false
+
                 };
                 
-                this.state.currentPage = 'rent';
+                this.handleLoginSuccess(this.state.user);
             } else {
                 console.log("✗ No active session - user not logged in");
                 this.state.isAuthenticated = false;
@@ -73,12 +77,38 @@ export class ToolshubApp extends Component {
         }
     }
 
-    handleLoginSuccess(user) {
+    async handleLoginSuccess(user) {
         console.log("=== HANDLING LOGIN SUCCESS ===");
-        
-        this.state.isAuthenticated = true;
-        this.state.user = user;
-        this.state.currentPage = 'rent';
+
+        try {
+
+            const userId = user.id;
+            const connectIDResult = await rpc("/toolshub/api/getUserStripeAccount", {userId});
+
+            if(connectIDResult.success) {
+
+                user.stripe_connect_account_id = connectIDResult.data.stripe_connect_account_id;
+                this.state.isAuthenticated = true;
+                this.state.user = user;
+                this.state.currentPage = 'rent';
+            }
+            else {
+                this.notification.add(
+                connectIDResult.data.message, {
+                'type': 'warning',
+                'title': "Error"
+            });
+            }
+
+
+
+        } catch (error) {
+            this.notification.add(
+                "Error getting Stripe account", {
+                'type': 'Danger',
+                'title': "Error"
+            });
+        }
 
     }
 

@@ -87,7 +87,7 @@ export class Login extends Component {
             const result = data.result;
 
             if (result && result.uid) {
-                console.log("✓ Successfully Logged in");
+                console.log("✓ Successfully Logged in", result);
                 
                 const userInfo = {
                     id: result.uid,

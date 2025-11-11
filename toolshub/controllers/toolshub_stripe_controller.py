@@ -99,3 +99,48 @@ class StripePaymentController(http.Controller):
                 }
             }
     
+    @http.route('/toolshub/validateConnectAccount', type='json', auth='user', methods=['POST'])
+    def validate_connect_account(self, **kwargs):
+        connect_id = kwargs.get("connect_id")
+        if not connect_id:
+            return {
+                "success": False,
+                "data": {
+                    'message': "No Connect Account ID Provided",
+                }
+            }
+
+        try:
+            # Initialize Stripe
+            stripe.api_key = request.env['ir.config_parameter'].sudo().get_param('stripe_api_key', '')
+
+            stripe.Account.retrieve(connect_id)
+
+            user = request.env.user  # current user
+            user.write({
+                "stripe_connect_account_id": connect_id
+            })
+
+            return {
+                "success": True, 
+                "data": {
+                    "message": "Account Added Successfully"
+                }
+                }
+        
+        except stripe._error.StripeError as e:
+            return {
+                "success": False, 
+                "data": {
+                    'message': "Stripe Connect account not found",
+                    'error': ''
+                }
+            }
+        except Exception as e:
+            return {
+                "success": False, 
+                "data": {
+                    'message': "Unexpected Error Occured",
+                    'error': str(e)
+                }
+            }

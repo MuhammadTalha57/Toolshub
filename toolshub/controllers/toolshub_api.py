@@ -395,3 +395,36 @@ class ToolshubAPI(http.Controller):
             'data': listing_data,
             'listing_id': rental_listing.id
         }
+
+    @http.route('/toolshub/api/getUserStripeAccount', type='json', auth='user', methods=['POST'])
+    def get_user_stripe_account(self, **kwargs):
+        """
+        Get user's Stripe Connect account ID
+        
+        :param user_id: int, user ID (optional, defaults to current user)
+        :return: dict with stripe_connect_account_id
+        """
+        try:
+            # If no user_id provided, use current user
+            user = request.env.user
+            
+            # Get stripe_connect_account_id, return empty string if None
+            stripe_account_id = user.stripe_connect_account_id or ''
+            
+            return {
+                'success': True,
+                'data': {
+                    'stripe_connect_account_id': stripe_account_id
+                }
+            }
+            
+        except Exception as e:
+            print(f"Error getting user stripe account: {str(e)}")
+            return {
+                'success': False,
+                'data': {
+                    'error': str(e),
+                    'message': 'Failed to fetch user stripe account'
+                }
+            }
+

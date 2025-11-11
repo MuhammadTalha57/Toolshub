@@ -27,6 +27,9 @@ export class RentListings extends Component {
             showDetailsModal: false,
             selectedListing: null,
             creating: false,
+            showConnectIDModal: false,
+            connectAccountID: '',
+            validatingConnectAccountID: false,
             newListing: {
                 tool_id: '',
                 plan_id: '',
@@ -101,18 +104,69 @@ export class RentListings extends Component {
         return this.state.tools.find(t => t.id == this.state.newListing.tool_id);
     }
 
+
     get availablePlans() {
         return this.selectedTool?.plan_ids || [];
     }
 
     openCreateModal() {
-        this.loadTools();
-        this.state.showCreateModal = true;
+        if(!this.props.user.stripe_connect_account_id) {
+            this.state.showConnectIDModal = true;
+        }
+        else {
+            this.loadTools();
+            this.state.showCreateModal = true;
+        }
     }
 
     closeCreateModal() {
         this.state.showCreateModal = false;
         this.resetForm();
+    }
+
+    closeConnectIDModal() {
+        this.state.showConnectIDModal = false;
+        this.state.connectAccountID = ''
+    }
+
+    async handleConnectIDSubmit(ev) {
+        ev.preventDefault();
+
+        this.state.validatingConnectAccountID = true;
+        const connect_id = this.state.connectAccountID;
+
+        try {
+            const validationResult = await rpc("/toolshub/validateConnectAccount", {connect_id});
+
+            if(validationResult.success) {
+                // Valid Account
+                this.notification.add(validationResult.data.message, {
+                type: "success",
+                title: "Validated Successfully!"
+                });
+                this.closeConnectIDModal();
+                this.props.user.stripe_connect_account_id = connect_id
+
+            }
+            else if(!validationResult.data.error) {
+                // Invalid Account
+                this.notification.add(validationResult.data.message, {
+                type: "warning",
+                title: "Validation Failed"
+            });
+
+            }
+
+        } catch (error) {
+            console.error(error);
+            this.notification.add("An unexpected error occurred. Please try again.", {
+                type: "danger",
+                title: "Server Error"
+            });
+        } finally {
+            this.state.validatingConnectAccountID = false;
+        }
+
     }
 
     resetForm() {
@@ -127,6 +181,7 @@ export class RentListings extends Component {
     }
 
     updateField(field, ev) {
+
         const value = ['price', 'total_users'].includes(field)
             ? parseFloat(ev.target.value) || 0
             : ev.target.value;
@@ -205,25 +260,6 @@ export class RentListings extends Component {
         } finally {
             this.state.creating = false;
         }
-
-        // const tool = this.state.tools.find(t => t.id == this.state.newListing.tool_id);
-        // const plan = tool?.plans.find(p => p.id == this.state.newListing.plan_id);
-
-        // if (!tool || !plan) return;
-
-        // const listingData = {
-        //     ...this.state.newListing,
-        //     tool_name: tool.name,
-        //     plan_name: plan.name,
-        //     image_url: tool.image_url,
-        //     owner_name: this.props.user?.name || 'You'
-        // };
-
-        // const result = await api.createRentListing(listingData);
-        // if (result.success) {
-        //     await this.loadData();
-        //     this.closeCreateModal();
-        // }
     }
 
     viewListing(listing) {
