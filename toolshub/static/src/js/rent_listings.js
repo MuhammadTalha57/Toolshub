@@ -278,25 +278,23 @@ export class RentListings extends Component {
     }
 
     async rentListing(listing) {
-        if (confirm(`Rent ${listing.tool_name} - ${listing.plan_name} for $${listing.price}?`)) {
-            try {
-                
-                console.log("PAssing listing", {listing});
-                const paymentResult = await rpc("/toolshub/processRentPayment", {listing});
-                if(paymentResult.success) {
-                    console.log("REDIRECTING USER TO CHECKOUT SESSION");
-                    window.location.href = paymentResult.data.checkout_url; // Redirect to Stripe Checkout
-                }
-                else {
-                    this.notification.add(paymentResult.data.message, {
-                    type: "danger",
-                    title: "Server Error"
-                    });
+        try {
+            
+            console.log("Passing listing", {listing});
+            const paymentResult = await rpc("/toolshub/processRentPayment", {listing});
+            if(paymentResult.success) {
+                console.log("REDIRECTING USER TO CHECKOUT SESSION");
+                window.location.href = paymentResult.data.checkout_url; // Redirect to Stripe Checkout
             }
+            else {
+                this.notification.add(paymentResult.data.message, {
+                type: "danger",
+                title: "Server Error"
+                });
+        }
 
-            } catch (error) {
-                console.error('Error Processing Payment:', error);
-            }
+        } catch (error) {
+            console.error('Error Processing Payment:', error);
         }
     }
 

@@ -155,7 +155,7 @@ class ToolshubAPI(http.Controller):
                     'id': tool.id,
                     'name': tool.name,
                     'icon': tool.icon,  # Base64 encoded image
-                    'imageUrl': tool.imageUrl,
+                    'image_url': tool.image_url,
                     'plan_ids': plans_data,  # Now it's a proper list of dicts
                     'plans_count': len(plans_data)
                 })

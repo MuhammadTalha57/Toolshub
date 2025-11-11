@@ -16,8 +16,8 @@ export class Navbar extends Component {
     get pages() {
         return [
             { id: 'rent', label: 'Rent Tools', icon: 'fa-store' },
-            { id: 'groupbuy', label: 'Group Buy', icon: 'fa-users' },
-            { id: 'addtool', label: 'Add Tool', icon: 'fa-plus-circle' }
+            // { id: 'groupbuy', label: 'Group Buy', icon: 'fa-users' },
+            // { id: 'addtool', label: 'Add Tool', icon: 'fa-plus-circle' }
         ];
     }
 

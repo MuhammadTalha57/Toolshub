@@ -6,10 +6,11 @@
 :root {
     /* Light Mode Colors */
     // --bg-primary: #f8f9fa;
-    --bg-primary: #d2d8df;
+    // --bg-primary: #d2d8df;
+    --bg-primary: #f1f1f1;
     --bg-secondary: #ffffff;
-    // --bg-tertiary: #f1f3f5;
-    --bg-tertiary: #c5cacf;
+    --bg-tertiary: #f7f2f2;
+    // --bg-tertiary: #c5cacf;
     --text-primary: #212529;
     --text-secondary: #6c757d;
     --text-muted: #adb5bd;
@@ -17,20 +18,24 @@
     --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
-    --primary-color: #6366f1;
+    // --primary-color: #6366f1;
+    --primary-color: #070707;
     --primary-hover: #4f46e5;
     --secondary-color: #8b5cf6;
     --success-color: #10b981;
     --warning-color: #f59e0b;
     --danger-color: #ef4444;
     --info-color: #3b82f6;
-    --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    // --gradient-primary: linear-gradient(135deg, #8397ec 0%, #9d74c5 100%);
+    --gradient-primary: linear-gradient(135deg, #070707 0%, #2e2d2e 100%);
     --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    // --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --gradient-success: linear-gradient(135deg, #7abaf3 0%, hwb(183 60% 1%) 100%);
 }
 
 [data-theme="dark"] {
     /* Dark Mode Colors */
+    --primary-color: #6366f1;
     --bg-primary: #0f172a;
     --bg-secondary: #1e293b;
     --bg-tertiary: #334155;
@@ -38,6 +43,8 @@
     --text-secondary: #cbd5e1;
     --text-muted: #64748b;
     --border-color: #334155;
+    --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
     --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
     --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
@@ -55,7 +62,7 @@
     background-color: var(--bg-primary);
     color: var(--text-primary);
     min-height: 100vh;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    // transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Animations */
@@ -260,8 +267,8 @@
     right: -50%;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-    animation: pulse 4s ease-in-out infinite;
+    // background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    // animation: pulse 4s ease-in-out infinite;
 }
 
 .auth-card {
