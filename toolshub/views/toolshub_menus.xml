@@ -17,7 +17,4 @@
     <!-- Rented Tools menu -->
     <menuitem id="toolshub_rented_tools_menu" name="Rented Tools" parent="toolshub_root_menu" action="toolshub_rented_tools_action" />
 
-    <!-- Stripe Seller Account Menu-->
-    <!-- <menuitem id="toolshub_stripe_res_partner_account_menu" name="Stripe Account" parent="toolshub_root_menu" action="toolshub_res_partner_stripe_action" /> -->
-
 </odoo>

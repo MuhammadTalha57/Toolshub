@@ -39,9 +39,6 @@
                         <field name="is_unlimited"/> 
                         <notebook>
                             <page string="Duration" invisible="is_unlimited">
-                                <!-- <label for="duration_years" string="Year(s)"/>
-                                <label for="duration_months" string="Month(s)"/>
-                                <label for="duration_days" string="Day(s)"/> -->
                                 <group>
                                     <field name="duration_years"></field>
                                     <field name="duration_months"></field>
