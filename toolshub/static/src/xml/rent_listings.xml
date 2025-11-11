@@ -220,7 +220,7 @@
                         <div class="modal-body">
                             <div class="listing-image" style="margin-bottom: 1.5rem; border-radius: 1rem; overflow: hidden;">
                                 <t t-if="state.selectedListing.tool_img">
-                                    <img t-att-src="'data:image/png;base64,' + state.selectedListing.tool_img" alt="image"/>
+                                    <img t-att-src="state.selectedListing.tool_img_url" alt="image"/>
                                 </t>
                             </div>
 

@@ -51,6 +51,7 @@ class ToolshubAPI(http.Controller):
                     'tool_id': listing.tool_id.id if listing.tool_id else None,
                     'tool_name': listing.tool_id.name if listing.tool_id else '',
                     'tool_img': listing.tool_id.icon,
+                    'tool_img_url': listing.tool_id.image_url,
                     'plan_id': listing.plan_id.id if listing.plan_id else None,
                     'plan_name': listing.plan_id.name if listing.plan_id else '',
                     'unlimited_access': listing.plan_id.is_unlimited,
@@ -154,7 +155,7 @@ class ToolshubAPI(http.Controller):
                     'id': tool.id,
                     'name': tool.name,
                     'icon': tool.icon,  # Base64 encoded image
-                    'url': tool.url,
+                    'imageUrl': tool.imageUrl,
                     'plan_ids': plans_data,  # Now it's a proper list of dicts
                     'plans_count': len(plans_data)
                 })

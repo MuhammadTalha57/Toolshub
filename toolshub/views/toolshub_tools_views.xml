@@ -10,7 +10,7 @@
             <list string="Tools">
                 <field name="name"/>
                 <field name="icon" widget="image" width="64"/>
-                <field name="url"/>
+                <field name="image_url"/>
             </list>
         </field>
     </record>
@@ -27,7 +27,7 @@
                     </h1>
                     <group>
                         <field name="icon" widget="image" width="64"/>
-                        <field name="url"/>
+                        <field name="image_url"/>
                     </group>
                 </sheet>
             </form>

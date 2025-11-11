@@ -6,7 +6,7 @@
         <div class="listing-card scale-in" t-att-class="{ 'own-listing': isOwnListing, 'inactive': !props.listing.is_active }">
             <div class="listing-image">
                 <t t-if="props.listing.tool_img">
-                    <img t-att-src="'data:image/png;base64,' + props.listing.tool_img" alt="image"/>
+                    <img t-att-src="props.listing.tool_img_url" alt="image"/>
                 </t>
                 <t t-else="">
                     <i class="fa fa-tools"></i>
