@@ -38,8 +38,26 @@ export class RentListings extends Component {
 
         onMounted(() => {
             this.loadRentListings();
+            this.handleStripeRedirect();
         });
     }
+
+    handleStripeRedirect() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get("status");
+
+        if (status === "success") {
+            this.notification.add("Payment successful. Thank you!", {
+                type: "success",
+                title: "Payment Success",
+            });
+        } else if (status === "cancelled") {
+            this.notification.add("Payment was cancelled.", {
+                type: "warning",
+                title: "Payment Cancelled",
+            });
+        }
+}
 
     async loadRentListings() {
         this.state.loading = true;
@@ -220,12 +238,19 @@ export class RentListings extends Component {
 
     async rentListing(listing) {
         if (confirm(`Rent ${listing.tool_name} - ${listing.plan_name} for $${listing.price}?`)) {
-            const result = await api.rentListing(listing.id);
-            if (result.success) {
-                alert(result.message);
-                await this.loadData();
-                this.closeDetailsModal();
+            try {
+
+                await rpc("/toolshub/process-rental-payment");
+
+            } catch (error) {
+                console.error('Error Processing Payment:', error);
             }
+            // const result = await api.rentListing(listing.id);
+            // if (result.success) {
+            //     alert(result.message);
+            //     await this.loadData();
+            //     this.closeDetailsModal();
+            // }
         }
     }
 

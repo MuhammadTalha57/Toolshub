@@ -14,8 +14,8 @@ class StripeWebhook(http.Controller):
         """Get Stripe keys from Odoo system parameters"""
         IrConfigParam = request.env['ir.config_parameter'].sudo()
         return {
-            'secret_key': IrConfigParam.get_param('stripe.secret_key', ''),
-            'webhook_secret': IrConfigParam.get_param('stripe.webhook_secret', '')
+            'secret_key': IrConfigParam.get_param('stripe_api_key', ''),
+            'webhook_secret': IrConfigParam.get_param('stripe_webhook_key', '')
         }
     
     @http.route('/stripe/webhook', type='http', auth='public', methods=['POST'], csrf=False)
@@ -30,14 +30,6 @@ class StripeWebhook(http.Controller):
         
         payload = request.httprequest.data
         sig_header = request.httprequest.headers.get('Stripe-Signature')
-        
-        print("="*50)
-        print("📨 Received Stripe Webhook")
-        print("="*50)
-        
-        # Debug logging
-        print(f"Webhook secret exists: {bool(keys['webhook_secret'])}")
-        print(f"Signature header exists: {bool(sig_header)}")
         
         try:
             # Verify webhook signature
@@ -116,22 +108,22 @@ class StripeWebhook(http.Controller):
         print(f"Processing checkout: {session}")
         # Your business logic here
         
-    def _handle_payment_success(self, payment_intent):
-        """Handle successful payment"""
-        print(f"Processing payment: {payment_intent}")
-        # Your business logic here
+    # def _handle_payment_success(self, payment_intent):
+    #     """Handle successful payment"""
+    #     print(f"Processing payment: {payment_intent}")
+    #     # Your business logic here
         
-    def _handle_payment_failed(self, payment_intent):
-        """Handle failed payment"""
-        print(f"Payment failed: {payment_intent}")
-        # Your business logic here
+    # def _handle_payment_failed(self, payment_intent):
+    #     """Handle failed payment"""
+    #     print(f"Payment failed: {payment_intent}")
+    #     # Your business logic here
         
-    def _handle_subscription_created(self, subscription):
-        """Handle new subscription"""
-        print(f"Processing subscription: {subscription}")
-        # Your business logic here
+    # def _handle_subscription_created(self, subscription):
+    #     """Handle new subscription"""
+    #     print(f"Processing subscription: {subscription}")
+    #     # Your business logic here
         
-    def _handle_subscription_deleted(self, subscription):
-        """Handle cancelled subscription"""
-        print(f"Subscription cancelled: {subscription}")
-        # Your business logic here
+    # def _handle_subscription_deleted(self, subscription):
+    #     """Handle cancelled subscription"""
+    #     print(f"Subscription cancelled: {subscription}")
+    #     # Your business logic here

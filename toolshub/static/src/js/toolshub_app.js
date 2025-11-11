@@ -78,7 +78,7 @@ export class ToolshubApp extends Component {
         
         this.state.isAuthenticated = true;
         this.state.user = user;
-        this.state.currentPage = 'dashboard';
+        this.state.currentPage = 'rent';
 
     }
 

@@ -5,17 +5,6 @@
     ],
     "application": True,
     "installable": True,
-    # 'assets': {
-
-    #     'toolshub.assets': [
-    #         ('include', 'web._assets_helpers'),
-    #         'web/static/src/scss/pre_variables.scss',
-    #         'web/static/lib/bootstrap/scss/_variables.scss',
-    #         ('include', 'web._assets_bootstrap'),
-    #         ('include', 'web._assets_core'),
-    #         'toolshub/static/src/**/*',
-    #     ],
-    # },
 
     'assets': {
 
@@ -93,10 +82,8 @@
         "views/toolshub_tools_views.xml",
         "views/toolshub_tool_plans_views.xml",
         "views/toolshub_tool_plan_features_views.xml",
-        "views/toolshub_res_partner_stripe_views.xml",
         "views/toolshub_tool_rent_listings_views.xml",
         "views/toolshub_rented_tools_views.xml",
-        "views/toolshub_rent_payment_wizard_views.xml",
         "views/toolshub_menus.xml",
         "views/toolshub_main_template.xml",
     ]

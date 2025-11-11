@@ -37,7 +37,7 @@ class ToolshubToolRentListings(models.Model):
     def _check_unlimited_users(self):
         for record in self:
             if (not record.plan_id.unlimited_users) and record.unlimited_users:
-                raise ValidationError("ERR: Selected Plan doesn't allow Unlimited Users.")
+                raise ValidationError("Selected Plan doesn't allow Unlimited Users.")
 
     @api.constrains("subscribers_count", "plan_id", "unlimited_users")
     def _check_subscribers_count(self):
