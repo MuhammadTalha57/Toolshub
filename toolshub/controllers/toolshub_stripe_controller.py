@@ -1,10 +1,10 @@
-# controllers/stripe_payment.py
+import logging
+
 import stripe
 from odoo import http
 from odoo.http import request
-# import logging
 
-# _logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 class StripePaymentController(http.Controller):
     
@@ -13,12 +13,14 @@ class StripePaymentController(http.Controller):
         """
         Process a rental payment with Stripe Connect
         """
-        print("CONTROLLER", kwargs)
+        _logger.info("HIT /toolshub/processRentPayment, Processing Rent Payment")
+        _logger.debug(f"Request kwargs: {kwargs}")
+        
         listing = kwargs.get('listing')
-        print(f"Got Listing {listing}")
+        _logger.debug(f"Got Listing {listing}")
 
         if not listing:
-            print("NO LISTING")
+            _logger.error("No Rent Listing Selected")
             return {
                 'success': False,
                 'data': {
@@ -30,13 +32,14 @@ class StripePaymentController(http.Controller):
         # Initialize Stripe
         stripe.api_key = request.env['ir.config_parameter'].sudo().get_param('stripe_api_key', '')
         
-        print("Creating Checkout Session")
+        _logger.debug("Creating Checkout Session")
         try:
-            # HARDCODED TEST VALUES
             SELLER_STRIPE_ACCOUNT = listing['owner_connect_account_id']
             RENTAL_AMOUNT = listing['price']
             PLATFORM_FEE_PERCENT = 5  # Platform takes 5%
             PLATFORM_FEE = int(RENTAL_AMOUNT * PLATFORM_FEE_PERCENT / 100)
+            
+            _logger.debug(f"Seller Account: {SELLER_STRIPE_ACCOUNT}, Amount: {RENTAL_AMOUNT}, Platform Fee: {PLATFORM_FEE}")
             
             # Create Stripe Checkout Session
             session = stripe.checkout.Session.create(
@@ -63,14 +66,15 @@ class StripePaymentController(http.Controller):
                 },
                 metadata={
                     'tool_name': listing['tool_name'],
-                    'tool_name': listing['plan_name'],
+                    'plan_name': listing['plan_name'],
                     'user_id': str(request.env.user.id),
                     'user_email': request.env.user.email,
                     'seller_account': SELLER_STRIPE_ACCOUNT,
                 }
             )
 
-            print("Created Checkout Session")
+            _logger.info("Checkout Session Created Successfully")
+            _logger.debug(f"Session ID: {session.id}")
             
             return {
                 'success': True,
@@ -81,7 +85,7 @@ class StripePaymentController(http.Controller):
             }
             
         except stripe._error.StripeError as e:
-            print(f"Stripe error: {str(e)}")
+            _logger.error(f"Stripe error: {str(e)}")
             return {
                 'success': False,
                 'data': {
@@ -90,19 +94,24 @@ class StripePaymentController(http.Controller):
                 }
             }
         except Exception as e:
-            print(f"Error: {str(e)}")
+            _logger.error(f"Unexpected error: {str(e)}")
             return {
                 'success': False,
                 'data': {
-                    'message': "Unexpected Error Occured",
+                    'message': "An Error Occured",
                     'error': str(e)
                 }
             }
     
     @http.route('/toolshub/validateConnectAccount', type='json', auth='user', methods=['POST'])
     def validate_connect_account(self, **kwargs):
+        _logger.info("HIT /toolshub/validateConnectAccount, Validating Connect Account")
+        
         connect_id = kwargs.get("connect_id")
+        _logger.debug(f"Connect ID: {connect_id}")
+        
         if not connect_id:
+            _logger.error("No Connect Account ID Provided")
             return {
                 "success": False,
                 "data": {
@@ -114,33 +123,38 @@ class StripePaymentController(http.Controller):
             # Initialize Stripe
             stripe.api_key = request.env['ir.config_parameter'].sudo().get_param('stripe_api_key', '')
 
+            _logger.debug(f"Retrieving Stripe Account: {connect_id}")
             stripe.Account.retrieve(connect_id)
 
-            user = request.env.user  # current user
+            user = request.env.user
+            _logger.debug(f"Updating user {user.id} with Connect Account ID")
             user.write({
                 "stripe_connect_account_id": connect_id
             })
 
+            _logger.info("Connect Account Validated and Added Successfully")
             return {
                 "success": True, 
                 "data": {
                     "message": "Account Added Successfully"
                 }
-                }
+            }
         
         except stripe._error.StripeError as e:
+            _logger.error(f"Stripe error: {str(e)}")
             return {
                 "success": False, 
                 "data": {
                     'message': "Stripe Connect account not found",
-                    'error': ''
+                    'error': str(e)
                 }
             }
         except Exception as e:
+            _logger.error(f"Unexpected error: {str(e)}")
             return {
                 "success": False, 
                 "data": {
-                    'message': "Unexpected Error Occured",
+                    'message': "An Error Occured",
                     'error': str(e)
                 }
             }
@@ -148,16 +162,21 @@ class StripePaymentController(http.Controller):
     @http.route('/toolshub/createConnectAccount', type='json', auth='user', methods=['POST'], csrf=False)
     def create_stripe_connect_account(self, **kwargs):
         """Create Stripe Connect account and redirect user to onboarding"""
+        _logger.info("HIT /toolshub/createConnectAccount, Creating Stripe Connect Account")
+        
         try:
             # Set your Stripe API key
             stripe.api_key = request.env['ir.config_parameter'].sudo().get_param('stripe_api_key', '')
             
             current_user = request.env.user
+            _logger.debug(f"Current user: {current_user.id} - {current_user.email}")
             
             # Check if user already has an account
             if current_user.stripe_connect_account_id:
                 account_id = current_user.stripe_connect_account_id
+                _logger.debug(f"User already has Connect Account: {account_id}")
             else:
+                _logger.debug("Creating new Stripe Connect Account")
                 # Create a new Connected Account
                 account = stripe.Account.create(
                     type='express',
@@ -169,19 +188,25 @@ class StripePaymentController(http.Controller):
                     }
                 )
                 account_id = account.id
+                _logger.debug(f"Created Connect Account: {account_id}")
                 
                 # Save account ID to user
                 current_user.sudo().write({
                     'stripe_connect_account_id': account_id
                 })
+                _logger.debug(f"Saved Connect Account ID to user {current_user.id}")
             
             # Generate onboarding link
+            _logger.debug(f"Generating onboarding link for account: {account_id}")
             account_link = stripe.AccountLink.create(
                 account=account_id,
                 refresh_url=request.httprequest.host_url + 'toolshub',
                 return_url=request.httprequest.host_url + 'toolshub?connectAccountStatus=success',
                 type='account_onboarding',
             )
+            
+            _logger.info("Stripe Connect Account Created and Onboarding Link Generated Successfully")
+            _logger.debug(f"Onboarding URL: {account_link.url}")
             
             # Return onboarding link to frontend
             return {
@@ -191,12 +216,21 @@ class StripePaymentController(http.Controller):
                 }
             }
             
-        except Exception as e:
-            print(f"Stripe Connect Error: {str(e)}")
+        except stripe._error.StripeError as e:
+            _logger.error(f"Stripe Connect Error: {str(e)}")
             return {
                 'success': False,
                 'data': {
-                    'message': 'An Error Occured',
+                    'message': 'Stripe Error Occurred',
+                    'error': str(e)
+                }
+            }
+        except Exception as e:
+            _logger.error(f"Unexpected error: {str(e)}")
+            return {
+                'success': False,
+                'data': {
+                    'message': 'An Error Occurred',
                     'error': str(e)
                 }
             }
