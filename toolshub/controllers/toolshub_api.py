@@ -179,13 +179,9 @@ class ToolshubAPI(http.Controller):
     def get_plans(self, filters=None, limit=None, offset=0):
         """
         Get tool plans with optional filters
-        
-        :param filters: dict of filters (e.g., {'tool_id': 1, 'search': 'premium', 'unlimited_users': True})
-        :param limit: int, limit number of results
-        :param offset: int, offset for pagination
-        :return: dict with plans data
         """
-        print("Getting Plans")
+
+        _logger.info("HIT /toolshub/api/getPlans, Getting Plans")
         try:
             domain = []
             
@@ -241,7 +237,8 @@ class ToolshubAPI(http.Controller):
             # Get plans with pagination
             plans = Plan.search(domain, limit=limit, offset=offset, order='tool_id asc, price asc')
             
-            print(f"Found {total_count} plans, returning {len(plans)}")
+            _logger.debug(f"Total Count of Tools: {total_count}")
+            _logger.debug(f"Plans: {plans}")
             
             # Format data
             plans_data = []
@@ -277,18 +274,19 @@ class ToolshubAPI(http.Controller):
             
             return {
                 'success': True,
-                'data': plans_data,
-                'total_count': total_count,
-                'limit': limit,
-                'offset': offset
+                'data': {
+                    'plans': plans_data
+                },
             }
             
         except Exception as e:
-            print(f"Error getting plans: {str(e)}")
+            _logger.error(str(e))
             return {
                 'success': False,
-                'error': str(e),
-                'message': 'Failed to fetch plans'
+                'data': {
+                    'message': "Failed to get Plans",
+                    'error': str(e)
+                }
             }
 
     @http.route('/toolshub/api/createRentListing', type='json', auth='user', methods=['POST'])
@@ -302,11 +300,12 @@ class ToolshubAPI(http.Controller):
         missing_fields = [field for field in required_fields if field not in kwargs]
         
         if missing_fields:
+            _logger.error("Missing Arguments while creating rent listing")
             return {
                 'success': False,
-                'error': 'missing_fields',
-                'message': f"Missing required fields: {', '.join(missing_fields)}",
-                'missing_fields': missing_fields
+                'data': {
+                    'message': "Required Parameters are missing",
+                }
             }
         
         # Validate data types and values
@@ -326,14 +325,16 @@ class ToolshubAPI(http.Controller):
                 if total_users is None:
                     return {
                         'success': False,
-                        'error': 'validation_error',
-                        'message': 'total_users is required when unlimited_users is False'
+                        'data': {
+                            'message': 'total_users is required when unlimited_users is False',
+                        }
                     }
                 if total_users <= 0:
                     return {
                         'success': False,
-                        'error': 'validation_error',
-                        'message': 'total_users must be greater than 0'
+                        'data': {
+                            'message': 'total_users must be greater than 0',
+                        }
                     }
             else:
                 total_users = 0
@@ -341,8 +342,10 @@ class ToolshubAPI(http.Controller):
         except (ValueError, TypeError) as e:
             return {
                 'success': False,
-                'error': 'validation_error',
-                'message': f'Invalid data format: {str(e)}'
+                'data': {
+                    'message': f'Invalid data format: {str(e)}',
+                    'error': str(e)
+                }
             }
         
         # Check if tool exists
@@ -350,8 +353,9 @@ class ToolshubAPI(http.Controller):
         if not tool.exists():
             return {
                 'success': False,
-                'error': 'not_found',
-                'message': f'Tool with ID {tool_id} not found'
+                'data': {
+                    'message': f'Selected Tool Not Found'
+                }
             }
         
         # Check if plan exists and belongs to the tool
@@ -359,15 +363,17 @@ class ToolshubAPI(http.Controller):
         if not plan.exists():
             return {
                 'success': False,
-                'error': 'not_found',
-                'message': f'Plan with ID {plan_id} not found'
+                'data': {
+                    'message': f'Selected Plan Not Found'
+                }
             }
         
         if plan.tool_id.id != tool_id:
             return {
                 'success': False,
-                'error': 'validation_error',
-                'message': 'Selected plan does not belong to the selected tool'
+                'data': {
+                    'message': f'Selected plan does not belong to the selected tool'
+                }
             }
         
         # Prepare values for creation
@@ -380,22 +386,21 @@ class ToolshubAPI(http.Controller):
         }
         
         # Create the record
-        # ValidationError will propagate to frontend automatically
-        # Odoo will handle the rollback and error response
-        print("API Creating Rent Listing")
+
         rental_listing = request.env['toolshub.tool.rent.listings'].create(vals)
         
         # If we reach here, record was created successfully
-        print(f"Rental listing created successfully: ID {rental_listing.id}")
+        _logger.debug(f"Rental listing created successfully: ID {rental_listing.id}")
+        _logger.info("Rent Listing Created Successfully")
         
         # Read the created record to return complete data
         listing_data = rental_listing.read()[0]
         
         return {
             'success': True,
-            'message': 'Rental listing created successfully',
-            'data': listing_data,
-            'listing_id': rental_listing.id
+            'data': {
+                'message': 'Rental listing created successfully'
+            }
         }
 
     @http.route('/toolshub/api/getUserStripeAccount', type='json', auth='user', methods=['POST'])

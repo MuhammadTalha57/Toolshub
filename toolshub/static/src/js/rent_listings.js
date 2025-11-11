@@ -215,8 +215,6 @@ export class RentListings extends Component {
 
     async handleCreateListing(ev) {
         ev.preventDefault();
-
-        console.log("Creating Rent Listing", this.state.newListing);
         
         if (!this.state.newListing.tool_id || !this.state.newListing.plan_id) {
             this.notification.add("Please select a tool and plan", {
@@ -242,12 +240,12 @@ export class RentListings extends Component {
             const result = await rpc("/toolshub/api/createRentListing", this.state.newListing);
     
             if(result.success) {
-                this.notification.add("Rent Listing Created Successfully!", {type: "success", title: "Listing Created"});
+                this.notification.add(result.data.message, {type: "success", title: "Listing Created"});
                 this.loadRentListings();
                 this.closeCreateModal();
             }
             else {
-                this.notification.add(result.message || "Failed to create listing", {type: "danger", title: "Error", sticky: true});
+                this.notification.add(result.data.message , {type: "danger", title: "Error"});
             }
 
         } catch (error) {
@@ -262,7 +260,7 @@ export class RentListings extends Component {
             // Error notification
             this.notification.add("An unexpected error occurred. Please try again.", {
                 type: "danger",
-                title: "Server Error"
+                title: "Error"
             });
 
         } finally {
