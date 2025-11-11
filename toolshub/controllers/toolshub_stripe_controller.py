@@ -53,8 +53,8 @@ class StripePaymentController(http.Controller):
                     'quantity': 1,
                 }],
                 mode='payment',
-                success_url='http://localhost:8069/toolshub?status=success',
-                cancel_url='http://localhost:8069/toolshub?status=cancelled',
+                success_url='http://localhost:8069/toolshub?paymentStatus=success',
+                cancel_url='http://localhost:8069/toolshub?paymentStatus=cancelled',
                 payment_intent_data={
                     'application_fee_amount': PLATFORM_FEE,
                     'transfer_data': {
@@ -141,6 +141,62 @@ class StripePaymentController(http.Controller):
                 "success": False, 
                 "data": {
                     'message': "Unexpected Error Occured",
+                    'error': str(e)
+                }
+            }
+
+    @http.route('/toolshub/createConnectAccount', type='json', auth='user', methods=['POST'], csrf=False)
+    def create_stripe_connect_account(self, **kwargs):
+        """Create Stripe Connect account and redirect user to onboarding"""
+        try:
+            # Set your Stripe API key
+            stripe.api_key = request.env['ir.config_parameter'].sudo().get_param('stripe_api_key', '')
+            
+            current_user = request.env.user
+            
+            # Check if user already has an account
+            if current_user.stripe_connect_account_id:
+                account_id = current_user.stripe_connect_account_id
+            else:
+                # Create a new Connected Account
+                account = stripe.Account.create(
+                    type='express',
+                    country='US',
+                    email=current_user.email,
+                    capabilities={
+                        'card_payments': {'requested': True},
+                        'transfers': {'requested': True},
+                    }
+                )
+                account_id = account.id
+                
+                # Save account ID to user
+                current_user.sudo().write({
+                    'stripe_connect_account_id': account_id
+                })
+            
+            # Generate onboarding link
+            account_link = stripe.AccountLink.create(
+                account=account_id,
+                refresh_url=request.httprequest.host_url + 'toolshub',
+                return_url=request.httprequest.host_url + 'toolshub?connectAccountStatus=success',
+                type='account_onboarding',
+            )
+            
+            # Return onboarding link to frontend
+            return {
+                'success': True,
+                'data': {
+                    'account_link': account_link.url,
+                }
+            }
+            
+        except Exception as e:
+            print(f"Stripe Connect Error: {str(e)}")
+            return {
+                'success': False,
+                'data': {
+                    'message': 'An Error Occured',
                     'error': str(e)
                 }
             }

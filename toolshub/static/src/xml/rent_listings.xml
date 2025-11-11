@@ -81,6 +81,10 @@
                                 <button type="submit" class="btn btn-primary" t-att-disabled="state.validatingConnectACcountID">
                                     <i class="fa fa-check"></i> Validate
                                 </button>
+                                <p style="color: var(--text-primary);">Don't have an account? </p>
+                                <a href="#" class="auth-switch-link" t-on-click="createConnectAccount">
+                                    Sign up here
+                                </a>
                             </div>
                         </form>
                     </div>

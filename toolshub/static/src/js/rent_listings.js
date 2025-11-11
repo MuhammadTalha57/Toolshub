@@ -47,18 +47,22 @@ export class RentListings extends Component {
 
     handleStripeRedirect() {
         const urlParams = new URLSearchParams(window.location.search);
-        const status = urlParams.get("status");
+        const paymentStatus = urlParams.get("paymentStatus");
+        const connectAccountStatus = urlParams.get("connectAccountStatus");
 
-        if (status === "success") {
+        if (paymentStatus === "success") {
             this.notification.add("Payment successful. Thank you!", {
                 type: "success",
                 title: "Payment Success",
             });
-        } else if (status === "cancelled") {
+        } else if (paymentStatus === "cancelled") {
             this.notification.add("Payment was cancelled.", {
                 type: "warning",
                 title: "Payment Cancelled",
             });
+        }
+        else if(connectAccountStatus === "success") {
+            this.notification.add("Connect Account Created Successfully!", {type:"Success", title: "Success"});
         }
 }
 
@@ -292,6 +296,24 @@ export class RentListings extends Component {
             } catch (error) {
                 console.error('Error Processing Payment:', error);
             }
+        }
+    }
+
+
+    async createConnectAccount() {
+        try {
+            const accRes = await rpc("/toolshub/createConnectAccount");
+
+            if(accRes.success) {
+                window.location.href = accRes.data.account_link // Redirect to Stripe Account Link
+            }
+            else {
+                this.notification.add(accRes.data.message, {type:"Warning", title:"Error"});
+            }
+
+
+        } catch(error) {
+            this.notification.add("Unexpected Error Occured", {type:"Danger", title:"Error"});
         }
     }
 
