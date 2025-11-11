@@ -36,8 +36,6 @@ class ToolshubToolPlans(models.Model):
     ]
 
     # Python Constraints
-
-    # Total Users should be > 0
     @api.constrains('unlimited_users', 'total_users')
     def _check_total_users(self):
         for record in self:
