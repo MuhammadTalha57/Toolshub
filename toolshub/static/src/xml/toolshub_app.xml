@@ -14,17 +14,10 @@
                     user="state.user"
                     onLogout.bind="handleLogout"
                 />
-                <!-- <Dashboard user="state.user" /> -->
                 <div class="toolshub-main">
                     <t t-if="state.currentPage === 'rent'">
                         <RentListings user="state.user" />
                     </t>
-                    <!-- <t t-elif="state.currentPage === 'groupbuy'">
-                        <GroupBuyListings user="state.user" />
-                    </t>
-                    <t t-elif="state.currentPage === 'addtool'">
-                        <AddTool />
-                    </t> -->
                 </div>
             </t>
         </div>
