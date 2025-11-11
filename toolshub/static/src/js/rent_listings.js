@@ -75,13 +75,15 @@ export class RentListings extends Component {
 
             const listingResult = await rpc("/toolshub/api/getRentListings")
 
-            console.log("Rent Listings Got: ", listingResult)
-
             if(listingResult.success) {
-                this.state.listings = listingResult.data
+                this.state.listings = listingResult.data.listings
+            }
+            else {
+                this.notification.add(listingResult.data.message, {type: 'danger', title: 'Error'});
             }
 
         } catch (error) {
+            this.notification.add("Unexpected Error Occured while loading Rent Listings", {type: 'danger', title: 'Error'});
             console.error('Error loading listings data:', error);
         } finally {
             this.state.loading = false;
@@ -89,21 +91,20 @@ export class RentListings extends Component {
     }
 
     async loadTools() {
-        // this.state.loading = true;
         try {
 
             const toolsResult = await rpc("/toolshub/api/getTools")
 
-            console.log("Tools Got: ", toolsResult)
-
             if(toolsResult.success) {
-                this.state.tools = toolsResult.data
+                this.state.tools = toolsResult.data.tools
+            }
+            else {
+                this.notification.add(toolsResult.data.message, {type: 'danger', title:'Error'});
             }
 
         } catch (error) {
+            this.notification.add("Unexpected Error Occured while loading Tools", {type: 'danger', title:'Error'});
             console.error('Error loading tools data:', error);
-        } finally {
-            // this.state.loading = false;
         }
     }
 

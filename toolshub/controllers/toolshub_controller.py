@@ -1,16 +1,15 @@
+import logging
+
 from odoo import http
 from odoo.http import request, route
+
+_logger = logging.getLogger(__name__)
 
 class ToolshubController(http.Controller):
     @http.route(['/toolshub'], type='http', auth='public', website=True)
     def show_homepage(self):
         """
-        Renders the owl playground page
+        Renders the Main Toolshub App
         """
-        website = request.env['website'].sudo().get_current_website()
-        values = {
-            'website': website,
-            'preview_object': False,
-        }
-        print("Controller hit")
-        return request.render('toolshub.main_app', values)
+        _logger.info("Main Controller Hit, Rendering Toolshub App")
+        return request.render('toolshub.main_app')

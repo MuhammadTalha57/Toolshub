@@ -1,18 +1,18 @@
+import logging
+
 from odoo import http
 from odoo.http import request
+
+_logger = logging.getLogger(__name__)
+
 
 class ToolshubAPI(http.Controller):
     @http.route(['/toolshub/api/getRentListings'], type='json', auth='user', methods=['POST'])
     def get_rent_listings(self, filters=None, limit=None, offset=0):
         """
         Get rent listings with optional filters
-        
-        :param filters: dict of filters (e.g., {'tool_id': 1, 'owner_id': 2})
-        :param limit: int, limit number of results
-        :param offset: int, offset for pagination
-        :return: dict with listings data
         """
-        print("Getting Rent Listings")
+        _logger.info("HIT /toolshub/api/getRentListing, Getting Rent Listings")
         try:
             domain = []
             
@@ -39,8 +39,9 @@ class ToolshubAPI(http.Controller):
             
             # Get listings with pagination
             listings = RentListing.search(domain, limit=limit, offset=offset, order='id desc')
-
-            print(total_count, listings)
+            
+            _logger.debug(f"Total Count of Rent Listings {total_count}")
+            _logger.debug(f"Rent Listings {listings}")
             
             # Format data
             listings_data = []
@@ -68,29 +69,27 @@ class ToolshubAPI(http.Controller):
             
             return {
                 'success': True,
-                'data': listings_data,
-                'total_count': total_count,
-                'limit': limit,
-                'offset': offset
+                "data": {
+                    'listings': listings_data,
+                }
             }
             
         except Exception as e:
+            _logger.error(str(e))
             return {
                 'success': False,
-                'error': str(e)
+                'data': {
+                    'message': "Failed to get Rent Listings",
+                    'error': str(e)
+                }
             }
 
     @http.route(['/toolshub/api/getTools'], type='json', auth='user', methods=['POST'])
     def get_tools(self, filters=None, limit=None, offset=0):
         """
         Get tools with optional filters
-
-        :param filters: dict of filters (e.g., {'name': 'GitHub', 'search': 'git'})
-        :param limit: int, limit number of results
-        :param offset: int, offset for pagination
-        :return: dict with tools data
         """
-        print("Getting Tools")
+        _logger.info("HIT /toolshub/api/getTools, Getting Tools")
         try:
             domain = []
             
@@ -128,7 +127,8 @@ class ToolshubAPI(http.Controller):
             # Get tools with pagination
             tools = Tool.search(domain, limit=limit, offset=offset, order='name asc')
             
-            print(f"Found {total_count} tools, returning {len(tools)}")
+            _logger.debug(f"Total Count of Tools {total_count}")
+            _logger.debug(f"Tools {tools}")
             
             # Format data
             tools_data = []
@@ -160,18 +160,19 @@ class ToolshubAPI(http.Controller):
             
             return {
                 'success': True,
-                'data': tools_data,
-                'total_count': total_count,
-                'limit': limit,
-                'offset': offset
+                'data': {
+                    'tools': tools_data,
+                }
             }
             
         except Exception as e:
-            print(f"Error getting tools: {str(e)}")
+            _logger.error(str(e))
             return {
                 'success': False,
-                'error': str(e),
-                'message': 'Failed to fetch tools'
+                'data': {
+                    'message': "Failed to get Tools",
+                    'error': str(e)
+                }
             }
 
     @http.route(['/toolshub/api/getPlans'], type='json', auth='user', methods=['POST'])
