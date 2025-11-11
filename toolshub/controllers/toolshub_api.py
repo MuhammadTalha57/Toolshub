@@ -63,6 +63,7 @@ class ToolshubAPI(http.Controller):
                     'available_users': listing.available_users if not listing.unlimited_users else None,
                     'owner_id': listing.owner_id.id if listing.owner_id else None,
                     'owner_name': listing.owner_id.name if listing.owner_id else '',
+                    'owner_connect_account_id': listing.owner_id.stripe_connect_account_id
                 })
             
             return {

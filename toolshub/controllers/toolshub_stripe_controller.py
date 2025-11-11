@@ -33,7 +33,7 @@ class StripePaymentController(http.Controller):
         print("Creating Checkout Session")
         try:
             # HARDCODED TEST VALUES
-            SELLER_STRIPE_ACCOUNT = 'acct_1SIuDg0JSHJqOCek'
+            SELLER_STRIPE_ACCOUNT = listing['owner_connect_account_id']
             RENTAL_AMOUNT = listing['price']
             PLATFORM_FEE_PERCENT = 5  # Platform takes 5%
             PLATFORM_FEE = int(RENTAL_AMOUNT * PLATFORM_FEE_PERCENT / 100)
@@ -53,8 +53,8 @@ class StripePaymentController(http.Controller):
                     'quantity': 1,
                 }],
                 mode='payment',
-                success_url='http://localhost:8069/toolshub?paymentStatus=success',
-                cancel_url='http://localhost:8069/toolshub?paymentStatus=cancelled',
+                success_url= request.httprequest.host_url + 'toolshub?paymentStatus=success',
+                cancel_url= request.httprequest.host_url + 'toolshub?paymentStatus=cancelled',
                 payment_intent_data={
                     'application_fee_amount': PLATFORM_FEE,
                     'transfer_data': {

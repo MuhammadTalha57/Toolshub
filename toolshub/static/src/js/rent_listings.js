@@ -62,7 +62,10 @@ export class RentListings extends Component {
             });
         }
         else if(connectAccountStatus === "success") {
-            this.notification.add("Connect Account Created Successfully!", {type:"Success", title: "Success"});
+            this.notification.add("Connect Account Created Successfully!", {type:"success", title: "Success"});
+        }
+        else if(connectAccountStatus === "cancelled") {
+            this.notification.add("Connect Account not created!", {type:"warning", title: "Account Creation Cancelled"});
         }
 }
 
@@ -308,12 +311,12 @@ export class RentListings extends Component {
                 window.location.href = accRes.data.account_link // Redirect to Stripe Account Link
             }
             else {
-                this.notification.add(accRes.data.message, {type:"Warning", title:"Error"});
+                this.notification.add(accRes.data.message, {type:"warning", title:"Error"});
             }
 
 
         } catch(error) {
-            this.notification.add("Unexpected Error Occured", {type:"Danger", title:"Error"});
+            this.notification.add("Unexpected Error Occured", {type:"danger", title:"Error"});
         }
     }
 
