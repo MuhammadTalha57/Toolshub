@@ -323,6 +323,7 @@ class ToolshubAPI(http.Controller):
             # Only validate total_users if not unlimited
             if not unlimited_users:
                 if total_users is None:
+                    _logger.error("Total Users not provided")
                     return {
                         'success': False,
                         'data': {
@@ -330,6 +331,7 @@ class ToolshubAPI(http.Controller):
                         }
                     }
                 if total_users <= 0:
+                    _logger.error("Total Users are not positive")
                     return {
                         'success': False,
                         'data': {
@@ -340,6 +342,7 @@ class ToolshubAPI(http.Controller):
                 total_users = 0
                 
         except (ValueError, TypeError) as e:
+            _logger.error("Invalid Data Format")
             return {
                 'success': False,
                 'data': {
@@ -351,6 +354,7 @@ class ToolshubAPI(http.Controller):
         # Check if tool exists
         tool = request.env['toolshub.tools'].browse(tool_id)
         if not tool.exists():
+            _logger.error(f"Tool Not found Tool ID = {tool_id}")
             return {
                 'success': False,
                 'data': {
@@ -361,6 +365,7 @@ class ToolshubAPI(http.Controller):
         # Check if plan exists and belongs to the tool
         plan = request.env['toolshub.tool.plans'].browse(plan_id)
         if not plan.exists():
+            _logger.error(f"Plan Not found Tool ID = {plan_id}")
             return {
                 'success': False,
                 'data': {
@@ -369,6 +374,7 @@ class ToolshubAPI(http.Controller):
             }
         
         if plan.tool_id.id != tool_id:
+            _logger.error(f"Invalid Plan for Selected Tool Tool ID = {tool_id}, Plan ID = {plan_id}")
             return {
                 'success': False,
                 'data': {
@@ -407,12 +413,8 @@ class ToolshubAPI(http.Controller):
     def get_user_stripe_account(self, **kwargs):
         """
         Get user's Stripe Connect account ID
-        
-        :param user_id: int, user ID (optional, defaults to current user)
-        :return: dict with stripe_connect_account_id
         """
         try:
-            # If no user_id provided, use current user
             user = request.env.user
             
             # Get stripe_connect_account_id, return empty string if None
@@ -426,7 +428,7 @@ class ToolshubAPI(http.Controller):
             }
             
         except Exception as e:
-            print(f"Error getting user stripe account: {str(e)}")
+            _logger.error(f"Error getting user stripe account: {str(e)}")
             return {
                 'success': False,
                 'data': {
