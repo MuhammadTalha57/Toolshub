@@ -16,6 +16,7 @@
                         <field name="total_users" invisible="unlimited_users"/>
                         <field name="subscribers_count"/>
                         <field name="available_users" invisible="unlimited_users"/>
+                        <field name="is_active"/>
                         <field name="price"/>
                         <field name="owner_id"/>
                     </group>

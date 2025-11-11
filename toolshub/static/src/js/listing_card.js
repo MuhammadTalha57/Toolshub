@@ -10,7 +10,8 @@ export class ListingCard extends Component {
         type: { type: String }, // 'rent' or 'groupbuy'
         currentUserId: { type: Number, optional: true },
         onView: { type: Function },
-        onAction: { type: Function }
+        onAction: { type: Function },
+        onToggleIsActive: { type: Function }
     };
 
     get isOwnListing() {
@@ -73,6 +74,12 @@ export class ListingCard extends Component {
         }
         return this.props.type === 'rent' ? 'Rent Now' : 'Join Group';
     }
+
+    handleToggleIsActive() {
+        this.props.listing.is_active = !this.props.listing.is_active
+        this.props.onToggleIsActive(this.props.listing);
+    }
+
 }
 
 registry.category("public_components").add("toolshub.ListingCard", ListingCard);

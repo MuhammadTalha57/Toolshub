@@ -2,7 +2,6 @@
 
 import { Component, useState, onMounted } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-// import { api } from "../services/api_service";
 import { rpc } from "@web/core/network/rpc";
 import { ListingCard } from "./listing_card";
 import { useService } from "@web/core/utils/hooks";
@@ -301,7 +300,6 @@ export class RentListings extends Component {
         }
     }
 
-
     async createConnectAccount() {
         try {
             const accRes = await rpc("/toolshub/createConnectAccount");
@@ -316,6 +314,39 @@ export class RentListings extends Component {
 
         } catch(error) {
             this.notification.add("Unexpected Error Occured", {type:"danger", title:"Error"});
+        }
+    }
+
+    async toggleIsActive(listing) {
+        try {
+            const result = await rpc("/toolshub/api/toggleListingActive", {
+                listing_id: listing.id
+            });
+
+            if (result.success) {
+                this.notification.add(result.data.message, {
+                    type: "success",
+                    title: "Status Updated"
+                });
+
+                // Update the listing in state
+                const listingIndex = this.state.listings.findIndex(l => l.id === listing.id);
+                if (listingIndex !== -1) {
+                    this.state.listings[listingIndex].is_active = result.data.is_active;
+                }
+            } else {
+                this.notification.add(result.data.message, {
+                    type: "danger",
+                    title: "Error"
+                });
+            }
+
+        } catch (error) {
+            console.error('Error toggling listing status:', error);
+            this.notification.add("Unexpected Error Occurred while toggling listing status", {
+                type: "danger",
+                title: "Error"
+            });
         }
     }
 

@@ -7,7 +7,7 @@ export class ThemeToggle extends Component {
 
     setup() {
         this.state = useState({
-            isDark: localStorage.getItem('theme') === 'dark' || false
+            isDark: localStorage.getItem('theme') === 'dark'
         });
 
         // Apply initial theme
@@ -20,12 +20,16 @@ export class ThemeToggle extends Component {
     }
 
     applyTheme() {
-        if (this.state.isDark) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
-        } else {
-            document.documentElement.setAttribute('data-theme', 'light');
-            localStorage.setItem('theme', 'light');
+        // Apply user's system preference as default on first load
+        if (localStorage.getItem('theme') === null) {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            localStorage.setItem('theme', prefersDark ? 'dark' : 'light');
         }
+        else {
+            const theme = this.state.isDark ? 'dark' : 'light';
+            localStorage.setItem('theme', theme);
+        }
+        document.documentElement.setAttribute('data-theme', localStorage.getItem('theme'));
     }
 }
+

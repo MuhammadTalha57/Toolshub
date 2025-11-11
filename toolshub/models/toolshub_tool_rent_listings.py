@@ -14,6 +14,7 @@ class ToolshubToolRentListings(models.Model):
     total_users = fields.Integer(strign="Total Users")
     unlimited_users = fields.Boolean("Unlimited Users")
     available_users = fields.Integer(string="Available Users", compute="_compute_available_users", store=True, readonly=True)
+    is_active = fields.Boolean("Is Active", default=True)
 
     currency_id = fields.Many2one(string="Currency", comodel_name="res.currency", default=lambda self: self.env.company.currency_id)
     price = fields.Monetary(string="Price Per User", currency_field="currency_id", required=True)

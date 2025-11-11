@@ -2,10 +2,8 @@
 
 import { Component, useState, onWillStart } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-// import { session } from "@web/session";
 import { rpc } from "@web/core/network/rpc";
 import { Login } from "./login";
-import { Dashboard } from "./dashboard";
 import { Navbar } from "./navbar";
 import { RentListings } from "./rent_listings";
 import { useService } from "@web/core/utils/hooks";
@@ -14,7 +12,6 @@ export class ToolshubApp extends Component {
     static template = "toolshub.ToolshubApp";
     static components = {
         Login,
-        Dashboard,
         Navbar,
         RentListings
     };
@@ -136,19 +133,6 @@ export class ToolshubApp extends Component {
 
     handleNavigate(page) {
         this.state.currentPage = page;
-    }
-
-    get currentComponent() {
-        switch (this.state.currentPage) {
-            case 'rent':
-                return 'RentListings';
-            case 'groupbuy':
-                return 'GroupBuyListings';
-            case 'addtool':
-                return 'AddTool';
-            default:
-                return 'RentListings';
-        }
     }
 }
 

@@ -3,7 +3,7 @@
 
     <!-- Listing Card Template -->
     <t t-name="toolshub.ListingCard">
-        <div class="listing-card scale-in" t-att-class="{ 'own-listing': isOwnListing }">
+        <div class="listing-card scale-in" t-att-class="{ 'own-listing': isOwnListing, 'inactive': !props.listing.is_active }">
             <div class="listing-image">
                 <t t-if="props.listing.tool_img">
                     <img t-att-src="'data:image/png;base64,' + props.listing.tool_img" alt="image"/>
@@ -17,9 +17,21 @@
                 <h3 class="listing-tool-name">
                     <t t-esc="props.listing.tool_name"/>
                 </h3>
-                <span class="listing-plan-name">
-                    <t t-esc="props.listing.plan_name"/>
-                </span>
+                <div class="listing-plan-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 0.5rem;">
+                    <span class="listing-plan-name" style="margin: 0;">
+                        <t t-esc="props.listing.plan_name"/>
+                    </span>
+                    <t t-if="isOwnListing">
+                        <label class="toggle-switch" style="display: flex; align-items: center; margin: 0;">
+                            <input 
+                                type="checkbox"
+                                t-att-checked="props.listing.is_active"
+                                t-on-change="handleToggleIsActive"
+                            />
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </t>
+                </div>
 
                 <div class="listing-details">
                     <t t-if="props.type === 'rent'">
@@ -106,8 +118,8 @@
                     </button>
                     <button 
                         class="btn btn-primary"
-                        t-att-class="{ 'btn-secondary': isOwnListing || isFull }"
-                        t-att-disabled="isOwnListing || isFull"
+                        t-att-class="{ 'btn-secondary': isOwnListing || isFull || !props.listing.is_active }"
+                        t-att-disabled="isOwnListing || isFull || !props.listing.is_active"
                         t-on-click="handleAction"
                     >
                         <i t-att-class="isOwnListing ? 'fa fa-check' : (isFull ? 'fa fa-ban' : (props.type === 'rent' ? 'fa fa-shopping-cart' : 'fa fa-user-plus'))"></i>

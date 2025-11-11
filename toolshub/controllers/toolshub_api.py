@@ -57,6 +57,7 @@ class ToolshubAPI(http.Controller):
                     'duration_years': listing.plan_id.duration_years,
                     'duration_months': listing.plan_id.duration_months,
                     'duration_days': listing.plan_id.duration_days,
+                    'is_active': listing.is_active,
                     'price': listing.price,
                     'currency_symbol': listing.currency_id.symbol if listing.currency_id else '$',
                     'subscribers_count': listing.subscribers_count,
@@ -436,4 +437,89 @@ class ToolshubAPI(http.Controller):
                     'message': 'Failed to fetch user stripe account'
                 }
             }
+
+    @http.route('/toolshub/api/toggleListingActive', type='json', auth='user', methods=['POST'])
+    def toggle_listing_active(self, **kwargs):
+        """
+        Toggle is_active status of a rental listing
+        Expected params: listing_id
+        """
+        _logger.info("HIT /toolshub/api/toggleListingActive, Toggling Listing Active Status")
+        
+        # Validate required fields
+        listing_id = kwargs.get('listing_id')
+        
+        if not listing_id:
+            _logger.error("Missing listing_id parameter")
+            return {
+                'success': False,
+                'data': {
+                    'message': "listing_id parameter is required",
+                }
+            }
+        
+        try:
+            listing_id = int(listing_id)
+        except (ValueError, TypeError) as e:
+            _logger.error(f"Invalid listing_id format: {str(e)}")
+            return {
+                'success': False,
+                'data': {
+                    'message': f'Invalid listing_id format: {str(e)}',
+                    'error': str(e)
+                }
+            }
+        
+        try:
+            # Get the listing
+            RentListing = request.env['toolshub.tool.rent.listings'].sudo()
+            listing = RentListing.browse(listing_id)
+            
+            if not listing.exists():
+                _logger.error(f"Listing not found with ID = {listing_id}")
+                return {
+                    'success': False,
+                    'data': {
+                        'message': 'Listing not found'
+                    }
+                }
+            
+            # Check if current user is the owner
+            if listing.owner_id.id != request.env.user.id:
+                _logger.error(f"User {request.env.user.id} attempted to toggle listing {listing_id} owned by {listing.owner_id.id}")
+                return {
+                    'success': False,
+                    'data': {
+                        'message': 'You can only toggle your own listings'
+                    }
+                }
+            
+            # Toggle is_active
+            new_status = not listing.is_active
+            listing.write({'is_active': new_status})
+            
+            _logger.debug(f"Listing {listing_id} is_active toggled to {new_status}")
+            _logger.info(f"Listing Active Status Toggled Successfully for Listing ID {listing_id}")
+            
+            return {
+                'success': True,
+                'data': {
+                    'message': 'Listing status updated successfully',
+                    'listing_id': listing_id,
+                    'is_active': new_status
+                }
+            }
+            
+        except Exception as e:
+            _logger.error(f"Error toggling listing active status: {str(e)}")
+            return {
+                'success': False,
+                'data': {
+                    'message': 'Failed to toggle listing status',
+                    'error': str(e)
+                }
+            }
+
+
+
 

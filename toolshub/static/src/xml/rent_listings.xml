@@ -35,13 +35,16 @@
             <t t-else="">
                 <div class="listings-grid">
                     <t t-foreach="state.listings" t-as="listing" t-key="listing.id">
-                        <ListingCard 
-                            listing="listing"
-                            type="'rent'"
-                            currentUserId="props.user?.id"
-                            onView.bind="viewListing"
-                            onAction.bind="rentListing"
-                        />
+                        <t t-if="listing.is_active or listing.owner_id === props.user.id">
+                            <ListingCard 
+                                listing="listing"
+                                type="'rent'"
+                                currentUserId="props.user?.id"
+                                onView.bind="viewListing"
+                                onAction.bind="rentListing"
+                                onToggleIsActive.bind="toggleIsActive"
+                            />
+                        </t>
                     </t>
                 </div>
             </t>
