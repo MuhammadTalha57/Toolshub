@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, useState, onWillStart } from "@odoo/owl";
+import { Component, useState, onWillStart, nextTick } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
 import { Login } from "./login";
@@ -22,12 +22,15 @@ export class ToolshubApp extends Component {
         this.state = useState({
             currentPage: 'rent',
             isAuthenticated: false,
-            user: null
+            user: null,
+            loading: true,
         });
 
         onWillStart(async () => {
             await this.checkUserSession();
         });
+
+
     }
 
     async checkUserSession() {
@@ -71,6 +74,9 @@ export class ToolshubApp extends Component {
             }
             this.state.isAuthenticated = false;
             this.state.user = null;
+        } finally {
+            // await nextTick();
+            this.state.loading = false;
         }
     }
 

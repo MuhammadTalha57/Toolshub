@@ -3,6 +3,9 @@
 
     <!-- Login Component Template -->
     <t t-name="toolshub.Login">
+        <div style="display: none;">
+            <ThemeToggle />
+        </div>
         <div class="auth-container fade-in">
             <div class="auth-card scale-in">
                 <div class="auth-header">

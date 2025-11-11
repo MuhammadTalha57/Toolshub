@@ -2,9 +2,11 @@
 
 import { Component, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { ThemeToggle } from "./theme_toggle";
 
 export class Login extends Component {
     static template = "toolshub.Login";
+    static components = {ThemeToggle};
     static props = {
         onLoginSuccess: { type: Function }
     };
