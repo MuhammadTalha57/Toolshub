@@ -74,7 +74,10 @@ export class ListingCard extends Component {
     }
 
     handleAction() {
-        if (!this.isOwnListing && !this.isFull) {
+        if(this.props.type === 'rentedtool') {
+            this.props.onAction(this.props.tool);
+        }
+        else if (!this.isOwnListing && !this.isFull) {
             this.props.onAction(this.props.listing);
         }
     }

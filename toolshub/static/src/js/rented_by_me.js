@@ -18,6 +18,7 @@ export class RentedByMe extends Component {
             showDetailsModal: false,
             showCredentialsModal: false,
             selectedListing: null,
+            selectedTool: null,
         });
 
         onMounted(() => {
@@ -50,9 +51,18 @@ export class RentedByMe extends Component {
         this.state.showDetailsModal = false;
     }
 
+    closeCredentialsModal() {
+        this.state.showCredentialsModal = false;
+    }
+
     viewListing(listing) {
         this.state.selectedListing = listing;
         this.state.showDetailsModal = true;
+    }
+
+    viewCredentials(tool) {
+        this.state.selectedTool = tool;
+        this.state.showCredentialsModal = true;
     }
 
 }
