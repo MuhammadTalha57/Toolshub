@@ -3,7 +3,7 @@
 
     <!-- Listing Card Template -->
     <t t-name="toolshub.ListingCard">
-        <div class="listing-card scale-in" t-att-class="{ 'own-listing': isOwnListing, 'inactive': !props.listing.is_active }">
+        <div class="listing-card scale-in" t-att-class="{ 'own-listing': isOwnListing, 'inactive': !isActive }">
             <div class="listing-image">
                 <t t-if="props.listing.tool_img">
                     <img t-att-src="props.listing.tool_img_url" alt="image"/>
@@ -41,19 +41,23 @@
                                 Owner: <t t-esc="props.listing.owner_name"/>
                             </span>
                         </div>
-                        <div class="listing-detail-item">
-                            <i class="fa fa-users"></i>
 
-                            <t t-if="props.listing.unlimited_users">
-                                <span>Unlimited Users</span>
-                            </t>
-                            <t t-else="">
-                                <span>
-                                    <t t-esc="props.listing.available_users"/> / <t t-esc="props.listing.available_users + props.listing.subscribers_count"/> slots available
-                                </span>
-                            </t>
+                        <t t-if="props.type !== 'rentedtool'">
+                            <div class="listing-detail-item">
+                                <i class="fa fa-users"></i>
 
-                        </div>
+                                <t t-if="props.listing.unlimited_users">
+                                    <span>Unlimited Users</span>
+                                </t>
+                                <t t-else="">
+                                    <span>
+                                        <t t-esc="props.listing.available_users"/> / <t t-esc="props.listing.available_users + props.listing.subscribers_count"/> slots available
+                                    </span>
+                                </t>
+
+                            </div>
+                        </t>
+
                         <div class="listing-detail-item">
                             <i class="fa fa-clock"></i>
 

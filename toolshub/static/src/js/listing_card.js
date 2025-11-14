@@ -18,6 +18,9 @@ export class ListingCard extends Component {
     get isOwnListing() {
         if (this.props.type === 'rent') {
             return this.props.listing.owner_id === this.props.currentUserId;
+        }
+        else if(this.props.type === 'rentedtool') {
+            return false;
         } else {
             return this.props.listing.initiator_id === this.props.currentUserId;
         }
@@ -26,10 +29,10 @@ export class ListingCard extends Component {
 
     get isActive() {
         if(this.props.type === 'rentedtool') {
-            return false;
+            return true;
         }
-        else if(this.props.type === 'rent') {
-            return props.listing.is_active;
+        if(this.props.type === 'rent') {
+            return this.props.listing.is_active;
         }
     }
 
