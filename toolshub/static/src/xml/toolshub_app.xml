@@ -24,6 +24,9 @@
                     <t t-if="state.currentPage === 'rent'">
                         <RentListings user="state.user" />
                     </t>
+                    <t t-elif="state.currentPage === 'rented-by-me'">
+                        <RentedByMe />
+                    </t>
                 </div>
             </t>
         </div>

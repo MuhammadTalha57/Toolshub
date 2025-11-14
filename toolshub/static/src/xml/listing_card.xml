@@ -21,7 +21,7 @@
                     <span class="listing-plan-name" style="margin: 0;">
                         <t t-esc="props.listing.plan_name"/>
                     </span>
-                    <t t-if="isOwnListing">
+                    <t t-if="props.type !== 'rentedtool' and isOwnListing">
                         <label class="toggle-switch" style="display: flex; align-items: center; margin: 0;">
                             <input 
                                 type="checkbox"
@@ -34,7 +34,7 @@
                 </div>
 
                 <div class="listing-details">
-                    <t t-if="props.type === 'rent'">
+                    <t t-if="props.type === 'rent' or props.type === 'rentedtool' ">
                         <div class="listing-detail-item">
                             <i class="fa fa-user"></i>
                             <span>
@@ -106,7 +106,7 @@
                 </t>
 
                 <div class="listing-price">
-                    $<t t-esc="props.type === 'rent' ? props.listing.price : props.listing.price_per_user"/>
+                    $<t t-esc="props.type === 'rent' or props.type === 'rentedtool' ? props.listing.price : props.listing.price_per_user"/>
                     <t t-if="props.type === 'groupbuy'">
                         <span style="font-size: 0.8rem; color: var(--text-secondary);">/user</span>
                     </t>
@@ -118,8 +118,8 @@
                     </button>
                     <button 
                         class="btn btn-primary"
-                        t-att-class="{ 'btn-secondary': isOwnListing || isFull || !props.listing.is_active }"
-                        t-att-disabled="isOwnListing || isFull || !props.listing.is_active"
+                        t-att-class="{ 'btn-secondary': props.type !== 'rentedtool' and (isOwnListing || isFull || !props.listing.is_active) }"
+                        t-att-disabled=" props.type !== 'rentedtool' and (isOwnListing || isFull || !props.listing.is_active)"
                         t-on-click="handleAction"
                     >
                         <i t-att-class="isOwnListing ? 'fa fa-check' : (isFull ? 'fa fa-ban' : (props.type === 'rent' ? 'fa fa-shopping-cart' : 'fa fa-user-plus'))"></i>

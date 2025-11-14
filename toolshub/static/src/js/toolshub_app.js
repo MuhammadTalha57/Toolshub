@@ -7,13 +7,15 @@ import { Login } from "./login";
 import { Navbar } from "./navbar";
 import { RentListings } from "./rent_listings";
 import { useService } from "@web/core/utils/hooks";
+import { RentedByMe } from "./rented_by_me";
 
 export class ToolshubApp extends Component {
     static template = "toolshub.ToolshubApp";
     static components = {
         Login,
         Navbar,
-        RentListings
+        RentListings,
+        RentedByMe,
     };
 
     setup() {

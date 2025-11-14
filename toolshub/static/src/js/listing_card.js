@@ -6,12 +6,13 @@ import { Component } from "@odoo/owl";
 export class ListingCard extends Component {
     static template = "toolshub.ListingCard";
     static props = {
-        listing: { type: Object },
+        listing: { type: Object},
+        tool: { type: Object, optional: true},
         type: { type: String }, // 'rent' or 'groupbuy'
         currentUserId: { type: Number, optional: true },
         onView: { type: Function },
         onAction: { type: Function },
-        onToggleIsActive: { type: Function }
+        onToggleIsActive: { type: Function, optional: true}
     };
 
     get isOwnListing() {
@@ -19,6 +20,16 @@ export class ListingCard extends Component {
             return this.props.listing.owner_id === this.props.currentUserId;
         } else {
             return this.props.listing.initiator_id === this.props.currentUserId;
+        }
+      
+    }
+
+    get isActive() {
+        if(this.props.type === 'rentedtool') {
+            return false;
+        }
+        else if(this.props.type === 'rent') {
+            return props.listing.is_active;
         }
     }
 
@@ -71,6 +82,9 @@ export class ListingCard extends Component {
         }
         if (this.isFull) {
             return 'Full';
+        }
+        if(this.props.type === 'rentedtool') {
+            return "View Credentials";
         }
         return this.props.type === 'rent' ? 'Rent Now' : 'Join Group';
     }
