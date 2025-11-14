@@ -35,11 +35,11 @@ class StripePaymentController(http.Controller):
         _logger.debug("Creating Checkout Session")
         try:
             SELLER_STRIPE_ACCOUNT = listing['owner_connect_account_id']
-            RENTAL_AMOUNT = listing['price']
+            RENTAL_AMOUNT = listing['price'] * 100
             PLATFORM_FEE_PERCENT = 5  # Platform takes 5%
             PLATFORM_FEE = int(RENTAL_AMOUNT * PLATFORM_FEE_PERCENT / 100)
             
-            _logger.debug(f"Seller Account: {SELLER_STRIPE_ACCOUNT}, Amount: {RENTAL_AMOUNT}, Platform Fee: {PLATFORM_FEE}")
+            _logger.info(f"Seller Account: {SELLER_STRIPE_ACCOUNT}, Amount: {RENTAL_AMOUNT}, Platform Fee: {PLATFORM_FEE}")
             
             # Create Stripe Checkout Session
             session = stripe.checkout.Session.create(
