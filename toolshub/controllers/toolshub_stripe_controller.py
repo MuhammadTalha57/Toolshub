@@ -56,8 +56,8 @@ class StripePaymentController(http.Controller):
                     'quantity': 1,
                 }],
                 mode='payment',
-                success_url= request.httprequest.host_url + 'toolshub?paymentStatus=success',
-                cancel_url= request.httprequest.host_url + 'toolshub?paymentStatus=cancelled',
+                success_url= request.httprequest.host_url + f'toolshub?paymentStatus=success&listingId={listing["id"]}',
+                cancel_url= request.httprequest.host_url + f'toolshub?paymentStatus=cancelled',
                 payment_intent_data={
                     'application_fee_amount': PLATFORM_FEE,
                     'transfer_data': {
@@ -234,7 +234,3 @@ class StripePaymentController(http.Controller):
                     'error': str(e)
                 }
             }
-        
-    
-
-

@@ -521,6 +521,117 @@ class ToolshubAPI(http.Controller):
                 }
             }
 
+    @http.route('/toolshub/api/createRentRecord', type='json', auth='user', methods=['POST'])
+    def create_rent_record(self, listing_id, **kwargs):
+        """
+        Create a rental record in toolshub.rented.tools
+        Required params: listing_id
+        """
+        _logger.info(f"Creating rent record for listing ID: {listing_id}")
+        
+        # Validate listing_id
+        if not listing_id:
+            _logger.error("Missing listing_id parameter")
+            return {
+                'success': False,
+                'data': {
+                    'message': "listing_id parameter is required",
+                }
+            }
+        
+        try:
+            listing_id = int(listing_id)
+        except (ValueError, TypeError) as e:
+            _logger.error(f"Invalid listing_id format: {str(e)}")
+            return {
+                'success': False,
+                'data': {
+                    'message': f'Invalid listing_id format: {str(e)}',
+                    'error': str(e)
+                }
+            }
+        
+        try:
+            # Get the listing
+            RentListing = request.env['toolshub.tool.rent.listings'].sudo()
+            listing = RentListing.browse(listing_id)
+            
+            if not listing.exists():
+                _logger.error(f"Listing not found with ID = {listing_id}")
+                return {
+                    'success': False,
+                    'data': {
+                        'message': 'Listing not found'
+                    }
+                }
+            
+            # Check if listing is active
+            if not listing.is_active:
+                _logger.error(f"Attempted to rent inactive listing ID = {listing_id}")
+                return {
+                    'success': False,
+                    'data': {
+                        'message': 'This listing is no longer active'
+                    }
+                }
+            
+            # Get current user (lender)
+            current_user = request.env.user
+            
+            # Prevent renting own listing
+            if listing.owner_id.id == current_user.id:
+                _logger.error(f"User {current_user.id} attempted to rent their own listing {listing_id}")
+                return {
+                    'success': False,
+                    'data': {
+                        'message': 'You cannot rent your own listing'
+                    }
+                }
+            
+            # Check if user already rented this listing
+            RentedTools = request.env['toolshub.rented.tools'].sudo()
+            existing_rent = RentedTools.search([
+                ('rent_listing_id', '=', listing_id),
+                ('lender_id', '=', current_user.id)
+            ], limit=1)
+            
+            if existing_rent:
+                _logger.warning(f"User {current_user.id} already rented listing {listing_id}")
+                return {
+                    'success': False,
+                    'data': {
+                        'message': 'You have already rented this listing'
+                    }
+                }
+            
+            # Prepare values for creation
+            vals = {
+                'rent_listing_id': listing_id,
+                'lender_id': current_user.id,
+            }
+            
+            # Create the rental record
+            rented_record = RentedTools.create(vals)
+            
+            _logger.debug(f"Rental record created successfully: ID {rented_record.id}")
+            _logger.info(f"Rent Record Created Successfully for Listing ID {listing_id}, User ID {current_user.id}")
+            
+            return {
+                'success': True,
+                'data': {
+                    'message': 'Rental record created successfully',
+                }
+            }
+            
+        except Exception as e:
+            _logger.error(f"Error creating rent record: {str(e)}")
+            return {
+                'success': False,
+                'data': {
+                    'message': 'Failed to create rental record',
+                    'error': str(e)
+                }
+            }
 
 
 

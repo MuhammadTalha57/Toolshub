@@ -44,9 +44,10 @@ export class RentListings extends Component {
         });
     }
 
-    handleStripeRedirect() {
+    async handleStripeRedirect() {
         const urlParams = new URLSearchParams(window.location.search);
         const paymentStatus = urlParams.get("paymentStatus");
+        const listing_id = urlParams.get("listingId");
         const connectAccountStatus = urlParams.get("connectAccountStatus");
 
         if (paymentStatus === "success") {
@@ -54,6 +55,14 @@ export class RentListings extends Component {
                 type: "success",
                 title: "Payment Success",
             });
+
+            await rpc("/toolshub/api/createRentRecord", {listing_id});
+
+            this.notification.add("Successfully Rented!", {
+                type: "success",
+                title: "Rent Success",
+            });
+
         } else if (paymentStatus === "cancelled") {
             this.notification.add("Payment was cancelled.", {
                 type: "warning",

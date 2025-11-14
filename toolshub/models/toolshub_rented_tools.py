@@ -5,5 +5,8 @@ class ToolshubRentedTools(models.Model):
     _description = "Model for Rented Toos."
 
     # Fields
-    rent_listing_id = fields.Many2one("toolshub.tool.rent.listings", string="Rent Listing")
-    lender_id = fields.Many2one("res.users", string="Lender", required=True, ondelete="cascade")
+    rent_listing_id = fields.Many2one("toolshub.tool.rent.listings", string="Rent Listing", readonly=True, required=True)
+    lender_id = fields.Many2one("res.users", string="Lender", required=True, ondelete="cascade", readonly=True)
+    login = fields.Char("Login", readonly=True)
+    password = fields.Char("Password", readonly=True)
+
