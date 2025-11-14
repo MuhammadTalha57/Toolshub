@@ -66,6 +66,11 @@ export class RentListings extends Component {
         else if(connectAccountStatus === "cancelled") {
             this.notification.add("Connect Account not created!", {type:"warning", title: "Account Creation Cancelled"});
         }
+
+        // Clear URL params after handling them (only if any params were present)
+        if (paymentStatus || connectAccountStatus) {
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
 }
 
     async loadRentListings() {
