@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <!-- Rented By Me Template -->
+    <t t-name="toolshub.RentedOut">
+        <div class="fade-in">
+            <div class="page-header">
+                <div style="display: flex; flex-direction: column; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h1 style="text-align: center;"><i class="fa fa-hand-holding-usd" ></i> Tools you rented out</h1>
+                    </div>
+                </div>
+            </div>
+
+            <t t-if="state.loading">
+                <div class="empty-state">
+                    <i class="fa fa-spinner fa-spin"></i>
+                    <h3>Loading rented out tools...</h3>
+                </div>
+            </t>
+            <t t-elif="state.rentedTools?.length === 0">
+                <div class="empty-state">
+                    <i class="fa fa-inbox"></i>
+                    <h3>No tools rented Yet</h3>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="listings-grid">
+                    <t t-foreach="state.rentedTools" t-as="tool" t-key="tool.id">
+                        <ListingCard 
+                            tool="tool" 
+                            listing="tool.listing"
+                            type="'rentedtool'"
+                            currentUserId="props.user?.id"
+                            onView.bind="viewListing"
+                            onAction.bind="viewCredentials"
+                        />
+                        <t t-if="tool.is_active">
+                        </t>
+                    </t>
+                </div>
+            </t>
+            
+            <!-- Details Modal -->
+            <t t-if="state.showDetailsModal and state.selectedListing">
+                <div class="modal-overlay" t-on-click.self="closeDetailsModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title">
+                                <t t-esc="state.selectedListing.tool_name"/>
+                            </h2>
+                            <button class="modal-close" t-on-click="closeDetailsModal">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="listing-image" style="margin-bottom: 1.5rem; border-radius: 1rem; overflow: hidden;">
+                                <t t-if="state.selectedListing.tool_img">
+                                    <img t-att-src="state.selectedListing.tool_img_url" alt="image"/>
+                                </t>
+                            </div>
+
+                            <div class="mb-3">
+                                <span class="listing-plan-name">
+                                    <t t-esc="state.selectedListing.plan_name"/>
+                                </span>
+                            </div>
+
+                            <div class="listing-details mb-3">
+                                <div class="listing-detail-item">
+                                    <i class="fa fa-user"></i>
+                                    <span>Owner: <strong><t t-esc="state.selectedListing.owner_name"/></strong></span>
+                                </div>
+                                <div class="listing-detail-item">
+                                    <i class="fa fa-dollar-sign"></i>
+                                    <span>Price: <strong>$<t t-esc="state.selectedListing.price"/></strong></span>
+                                </div>
+                                <div class="listing-detail-item">
+                                    <i class="fa fa-clock"></i>
+
+                                    <span><t t-esc="state.selectedTool.remaining_usage"/></span>
+                                </div>
+                            </div>
+
+                            <t t-if="state.selectedListing.description">
+                                <div class="mb-3">
+                                    <h4 style="margin-bottom: 0.5rem;">Description</h4>
+                                    <p style="color: var(--text-secondary);">
+                                        <t t-esc="state.selectedListing.description"/>
+                                    </p>
+                                </div>
+                            </t>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" t-on-click="closeDetailsModal">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <!-- Credentials Modal -->
+            <t t-if="state.showCredentialsModal and state.selectedTool">
+                <div class="modal-overlay" t-on-click.self="closeCredentialsModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title">
+                                <t t-esc="state.selectedTool.listing.tool_name"/>
+                            </h2>
+                            <button class="modal-close" t-on-click="closeCredentialsModal">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="listing-image" style="margin-bottom: 1.5rem; border-radius: 1rem; overflow: hidden;">
+                                <t t-if="state.selectedTool.listing.tool_img">
+                                    <img t-att-src="state.selectedTool.listing.tool_img_url" alt="image"/>
+                                </t>
+                            </div>
+
+                            <div class="mb-3">
+                                <span class="listing-plan-name">
+                                    Credentials
+                                </span>
+                            </div>
+
+                            <t t-if="state.selectedTool.login or state.selectedTool.password">
+                                <div class="listing-details mb-3">
+                                    <t t-if="state.selectedTool.login">
+                                        <div class="listing-detail-item">
+                                            <i class="fa fa-user"></i>
+                                            <span>Login: <strong><t t-esc="state.selectedTool.login"/></strong></span>
+                                        </div>
+                                    </t>
+                                    <t t-if="state.selectedTool.password">
+                                        <div class="listing-detail-item">
+                                            <i class="fa fa-lock"></i>
+                                            <span>Password: <strong><t t-esc="state.selectedTool.password"/></strong></span>
+                                        </div>
+                                    </t>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="empty-state" style="padding: 2rem 1rem; margin: 1rem 0;">
+                                    <i class="fa fa-info-circle" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                                    <h3 style="color: var(--text-secondary); font-size: 1.2rem; font-weight: 500;">No Credentials Provided</h3>
+                                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">The owner has not added credentials for this listing yet.</p>
+                                </div>
+                            </t>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" t-on-click="closeCredentialsModal">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+        </div>
+    </t>
+</templates>

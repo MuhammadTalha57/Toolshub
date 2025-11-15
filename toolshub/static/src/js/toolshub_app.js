@@ -8,6 +8,7 @@ import { Navbar } from "./navbar";
 import { RentListings } from "./rent_listings";
 import { useService } from "@web/core/utils/hooks";
 import { RentedByMe } from "./rented_by_me";
+import { RentedOut } from "./rented_out";
 
 export class ToolshubApp extends Component {
     static template = "toolshub.ToolshubApp";
@@ -16,6 +17,7 @@ export class ToolshubApp extends Component {
         Navbar,
         RentListings,
         RentedByMe,
+        RentedOut,
     };
 
     setup() {

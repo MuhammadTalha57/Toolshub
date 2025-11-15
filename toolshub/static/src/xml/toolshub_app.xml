@@ -27,6 +27,9 @@
                     <t t-elif="state.currentPage === 'rented-by-me'">
                         <RentedByMe />
                     </t>
+                    <t t-elif="state.currentPage === 'rented-out'">
+                        <RentedOut />
+                    </t>
                 </div>
             </t>
         </div>
