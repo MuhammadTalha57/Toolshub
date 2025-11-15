@@ -658,6 +658,10 @@ class ToolshubAPI(http.Controller):
             rented_tools_data = []
             for rented_tool in rented_tools:
                 listing = rented_tool.rent_listing_id
+
+                plan_features = []
+                for feature in listing.plan_id.feature_ids:
+                    plan_features.append({'id': feature.id,'name': feature.name})
             
                 # Build listing object
                 listing_data = {
@@ -668,6 +672,7 @@ class ToolshubAPI(http.Controller):
                     'tool_img_url': listing.tool_id.image_url,
                     'plan_id': listing.plan_id.id if listing.plan_id else None,
                     'plan_name': listing.plan_id.name if listing.plan_id else '',
+                    'plan_features': plan_features,
                     'unlimited_access': listing.plan_id.is_unlimited,
                     'duration_years': listing.plan_id.duration_years,
                     'duration_months': listing.plan_id.duration_months,
@@ -733,6 +738,10 @@ class ToolshubAPI(http.Controller):
             rented_out_tools_data = []
             for rented_tool in rented_out_tools:
                 listing = rented_tool.rent_listing_id
+
+                plan_features = []
+                for feature in listing.plan_id.feature_ids:
+                    plan_features.append({'id': feature.id,'name': feature.name})
             
                 # Build listing object
                 listing_data = {
@@ -743,6 +752,7 @@ class ToolshubAPI(http.Controller):
                     'tool_img_url': listing.tool_id.image_url,
                     'plan_id': listing.plan_id.id if listing.plan_id else None,
                     'plan_name': listing.plan_id.name if listing.plan_id else '',
+                    'plan_features': plan_features,
                     'unlimited_access': listing.plan_id.is_unlimited,
                     'duration_years': listing.plan_id.duration_years,
                     'duration_months': listing.plan_id.duration_months,

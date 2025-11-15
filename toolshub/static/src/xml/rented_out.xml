@@ -82,6 +82,15 @@
                                     <span><t t-esc="state.selectedTool.remaining_usage"/></span>
                                 </div>
                             </div>
+                            <div class="modal-subtitle">Features</div>
+                            <div class="listing-features">
+                                <t t-foreach="state.selectedListing.plan_features" t-as="feature" t-key="feature.id">
+                                    <span class="listing-feature">
+                                        <t t-esc="feature.name"/>
+                                    </span>
+                                </t>
+                            </div>
+
                         </div>
 
                         <div class="modal-footer">

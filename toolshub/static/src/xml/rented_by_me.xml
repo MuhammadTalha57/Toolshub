@@ -83,14 +83,14 @@
                                 </div>
                             </div>
 
-                            <t t-if="state.selectedListing.description">
-                                <div class="mb-3">
-                                    <h4 style="margin-bottom: 0.5rem;">Description</h4>
-                                    <p style="color: var(--text-secondary);">
-                                        <t t-esc="state.selectedListing.description"/>
-                                    </p>
-                                </div>
-                            </t>
+                            <div class="modal-subtitle">Features</div>
+                            <div class="listing-features">
+                                <t t-foreach="state.selectedListing.plan_features" t-as="feature" t-key="feature.id">
+                                    <span class="listing-feature">
+                                        <t t-esc="feature.name"/>
+                                    </span>
+                                </t>
+                            </div>
                         </div>
 
                         <div class="modal-footer">

@@ -64,6 +64,7 @@ export class RentedOut extends Component {
     viewListing(tool) {
         this.state.selectedTool = tool;
         this.state.selectedListing = tool.listing;
+        console.log("Listing", this.state.selectedListing);
         this.state.showDetailsModal = true;
     }
 
