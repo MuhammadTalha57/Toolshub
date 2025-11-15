@@ -18,7 +18,7 @@
                     <h3>Loading rented tools...</h3>
                 </div>
             </t>
-            <t t-if="state.rentedTools?.length === 0">
+            <t t-elif="state.rentedTools?.length === 0">
                 <div class="empty-state">
                     <i class="fa fa-inbox"></i>
                     <h3>No tools rented Yet</h3>
