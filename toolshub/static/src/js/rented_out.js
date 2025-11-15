@@ -72,7 +72,6 @@ export class RentedOut extends Component {
         this.state.login = tool.login;
         this.state.password = tool.password;
         this.state.showCredentialsModal = true;
-
     }
 
 

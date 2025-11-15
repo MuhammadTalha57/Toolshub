@@ -30,7 +30,7 @@
                         <ListingCard 
                             tool="tool" 
                             listing="tool.listing"
-                            type="'rentedouttool'"
+                            type="'rentedOutTool'"
                             currentUserId="props.user?.id"
                             onView.bind="viewListing"
                             onAction.bind="viewCredentials"
@@ -129,7 +129,6 @@
                                             type="text"
                                             class="form-input"
                                             t-model="state.login"
-                                            t-att-value="state.selectedTool.login"
                                             required="required"
                                         />
                                     </div>
@@ -143,7 +142,6 @@
                                             type="text"
                                             class="form-input"
                                             t-model="state.password"
-                                            t-att-value="state.selectedTool.password"
                                             required="required"
                                         />
                                     </div>

@@ -31,9 +31,12 @@ export class ListingCard extends Component {
         if(this.props.type === 'rentedTool') {
             return this.props.tool.is_active;
         }
-        if(this.props.type === 'rentListing') {
+        else if(this.props.type === 'rentListing') {
             return this.props.listing.is_active;
+        } else if(this.props.type === 'rentedOutTool') {
+            return this.props.tool.is_active;
         }
+
     }
 
     get progress() {
@@ -75,6 +78,8 @@ export class ListingCard extends Component {
         }
         else if(this.props.type === 'rentedTool') {
             this.props.onView(this.props.tool);
+        } else if(this.props.type === 'rentedOutTool') {
+            this.props.onView(this.props.tool);
         }
     }
 
@@ -85,6 +90,8 @@ export class ListingCard extends Component {
             }
         }
         else if(this.props.type === 'rentedTool') {
+            this.props.onAction(this.props.tool);
+        } else if(this.props.type === 'rentedOutTool') {
             this.props.onAction(this.props.tool);
         }
     }
@@ -100,7 +107,10 @@ export class ListingCard extends Component {
             return "Rent Now";
 
         }
-        if(this.props.type === 'rentedTool') {
+        else if(this.props.type === 'rentedTool') {
+            return "View Credentials";
+        }
+        else if(this.props.type === 'rentedOutTool') {
             return "View Credentials";
         }
         return "Join Group";
