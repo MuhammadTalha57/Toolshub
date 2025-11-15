@@ -8,7 +8,7 @@ class ToolshubRentedTools(models.Model):
     # Fields
     rent_listing_id = fields.Many2one("toolshub.tool.rent.listings", string="Rent Listing", readonly=True, required=True)
     lender_id = fields.Many2one("res.users", string="Lender", required=True, ondelete="cascade", readonly=True)
-    is_active = fields.Boolean("Is Active", store=True)
+    is_active = fields.Boolean("Is Active", compute="_compute_is_active", store=True, default=True)
     
     login = fields.Char("Login")
     password = fields.Char("Password")

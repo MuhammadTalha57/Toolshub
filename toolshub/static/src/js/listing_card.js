@@ -58,7 +58,9 @@ export class ListingCard extends Component {
     }
 
     get isFull() {
-        return this.availableSlots <= 0;
+        if(this.props.type === 'rentListing') {
+            return this.props.listing.available_users <= 0;
+        }
     }
 
     get daysLeft() {

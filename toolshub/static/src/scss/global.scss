@@ -58,13 +58,13 @@
     box-sizing: border-box;
 }
 
-.toolshub-app {
-    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-    min-height: 100vh;
-    // transition: background-color 0.3s ease, color 0.3s ease;
-}
+// .toolshub-app {
+//     font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+//     background-color: var(--bg-primary);
+//     color: var(--text-primary);
+//     min-height: 100vh;
+//     // transition: background-color 0.3s ease, color 0.3s ease;
+// }
 
 /* Animations */
 @keyframes fadeIn {
@@ -148,160 +148,162 @@
 /* ============================================
    Navbar Styles
    ============================================ */
-.toolshub-navbar {
-    background-color: var(--bg-secondary);
-    border-bottom: 1px solid var(--border-color);
-    box-shadow: var(--shadow-sm);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    transition: all 0.3s ease;
-}
 
-.navbar-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+// .toolshub-navbar {
+//     background-color: var(--bg-secondary);
+//     border-bottom: 1px solid var(--border-color);
+//     box-shadow: var(--shadow-sm);
+//     position: sticky;
+//     top: 0;
+//     z-index: 1000;
+//     transition: all 0.3s ease;
+// }
 
-.navbar-logo {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--primary-color);
-    text-decoration: none;
-}
+// .navbar-container {
+//     max-width: 1400px;
+//     margin: 0 auto;
+//     padding: 1rem 2rem;
+//     display: flex;
+//     justify-content: space-between;
+//     align-items: center;
+// }
 
-.navbar-logo i {
-    font-size: 2rem;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
+// .navbar-logo {
+//     display: flex;
+//     align-items: center;
+//     gap: 0.75rem;
+//     font-size: 1.5rem;
+//     font-weight: 700;
+//     color: var(--primary-color);
+//     text-decoration: none;
+// }
 
-.navbar-nav {
-    display: flex;
-    gap: 2rem;
-    list-style: none;
-    // align-items: center;
-    flex-direction: row;
-}
+// .navbar-logo i {
+//     font-size: 2rem;
+//     background: var(--gradient-primary);
+//     -webkit-background-clip: text;
+//     -webkit-text-fill-color: transparent;
+//     background-clip: text;
+// }
 
-.nav-item {
-    cursor: pointer;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    transition: all 0.3s ease;
-    color: var(--text-secondary);
-    font-weight: 500;
-    position: relative;
-}
+// .navbar-nav {
+//     display: flex;
+//     gap: 2rem;
+//     list-style: none;
+//     // align-items: center;
+//     flex-direction: row;
+// }
 
-.nav-item:hover {
-    color: var(--primary-color);
-    background-color: var(--bg-tertiary);
-}
+// .nav-item {
+//     cursor: pointer;
+//     padding: 0.5rem 1rem;
+//     border-radius: 0.5rem;
+//     transition: all 0.3s ease;
+//     color: var(--text-secondary);
+//     font-weight: 500;
+//     position: relative;
+// }
 
-.nav-item.active {
-    color: var(--primary-color);
-}
+// .nav-item:hover {
+//     color: var(--primary-color);
+//     background-color: var(--bg-tertiary);
+// }
 
-.nav-item.active::after {
-    content: '';
-    position: absolute;
-    bottom: -0.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 30px;
-    height: 3px;
-    background: var(--gradient-primary);
-    border-radius: 2px;
-}
+// .nav-item.active {
+//     color: var(--primary-color);
+// }
+
+// .nav-item.active::after {
+//     content: '';
+//     position: absolute;
+//     bottom: -0.5rem;
+//     left: 50%;
+//     transform: translateX(-50%);
+//     width: 30px;
+//     height: 3px;
+//     background: var(--gradient-primary);
+//     border-radius: 2px;
+// }
 
 /* Theme Toggle Button */
-.theme-toggle {
-    background-color: var(--bg-tertiary);
-    border: none;
-    padding: 0.75rem;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    color: var(--text-primary);
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 45px;
-    height: 45px;
-}
+// .theme-toggle {
+//     background-color: var(--bg-tertiary);
+//     border: none;
+//     padding: 0.75rem;
+//     border-radius: 50%;
+//     cursor: pointer;
+//     transition: all 0.3s ease;
+//     color: var(--text-primary);
+//     font-size: 1.2rem;
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     width: 45px;
+//     height: 45px;
+// }
 
-.theme-toggle:hover {
-    background-color: var(--primary-color);
-    color: white;
-    transform: rotate(180deg);
-}
+// .theme-toggle:hover {
+//     background-color: var(--primary-color);
+//     color: white;
+//     transform: rotate(180deg);
+// }
 
 /* ============================================
    Login/Signup Page Styles
    ============================================ */
-.auth-container {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--gradient-primary);
-    padding: 2rem;
-    position: relative;
-    overflow: hidden;
-}
 
-.auth-container::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -50%;
-    width: 100%;
-    height: 100%;
-    // background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-    // animation: pulse 4s ease-in-out infinite;
-}
+// .auth-container {
+//     min-height: 100vh;
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     background: var(--gradient-primary);
+//     padding: 2rem;
+//     position: relative;
+//     overflow: hidden;
+// }
 
-.auth-card {
-    background-color: var(--bg-secondary);
-    border-radius: 1.5rem;
-    padding: 3rem;
-    box-shadow: var(--shadow-lg);
-    max-width: 450px;
-    width: 100%;
-    position: relative;
-    z-index: 1;
-}
+// .auth-container::before {
+//     content: '';
+//     position: absolute;
+//     top: -50%;
+//     right: -50%;
+//     width: 100%;
+//     height: 100%;
+//     // background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+//     // animation: pulse 4s ease-in-out infinite;
+// }
 
-.auth-header {
-    text-align: center;
-    margin-bottom: 2rem;
-}
+// .auth-card {
+//     background-color: var(--bg-secondary);
+//     border-radius: 1.5rem;
+//     padding: 3rem;
+//     box-shadow: var(--shadow-lg);
+//     max-width: 450px;
+//     width: 100%;
+//     position: relative;
+//     z-index: 1;
+// }
 
-.auth-header h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
+// .auth-header {
+//     text-align: center;
+//     margin-bottom: 2rem;
+// }
 
-.auth-header p {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-}
+// .auth-header h1 {
+//     font-size: 2rem;
+//     font-weight: 700;
+//     margin-bottom: 0.5rem;
+//     background: var(--gradient-primary);
+//     -webkit-background-clip: text;
+//     -webkit-text-fill-color: transparent;
+//     background-clip: text;
+// }
+
+// .auth-header p {
+//     color: var(--text-secondary);
+//     font-size: 0.95rem;
+// }
 
 .form-group {
     margin-bottom: 1.5rem;
@@ -355,47 +357,47 @@
     transform: translateY(0);
 }
 
-.auth-divider {
-    text-align: center;
-    margin: 1.5rem 0;
-    color: var(--text-muted);
-    position: relative;
-}
+// .auth-divider {
+//     text-align: center;
+//     margin: 1.5rem 0;
+//     color: var(--text-muted);
+//     position: relative;
+// }
 
-.auth-divider::before,
-.auth-divider::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    width: 40%;
-    height: 1px;
-    background-color: var(--border-color);
-}
+// .auth-divider::before,
+// .auth-divider::after {
+//     content: '';
+//     position: absolute;
+//     top: 50%;
+//     width: 40%;
+//     height: 1px;
+//     background-color: var(--border-color);
+// }
 
-.auth-divider::before {
-    left: 0;
-}
+// .auth-divider::before {
+//     left: 0;
+// }
 
-.auth-divider::after {
-    right: 0;
-}
+// .auth-divider::after {
+//     right: 0;
+// }
 
-.auth-switch {
-    text-align: center;
-    margin-top: 1.5rem;
-    color: var(--text-secondary);
-}
+// .auth-switch {
+//     text-align: center;
+//     margin-top: 1.5rem;
+//     color: var(--text-secondary);
+// }
 
-.auth-switch-link {
-    color: var(--primary-color);
-    cursor: pointer;
-    font-weight: 600;
-    text-decoration: none;
-}
+// .auth-switch-link {
+//     color: var(--primary-color);
+//     cursor: pointer;
+//     font-weight: 600;
+//     text-decoration: none;
+// }
 
-.auth-switch-link:hover {
-    text-decoration: underline;
-}
+// .auth-switch-link:hover {
+//     text-decoration: underline;
+// }
 
 /* ============================================
    Main Container Styles

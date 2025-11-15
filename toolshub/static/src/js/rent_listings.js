@@ -58,6 +58,8 @@ export class RentListings extends Component {
 
             await rpc("/toolshub/api/createRentRecord", {listing_id});
 
+            await this.loadRentListings();
+
             this.notification.add("Successfully Rented!", {
                 type: "success",
                 title: "Rent Success",
@@ -294,7 +296,6 @@ export class RentListings extends Component {
     async rentListing(listing) {
         try {
             
-            console.log("Passing listing", {listing});
             const paymentResult = await rpc("/toolshub/processRentPayment", {listing});
             if(paymentResult.success) {
                 console.log("REDIRECTING USER TO CHECKOUT SESSION");
@@ -302,8 +303,8 @@ export class RentListings extends Component {
             }
             else {
                 this.notification.add(paymentResult.data.message, {
-                type: "danger",
-                title: "Server Error"
+                    type: "danger",
+                    title: "Server Error"
                 });
         }
 

@@ -5,7 +5,7 @@
     <t t-name="toolshub.ListingCard">
 
         <t t-if="props.type === 'rentListing'">
-            <div class="listing-card scale-in" t-att-class="{ 'own-listing': isOwnListing, 'inactive': !isActive }">
+            <div class="listing-card scale-in" t-att-class="{ 'own-listing': isOwnListing, 'inactive': !isActive, 'rent-listing-full': isFull }">
                 <div class="listing-image">
                     <t t-if="props.listing.tool_img">
                         <img t-att-src="props.listing.tool_img_url" alt="image"/>
@@ -141,7 +141,7 @@
                             class="btn btn-primary"
                             t-on-click="handleAction"
                         >
-                            <i class="fa fa-user-plus"></i>
+                            <i class="fa fa-key"></i>
                             <t t-esc="getActionLabel()"/>
                         </button>
                     </div>
@@ -196,7 +196,7 @@
                             class="btn btn-primary"
                             t-on-click="handleAction"
                         >
-                            <i class="fa fa-user-plus"></i>
+                            <i class="fa fa-key"></i>
                             <t t-esc="getActionLabel()"/>
                         </button>
                     </div>

@@ -589,21 +589,7 @@ class ToolshubAPI(http.Controller):
                     }
                 }
             
-            # Check if user already rented this listing
             RentedTools = request.env['toolshub.rented.tools'].sudo()
-            existing_rent = RentedTools.search([
-                ('rent_listing_id', '=', listing_id),
-                ('lender_id', '=', current_user.id)
-            ], limit=1)
-            
-            if existing_rent:
-                _logger.warning(f"User {current_user.id} already rented listing {listing_id}")
-                return {
-                    'success': False,
-                    'data': {
-                        'message': 'You have already rented this listing'
-                    }
-                }
             
             # Prepare values for creation
             vals = {
