@@ -4,8 +4,10 @@ access_toolshub_tool_plans_user,access.toolshub.tool.plans.user,model_toolshub_t
 access_toolshub_tool_plan_features_user,access.toolshub.tool.plan.features.user,model_toolshub_tool_plan_features,base.group_user,1,1,1,1
 access_toolshub_rented_tools_user,access.toolshub.rented.tools.user,model_toolshub_rented_tools,base.group_user,1,1,1,1
 access_toolshub_tool_rent_listings_user,access.toolshub.tool.rent.listings.user,model_toolshub_tool_rent_listings,base.group_user,1,1,1,1
+access_toolshub_tool_rented_tools_user,access.toolshub.rented.tools.user,model_toolshub_rented_tools,base.group_user,1,1,1,1
 access_toolshub_tools_portal,access.toolshub.tools.portal,model_toolshub_tools,base.group_portal,1,0,0,0
 access_toolshub_tool_plans_portal,access.toolshub.tool.plans.portal,model_toolshub_tool_plans,base.group_portal,1,0,0,0
 access_toolshub_tool_plan_features_portal,access.toolshub.tool.plan.features.portal,model_toolshub_tool_plan_features,base.group_portal,1,0,0,0
 access_toolshub_rented_tools_portal,access.toolshub.rented.tools.portal,model_toolshub_rented_tools,base.group_portal,1,1,1,1
 access_toolshub_tool_rent_listings_portal,access.toolshub.tool.rent.listings.portal,model_toolshub_tool_rent_listings,base.group_portal,1,1,1,1
+access_toolshub_tool_rented_tools_portal,access.toolshub.rented.tools.portal,model_toolshub_rented_tools,base.group_portal,1,1,1,0

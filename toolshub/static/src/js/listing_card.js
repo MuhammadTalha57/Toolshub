@@ -70,6 +70,10 @@ export class ListingCard extends Component {
     }
 
     handleView() {
+        if(this.props.type === 'rentedtool') {
+            this.props.onView(this.props.tool);
+            return;
+        }
         this.props.onView(this.props.listing);
     }
 

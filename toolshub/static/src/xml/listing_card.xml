@@ -60,8 +60,10 @@
 
                         <div class="listing-detail-item">
                             <i class="fa fa-clock"></i>
-
-                            <t t-if="props.listing.unlimited_access">
+                            <t t-if="props.type==='rentedtool'">
+                                <span><t t-esc="props.tool.remaining_usage"/></span>
+                            </t>
+                            <t t-elif="props.listing.unlimited_access">
                                 <span>Unlimited Access</span>
                             </t>
                             <t t-else="">
@@ -71,6 +73,8 @@
                                     <t t-if="props.listing.duration_days"><t t-esc="props.listing.duration_days"/> Days </t>
                                 </span>
                             </t>
+
+
                         </div>
                     </t>
                     <t t-else="">

@@ -7,8 +7,7 @@
             <div class="page-header">
                 <div style="display: flex; flex-direction: column; justify-content: space-between; align-items: center;">
                     <div>
-                        <h1 style="text-align: center;"><i class="fa fa-store" ></i> Tools you rented</h1>
-                        <!-- <p>Browse and rent software tools from other users</p> -->
+                        <h1 style="text-align: center;"><i class="fa fa-shopping-bag" ></i> Tools you rented</h1>
                     </div>
                 </div>
             </div>
@@ -23,11 +22,7 @@
             <t t-if="state.rentedTools?.length === 0">
                 <div class="empty-state">
                     <i class="fa fa-inbox"></i>
-                    <h3>No tools rented</h3>
-                    <!-- <p>Be the first to create a rent listing!</p>
-                    <button class="btn btn-primary btn-lg" t-on-click="openCreateModal">
-                        <i class="fa fa-plus-circle"></i> Create Rent Listing
-                    </button> -->
+                    <h3>No tools rented Yet</h3>
                 </div>
             </t>
             <t t-else="">
@@ -82,32 +77,10 @@
                                     <i class="fa fa-dollar-sign"></i>
                                     <span>Price: <strong>$<t t-esc="state.selectedListing.price"/></strong></span>
                                 </div>
-                                <!-- <div class="listing-detail-item">
-                                    <i class="fa fa-users"></i>
-
-                                    <t t-if="state.selectedListing.unlimited_users">
-                                        <span>Unlimited Users</span>
-                                    </t>
-                                    <t t-else="">
-                                        <span>
-                                            <t t-esc="state.selectedListing.available_users"/> / <t t-esc="state.selectedListing.available_users + state.selectedListing.subscribers_count"/> slots available
-                                        </span>
-                                    </t>
-
-                                </div> -->
                                 <div class="listing-detail-item">
                                     <i class="fa fa-clock"></i>
 
-                                    <t t-if="state.selectedListing.unlimited_access">
-                                        <span>Unlimited Access</span>
-                                    </t>
-                                    <t t-else="">
-                                        <span>
-                                            <t t-if="state.selectedListing.duration_years"><t t-esc="state.selectedListing.duration_years"/> Years </t>
-                                            <t t-if="state.selectedListing.duration_months"><t t-esc="state.selectedListing.duration_months"/> Months </t>
-                                            <t t-if="state.selectedListing.duration_days"><t t-esc="state.selectedListing.duration_days"/> Days </t>
-                                        </span>
-                                    </t>
+                                    <span><t t-esc="state.selectedTool.remaining_usage"/></span>
                                 </div>
                             </div>
 

@@ -58,8 +58,9 @@ export class RentedByMe extends Component {
         this.state.selectedTool = null;
     }
 
-    viewListing(listing) {
-        this.state.selectedListing = listing;
+    viewListing(tool) {
+        this.state.selectedTool = tool;
+        this.state.selectedListing = tool.listing;
         this.state.showDetailsModal = true;
     }
 
