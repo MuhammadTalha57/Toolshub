@@ -282,15 +282,6 @@
                             <button class="btn btn-secondary" t-on-click="closeDetailsModal">
                                 Close
                             </button>
-                            <t t-if="state.selectedListing.owner_id !== props.user?.id">
-                                <!-- <button 
-                                    class="btn btn-primary"
-                                    t-on-click="() => this.rentListing(state.selectedListing)"
-                                    t-att-disabled="(state.selectedListing.available_users - state.selectedListing.subscribed_users) <= 0"
-                                >
-                                    <i class="fa fa-shopping-cart"></i> Rent Now
-                                </button> -->
-                            </t>
                         </div>
                     </div>
                 </div>
