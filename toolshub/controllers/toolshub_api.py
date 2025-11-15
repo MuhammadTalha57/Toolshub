@@ -14,6 +14,7 @@ class ToolshubAPI(http.Controller):
         Get rent listings with optional filters
         """
         _logger.info("HIT /toolshub/api/getRentListing, Getting Rent Listings")
+
         try:
             domain = []
             

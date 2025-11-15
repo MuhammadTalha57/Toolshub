@@ -66,9 +66,12 @@ class ToolshubAuth(http.Controller):
                 'login': email,
                 'password': password,
                 'partner_id': partner.id,
-                'active': False,  # User is INACTIVE until email verified
+                'active': True,
                 'groups_id': [(6, 0, [request.env.ref('base.group_portal').id])],
             })
+
+            user.with_context(active_test=False).sudo().write({'active': False})
+            _logger.debug(f"User deactivated: {email}")
             
             _logger.debug(f"Created inactive user: {email} (ID: {user.id})")
             _logger.info(f"User Created Successfully: {email}")

@@ -135,92 +135,52 @@ export class Login extends Component {
         try {
             console.log("=== SIGNUP ATTEMPT ===");
             
-            const csrfToken = this.getCSRFToken();
-            
-            const formData = new URLSearchParams();
-            if (csrfToken) {
-                formData.append('csrf_token', csrfToken);
-            }
-            formData.append('name', this.state.username);
-            formData.append('login', this.state.email);
-            formData.append('password', this.state.password);
-            formData.append('confirm_password', this.state.confirmPassword);
-
-            const response = await fetch('/web/signup', {
+            const response = await fetch('/toolshub/api/signup', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'application/json',
                 },
                 credentials: 'include',
-                body: formData.toString()
+                body: JSON.stringify({
+                    jsonrpc: '2.0',
+                    method: 'call',
+                    params: {
+                        name: this.state.username,
+                        email: this.state.email,
+                        password: this.state.password
+                    }
+                })
             });
 
-            const text = await response.text();
+            const data = await response.json();
 
-            // console.log(response, text);
-
-            if (!response.ok) {
-
-
-                this.state.error = "Signup Failed";
+            if (data.error) {
+                console.error("RPC Error:", data.error);
+                const errorMessage = data.error.data?.message || data.error.message || 'Signup failed';
+                this.state.error = errorMessage;
                 return;
-
-
-
-                // console.log("=== ERROR RESPONSE ===");
-                
-                // // Parse HTML to extract error
-                // const parser = new DOMParser();
-                // const doc = parser.parseFromString(text, 'text/html');
-                
-                // // Try multiple selectors to find the error
-                // const errorSelectors = [
-                //     '.alert-danger',
-                //     '.text-danger', 
-                //     'div.error',
-                //     'p.text-danger',
-                //     'div[role="alert"]',
-                //     '.o_error_detail',
-                //     'h1', // Sometimes the error is in h1
-                // ];
-                
-                // let errorMessage = null;
-                // for (const selector of errorSelectors) {
-                //     const element = doc.querySelector(selector);
-                //     if (element) {
-                //         errorMessage = element.textContent.trim();
-                //         console.log(`Found error in ${selector}:`, errorMessage);
-                //         if (errorMessage.length > 5) { // Valid error message
-                //             break;
-                //         }
-                //     }
-                // }
-
-                // // Log the full HTML for debugging (you can remove this later)
-                // console.log("Full HTML response:", text);
-
-                // // Set appropriate error message
-                // if (errorMessage) {
-                //     this.state.error = errorMessage;
-                // } else if (text.includes('not found') || text.includes('NotFound') || text.includes('404')) {
-                //     this.state.error = 'Signup is not available. Please enable "Free sign up" in Settings → General Settings';
-                // } else if (text.includes('werkzeug.exceptions.NotFound')) {
-                //     this.state.error = 'Signup endpoint not found. Ensure auth_signup module is installed and signup is enabled.';
-                // } else {
-                //     this.state.error = 'Signup failed. Please contact administrator to enable signup.';
-                // }
-                
-                // return;
             }
 
-            // Success
-            console.log("✓ Signup successful");
-            // await new Promise(resolve => setTimeout(resolve, 1000));
-            await this.handleLogin();
+            const result = data.result;
+
+            if (result && result.success) {
+                console.log("✓ Signup successful:", result.data.message);
+                
+                // Show success message and switch to login mode
+                this.state.error = ''; // Clear any errors
+                alert(result.data.message); // Show activation email message
+                
+                // Switch to login mode
+                this.state.isLogin = true;
+                this.clearForm();
+                
+            } else {
+                this.state.error = result?.data?.message || 'Signup failed';
+            }
             
         } catch (error) {
             console.error("Signup Error:", error);
-            this.state.error = 'An error occurred during signup.';
+            this.state.error = 'An error occurred during signup. Please try again.';
         } finally {
             this.state.loading = false;
         }
