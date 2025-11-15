@@ -95,7 +95,59 @@
             </div>
         </t>
         <t t-elif="props.type === 'rentedTool'">
-            <div>Hello</div>
+            <div class="listing-card scale-in" t-att-class="{'inactive': !isActive }">
+                <div class="listing-image">
+                    <t t-if="props.listing.tool_img">
+                        <img t-att-src="props.listing.tool_img_url" alt="image"/>
+                    </t>
+                    <t t-else="">
+                        <i class="fa fa-tools"></i>
+                    </t>
+                </div>
+
+                <div class="listing-content">
+                    <h3 class="listing-tool-name">
+                        <t t-esc="props.listing.tool_name"/>
+                    </h3>
+                    <div class="listing-plan-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 0.5rem;">
+                        <span class="listing-plan-name" style="margin: 0;">
+                            <t t-esc="props.listing.plan_name"/>
+                        </span>
+                    </div>
+
+                    <div class="listing-details">
+                        <div class="listing-detail-item">
+                            <i class="fa fa-user"></i>
+                            <span>
+                                Owner: <t t-esc="props.listing.owner_name"/>
+                            </span>
+                        </div>
+
+                        <div class="listing-detail-item">
+                            <i class="fa fa-clock"></i>
+                            <span><t t-esc="props.tool.remaining_usage"/></span>
+                        </div>
+
+                    </div>
+
+                    <div class="listing-price">
+                        $<t t-esc="props.listing.price"/>
+                    </div>
+
+                    <div class="listing-actions">
+                        <button class="btn btn-secondary" t-on-click="handleView">
+                            <i class="fa fa-eye"></i> View Details
+                        </button>
+                        <button 
+                            class="btn btn-primary"
+                            t-on-click="handleAction"
+                        >
+                            <i class="fa fa-user-plus"></i>
+                            <t t-esc="getActionLabel()"/>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </t>
         <t t-elif="props.type === 'rentedOutTool'">
             <div>Hello</div>

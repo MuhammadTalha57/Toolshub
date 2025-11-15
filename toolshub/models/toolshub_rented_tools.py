@@ -8,7 +8,7 @@ class ToolshubRentedTools(models.Model):
     # Fields
     rent_listing_id = fields.Many2one("toolshub.tool.rent.listings", string="Rent Listing", readonly=True, required=True)
     lender_id = fields.Many2one("res.users", string="Lender", required=True, ondelete="cascade", readonly=True)
-    is_active = fields.Boolean("Is Active")
+    is_active = fields.Boolean("Is Active", store=True)
     
     login = fields.Char("Login")
     password = fields.Char("Password")
@@ -118,7 +118,7 @@ class ToolshubRentedTools(models.Model):
     
     # Compute is_active based on expiry
     @api.depends('rent_listing_id', 'rent_listing_id.plan_id.is_unlimited', 
-                 'expiry_date', 'payment_status')
+                 'expiry_date')
     def _compute_is_active(self):
         for record in self:
             

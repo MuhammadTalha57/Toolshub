@@ -30,7 +30,7 @@
                         <ListingCard 
                             tool="tool" 
                             listing="tool.listing"
-                            type="'rentedtool'"
+                            type="'rentedTool'"
                             currentUserId="props.user?.id"
                             onView.bind="viewListing"
                             onAction.bind="viewCredentials"

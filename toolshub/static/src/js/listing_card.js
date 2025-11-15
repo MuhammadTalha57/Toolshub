@@ -19,7 +19,7 @@ export class ListingCard extends Component {
         if (this.props.type === 'rentListing') {
             return this.props.listing.owner_id === this.props.currentUserId;
         }
-        else if(this.props.type === 'rentedtool') {
+        else if(this.props.type === 'rentedTool') {
             return false;
         } else if(this.props.type === 'groupBuy') {
             return this.props.listing.initiator_id === this.props.currentUserId;
@@ -28,8 +28,8 @@ export class ListingCard extends Component {
     }
 
     get isActive() {
-        if(this.props.type === 'rentedtool') {
-            return true;
+        if(this.props.type === 'rentedTool') {
+            return this.props.tool.is_active;
         }
         if(this.props.type === 'rentListing') {
             return this.props.listing.is_active;
@@ -73,7 +73,7 @@ export class ListingCard extends Component {
         if(this.props.type === 'rentListing') {
             this.props.onView(this.props.listing);
         }
-        else if(this.props.type === 'rentedtool') {
+        else if(this.props.type === 'rentedTool') {
             this.props.onView(this.props.tool);
         }
     }
@@ -84,7 +84,7 @@ export class ListingCard extends Component {
                 this.props.onAction(this.props.listing);
             }
         }
-        else if(this.props.type === 'rentedtool') {
+        else if(this.props.type === 'rentedTool') {
             this.props.onAction(this.props.tool);
         }
     }
@@ -100,7 +100,7 @@ export class ListingCard extends Component {
             return "Rent Now";
 
         }
-        if(this.props.type === 'rentedtool') {
+        if(this.props.type === 'rentedTool') {
             return "View Credentials";
         }
         return "Join Group";
