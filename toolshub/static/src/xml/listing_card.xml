@@ -3,38 +3,41 @@
 
     <!-- Listing Card Template -->
     <t t-name="toolshub.ListingCard">
-        <div class="listing-card scale-in" t-att-class="{ 'own-listing': isOwnListing, 'inactive': !isActive }">
-            <div class="listing-image">
-                <t t-if="props.listing.tool_img">
-                    <img t-att-src="props.listing.tool_img_url" alt="image"/>
-                </t>
-                <t t-else="">
-                    <i class="fa fa-tools"></i>
-                </t>
-            </div>
 
-            <div class="listing-content">
-                <h3 class="listing-tool-name">
-                    <t t-esc="props.listing.tool_name"/>
-                </h3>
-                <div class="listing-plan-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 0.5rem;">
-                    <span class="listing-plan-name" style="margin: 0;">
-                        <t t-esc="props.listing.plan_name"/>
-                    </span>
-                    <t t-if="props.type !== 'rentedtool' and isOwnListing">
-                        <label class="toggle-switch" style="display: flex; align-items: center; margin: 0;">
-                            <input 
-                                type="checkbox"
-                                t-att-checked="props.listing.is_active"
-                                t-on-change="handleToggleIsActive"
-                            />
-                            <span class="toggle-slider"></span>
-                        </label>
+        <!-- Rent Listing -->
+        <t t-if="props.type === 'rentListing'">
+            <div class="listing-card scale-in" t-att-class="{ 'own-listing': isOwnListing, 'inactive': !isActive }">
+                <div class="listing-image">
+                    <t t-if="props.listing.tool_img">
+                        <img t-att-src="props.listing.tool_img_url" alt="image"/>
+                    </t>
+                    <t t-else="">
+                        <i class="fa fa-tools"></i>
                     </t>
                 </div>
 
-                <div class="listing-details">
-                    <t t-if="props.type === 'rent' or props.type === 'rentedtool' ">
+                <div class="listing-content">
+                    <h3 class="listing-tool-name">
+                        <t t-esc="props.listing.tool_name"/>
+                    </h3>
+                    <div class="listing-plan-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 0.5rem;">
+                        <span class="listing-plan-name" style="margin: 0;">
+                            <t t-esc="props.listing.plan_name"/>
+                        </span>
+
+                        <t t-if="isOwnListing">
+                            <label class="toggle-switch" style="display: flex; align-items: center; margin: 0;">
+                                <input 
+                                    type="checkbox"
+                                    t-att-checked="props.listing.is_active"
+                                    t-on-change="handleToggleIsActive"
+                                />
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </t>
+                    </div>
+
+                    <div class="listing-details">
                         <div class="listing-detail-item">
                             <i class="fa fa-user"></i>
                             <span>
@@ -42,28 +45,23 @@
                             </span>
                         </div>
 
-                        <t t-if="props.type !== 'rentedtool'">
-                            <div class="listing-detail-item">
-                                <i class="fa fa-users"></i>
+                        <div class="listing-detail-item">
+                            <i class="fa fa-users"></i>
 
-                                <t t-if="props.listing.unlimited_users">
-                                    <span>Unlimited Users</span>
-                                </t>
-                                <t t-else="">
-                                    <span>
-                                        <t t-esc="props.listing.available_users"/> / <t t-esc="props.listing.available_users + props.listing.subscribers_count"/> slots available
-                                    </span>
-                                </t>
+                            <t t-if="props.listing.unlimited_users">
+                                <span>Unlimited Users</span>
+                            </t>
+                            <t t-else="">
+                                <span>
+                                    <t t-esc="props.listing.available_users"/> / <t t-esc="props.listing.available_users + props.listing.subscribers_count"/> slots available
+                                </span>
+                            </t>
 
-                            </div>
-                        </t>
+                        </div>
 
                         <div class="listing-detail-item">
                             <i class="fa fa-clock"></i>
-                            <t t-if="props.type==='rentedtool'">
-                                <span><t t-esc="props.tool.remaining_usage"/></span>
-                            </t>
-                            <t t-elif="props.listing.unlimited_access">
+                            <t t-if="props.listing.unlimited_access">
                                 <span>Unlimited Access</span>
                             </t>
                             <t t-else="">
@@ -73,69 +71,177 @@
                                     <t t-if="props.listing.duration_days"><t t-esc="props.listing.duration_days"/> Days </t>
                                 </span>
                             </t>
-
-
-                        </div>
-                    </t>
-                    <t t-else="">
-                        <div class="listing-detail-item">
-                            <i class="fa fa-user"></i>
-                            <span>
-                                Initiator: <t t-esc="props.listing.initiator_name"/>
-                            </span>
-                        </div>
-                        <div class="listing-detail-item">
-                            <i class="fa fa-users"></i>
-                            <span>
-                                <t t-esc="props.listing.subscribed_users"/> / <t t-esc="props.listing.total_required_users"/> joined
-                            </span>
-                        </div>
-                        <t t-if="daysLeft !== null">
-                            <div class="listing-detail-item">
-                                <i class="fa fa-calendar"></i>
-                                <span>
-                                    <t t-esc="daysLeft"/> days left
-                                </span>
-                            </div>
-                        </t>
-                    </t>
-                </div>
-
-                <t t-if="props.type === 'groupbuy'">
-                    <div class="progress-bar-container">
-                        <div class="progress-bar-label">
-                            <span>Progress</span>
-                            <span><t t-esc="Math.round(progress)"/>%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-bar-fill" t-att-style="'width: ' + progress + '%'"></div>
                         </div>
                     </div>
-                </t>
+                    <div class="listing-price">
+                        $<t t-esc="props.listing.price" />
+                    </div>
 
-                <div class="listing-price">
-                    $<t t-esc="props.type === 'rent' or props.type === 'rentedtool' ? props.listing.price : props.listing.price_per_user"/>
-                    <t t-if="props.type === 'groupbuy'">
-                        <span style="font-size: 0.8rem; color: var(--text-secondary);">/user</span>
+                    <div class="listing-actions">
+                        <button class="btn btn-secondary" t-on-click="handleView">
+                            <i class="fa fa-eye"></i> View Details
+                        </button>
+                        <button 
+                            class="btn btn-primary"
+                            t-att-class="{ 'btn-secondary': isOwnListing || !isActive }"
+                            t-att-disabled="isOwnListing || !isActive"
+                            t-on-click="handleAction"
+                        >
+                            <i t-att-class="isOwnListing ? 'fa fa-check' : (isFull ? 'fa fa-ban' : 'fa fa-shopping-cart')"></i>
+                            <t t-esc="getActionLabel()"/>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </t>
+        <t t-elif="props.type === 'rentedTool'">
+            <div>Hello</div>
+        </t>
+        <t t-elif="props.type === 'rentedOutTool'">
+            <div>Hello</div>
+        </t>
+        <t t-else="">
+
+            <div class="listing-card scale-in" t-att-class="{ 'own-listing': isOwnListing, 'inactive': !isActive }">
+                <div class="listing-image">
+                    <t t-if="props.listing.tool_img">
+                        <img t-att-src="props.listing.tool_img_url" alt="image"/>
+                    </t>
+                    <t t-else="">
+                        <i class="fa fa-tools"></i>
                     </t>
                 </div>
 
-                <div class="listing-actions">
-                    <button class="btn btn-secondary" t-on-click="handleView">
-                        <i class="fa fa-eye"></i> View Details
-                    </button>
-                    <button 
-                        class="btn btn-primary"
-                        t-att-class="{ 'btn-secondary': props.type !== 'rentedtool' and (isOwnListing || isFull || !props.listing.is_active) }"
-                        t-att-disabled=" props.type !== 'rentedtool' and (isOwnListing || isFull || !props.listing.is_active)"
-                        t-on-click="handleAction"
-                    >
-                        <i t-att-class="isOwnListing ? 'fa fa-check' : (isFull ? 'fa fa-ban' : (props.type === 'rent' ? 'fa fa-shopping-cart' : 'fa fa-user-plus'))"></i>
-                        <t t-esc="getActionLabel()"/>
-                    </button>
+                <div class="listing-content">
+                    <h3 class="listing-tool-name">
+                        <t t-esc="props.listing.tool_name"/>
+                    </h3>
+                    <div class="listing-plan-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 0.5rem;">
+                        <span class="listing-plan-name" style="margin: 0;">
+                            <t t-esc="props.listing.plan_name"/>
+                        </span>
+                        <t t-if="props.type !== 'rentedtool' and isOwnListing">
+                            <label class="toggle-switch" style="display: flex; align-items: center; margin: 0;">
+                                <input 
+                                    type="checkbox"
+                                    t-att-checked="props.listing.is_active"
+                                    t-on-change="handleToggleIsActive"
+                                />
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </t>
+                    </div>
+
+                    <div class="listing-details">
+                        <t t-if="props.type === 'rent' or props.type === 'rentedtool' or props.type === 'rentedouttool' ">
+                            <div class="listing-detail-item">
+                                <i class="fa fa-user"></i>
+                                <span>
+                                    <t t-if="props.type === 'rentedouttool'">
+                                        Lender: <t t-esc="props.tool.lender_name"/>
+                                    </t>
+                                    <t t-else="">
+                                        Owner: <t t-esc="props.listing.owner_name"/>
+                                    </t>
+                                </span>
+                            </div>
+
+                            <t t-if="props.type !== 'rentedtool'">
+                                <div class="listing-detail-item">
+                                    <i class="fa fa-users"></i>
+
+                                    <t t-if="props.listing.unlimited_users">
+                                        <span>Unlimited Users</span>
+                                    </t>
+                                    <t t-else="">
+                                        <span>
+                                            <t t-esc="props.listing.available_users"/> / <t t-esc="props.listing.available_users + props.listing.subscribers_count"/> slots available
+                                        </span>
+                                    </t>
+
+                                </div>
+                            </t>
+
+                            <div class="listing-detail-item">
+                                <i class="fa fa-clock"></i>
+                                <t t-if="props.type==='rentedtool'">
+                                    <span><t t-esc="props.tool.remaining_usage"/></span>
+                                </t>
+                                <t t-elif="props.listing.unlimited_access">
+                                    <span>Unlimited Access</span>
+                                </t>
+                                <t t-else="">
+                                    <span>
+                                        <t t-if="props.listing.duration_years"><t t-esc="props.listing.duration_years"/> Years </t>
+                                        <t t-if="props.listing.duration_months"><t t-esc="props.listing.duration_months"/> Months </t>
+                                        <t t-if="props.listing.duration_days"><t t-esc="props.listing.duration_days"/> Days </t>
+                                    </span>
+                                </t>
+
+
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <div class="listing-detail-item">
+                                <i class="fa fa-user"></i>
+                                <span>
+                                    Initiator: <t t-esc="props.listing.initiator_name"/>
+                                </span>
+                            </div>
+                            <div class="listing-detail-item">
+                                <i class="fa fa-users"></i>
+                                <span>
+                                    <t t-esc="props.listing.subscribed_users"/> / <t t-esc="props.listing.total_required_users"/> joined
+                                </span>
+                            </div>
+                            <t t-if="daysLeft !== null">
+                                <div class="listing-detail-item">
+                                    <i class="fa fa-calendar"></i>
+                                    <span>
+                                        <t t-esc="daysLeft"/> days left
+                                    </span>
+                                </div>
+                            </t>
+                        </t>
+                    </div>
+
+                    <t t-if="props.type === 'groupbuy'">
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-label">
+                                <span>Progress</span>
+                                <span><t t-esc="Math.round(progress)"/>%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-bar-fill" t-att-style="'width: ' + progress + '%'"></div>
+                            </div>
+                        </div>
+                    </t>
+
+                    <div class="listing-price">
+                        $<t t-esc="props.type === 'rent' or props.type === 'rentedtool' ? props.listing.price : props.listing.price_per_user"/>
+                        <t t-if="props.type === 'groupbuy'">
+                            <span style="font-size: 0.8rem; color: var(--text-secondary);">/user</span>
+                        </t>
+                    </div>
+
+                    <div class="listing-actions">
+                        <button class="btn btn-secondary" t-on-click="handleView">
+                            <i class="fa fa-eye"></i> View Details
+                        </button>
+                        <button 
+                            class="btn btn-primary"
+                            t-att-class="{ 'btn-secondary': props.type !== 'rentedtool' and (isOwnListing || isFull || !props.listing.is_active) }"
+                            t-att-disabled=" props.type !== 'rentedtool' and (isOwnListing || isFull || !props.listing.is_active)"
+                            t-on-click="handleAction"
+                        >
+                            <i t-att-class="isOwnListing ? 'fa fa-check' : (isFull ? 'fa fa-ban' : (props.type === 'rent' ? 'fa fa-shopping-cart' : 'fa fa-user-plus'))"></i>
+                            <t t-esc="getActionLabel()"/>
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
+        </t>
+
     </t>
 
 </templates>

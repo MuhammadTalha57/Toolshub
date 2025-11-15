@@ -234,3 +234,5 @@ class StripePaymentController(http.Controller):
                     'error': str(e)
                 }
             }
+
+

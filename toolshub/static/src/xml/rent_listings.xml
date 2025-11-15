@@ -38,7 +38,7 @@
                         <t t-if="listing.is_active or listing.owner_id === props.user.id">
                             <ListingCard 
                                 listing="listing"
-                                type="'rent'"
+                                type="'rentListing'"
                                 currentUserId="props.user?.id"
                                 onView.bind="viewListing"
                                 onAction.bind="rentListing"

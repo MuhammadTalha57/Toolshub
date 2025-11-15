@@ -51,6 +51,7 @@ export class RentedByMe extends Component {
     closeDetailsModal() {
         this.state.showDetailsModal = false;
         this.state.selectedListing = null;
+        this.state.selectedTool = null;
     }
 
     closeCredentialsModal() {

@@ -785,3 +785,99 @@ class ToolshubAPI(http.Controller):
                 }
             }
 
+    @http.route('/toolshub/api/updateRentedToolCredentials', type='json', auth='user', methods=['POST'])
+    def update_rented_tool_credentials(self, rented_tool_id, login, password, **kwargs):
+        """
+        Update login and password for a rented tool
+        Expected params: rented_tool_id, login, password
+        """
+        _logger.info("HIT /toolshub/api/updateRentedToolCredentials, Updating Rented Tool Credentials")
+        
+        # Validate required fields
+        # rented_tool_id = kwargs.get('rented_tool_id')
+        # login = kwargs.get('login')
+        # password = kwargs.get('password')
+        
+        if not rented_tool_id:
+            _logger.error("Missing rented_tool_id parameter")
+            return {
+                'success': False,
+                'data': {
+                    'message': "rented_tool_id parameter is required",
+                }
+            }
+        
+        if not login or not password:
+            _logger.error("Missing login or password parameters")
+            return {
+                'success': False,
+                'data': {
+                    'message': "login and password parameters are required",
+                }
+            }
+        
+        try:
+            rented_tool_id = int(rented_tool_id)
+        except (ValueError, TypeError) as e:
+            _logger.error(f"Invalid rented_tool_id format: {str(e)}")
+            return {
+                'success': False,
+                'data': {
+                    'message': f'Invalid rented_tool_id format: {str(e)}',
+                    'error': str(e)
+                }
+            }
+        
+        try:
+            # Get the rented tool record
+            RentedTools = request.env['toolshub.rented.tools'].sudo()
+            rented_tool = RentedTools.browse(rented_tool_id)
+            
+            if not rented_tool.exists():
+                _logger.error(f"Rented tool not found with ID = {rented_tool_id}")
+                return {
+                    'success': False,
+                    'data': {
+                        'message': 'Rented tool record not found'
+                    }
+                }
+            
+            # Check if current user is the owner of the listing
+            current_user = request.env.user
+            if rented_tool.rent_listing_id.owner_id.id != current_user.id:
+                _logger.error(f"User {current_user.id} attempted to update credentials for rented tool {rented_tool_id} owned by {rented_tool.rent_listing_id.owner_id.id}")
+                return {
+                    'success': False,
+                    'data': {
+                        'message': 'You can only update credentials for your own rented out tools'
+                    }
+                }
+            
+            # Update credentials
+            rented_tool.write({
+                'login': login,
+                'password': password
+            })
+            
+            _logger.debug(f"Credentials updated for rented tool ID {rented_tool_id}")
+            _logger.info(f"Rented Tool Credentials Updated Successfully for ID {rented_tool_id}")
+            
+            return {
+                'success': True,
+                'data': {
+                    'message': 'Credentials updated successfully',
+                    'login': login,
+                    'password': password,
+                }
+            }
+            
+        except Exception as e:
+            _logger.error(f"Error updating rented tool credentials: {str(e)}")
+            return {
+                'success': False,
+                'data': {
+                    'message': 'Failed to update credentials',
+                    'error': str(e)
+                }
+            }
+

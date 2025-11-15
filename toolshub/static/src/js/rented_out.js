@@ -15,34 +15,36 @@ export class RentedOut extends Component {
 
         this.state = useState({
             loading: true,
-            rentedTools: [],
+            rentedOutTools: [],
             showDetailsModal: false,
             showCredentialsModal: false,
             selectedListing: null,
             selectedTool: null,
+            login: null,
+            password: null,
         });
 
         onMounted(() => {
-            this.loadRentedTools();
+            this.loadRentedOutTools();
         });
     }
 
-    async loadRentedTools() {
+    async loadRentedOutTools() {
         this.state.loading = true;
         try {
 
-            const rentedToolsResult = await rpc("/toolshub/api/getRentedTools")
+            const rentedOutToolsResult = await rpc("/toolshub/api/getRentedOutTools")
 
-            if(rentedToolsResult.success) {
-                this.state.rentedTools = rentedToolsResult.data.rented_tools;
+            if(rentedOutToolsResult.success) {
+                this.state.rentedOutTools = rentedOutToolsResult.data.rented_out_tools;
             }
             else {
-                this.notification.add(rentedToolsResult.data.message, {type: 'danger', title: 'Error'});
+                this.notification.add(rentedOutToolsResult.data.message, {type: 'danger', title: 'Error'});
             }
             
         } catch (error) {
-            this.notification.add("Unexpected Error Occured while loading Rented Tools", {type: 'danger', title: 'Error'});
-            console.error('Error loading rented tools data:', error);
+            this.notification.add("Unexpected Error Occured while loading Rented Out Tools", {type: 'danger', title: 'Error'});
+            console.error('Error loading rented out tools data:', error);
         } finally {
             this.state.loading = false;
         }
@@ -51,6 +53,7 @@ export class RentedOut extends Component {
     closeDetailsModal() {
         this.state.showDetailsModal = false;
         this.state.selectedListing = null;
+        this.state.selectedTool = null;
     }
 
     closeCredentialsModal() {
@@ -66,7 +69,48 @@ export class RentedOut extends Component {
 
     viewCredentials(tool) {
         this.state.selectedTool = tool;
+        this.state.login = tool.login;
+        this.state.password = tool.password;
         this.state.showCredentialsModal = true;
+
+    }
+
+
+    async handleCredentialsSubmit(ev) {
+        ev.preventDefault();
+
+        try {
+            const result = await rpc("/toolshub/api/updateRentedToolCredentials", {'rented_tool_id': this.state.selectedTool.id, 'login': this.state.login, 'password': this.state.password});
+
+            if (result.success) {
+                this.notification.add(result.data.message, {
+                    type: "success",
+                    title: "Credentials Updated"
+                });
+
+                // Update the listing in state
+                const rentedOutToolIndex = this.state.rentedOutTools.findIndex(tool => tool.id === this.state.selectedTool.id);
+                if (rentedOutToolIndex !== -1) {
+                    this.state.rentedOutTools[rentedOutToolIndex].login = result.data.login;
+                    this.state.rentedOutTools[rentedOutToolIndex].password = result.data.password;
+                }
+            } else {
+                this.notification.add(result.data.message, {
+                    type: "danger",
+                    title: "Error"
+                });
+            }
+
+        } catch (error) {
+            console.error('Error while updating credentials:', error);
+            this.notification.add("Unexpected Error Occurred while updating credentials", {
+                type: "danger",
+                title: "Error"
+            });
+        } finally {
+            this.closeCredentialsModal();
+        }
+
     }
 
 }

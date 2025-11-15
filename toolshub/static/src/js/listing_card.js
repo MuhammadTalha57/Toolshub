@@ -16,12 +16,12 @@ export class ListingCard extends Component {
     };
 
     get isOwnListing() {
-        if (this.props.type === 'rent') {
+        if (this.props.type === 'rentListing') {
             return this.props.listing.owner_id === this.props.currentUserId;
         }
         else if(this.props.type === 'rentedtool') {
             return false;
-        } else {
+        } else if(this.props.type === 'groupBuy') {
             return this.props.listing.initiator_id === this.props.currentUserId;
         }
       
@@ -31,7 +31,7 @@ export class ListingCard extends Component {
         if(this.props.type === 'rentedtool') {
             return true;
         }
-        if(this.props.type === 'rent') {
+        if(this.props.type === 'rentListing') {
             return this.props.listing.is_active;
         }
     }
@@ -47,9 +47,9 @@ export class ListingCard extends Component {
     }
 
     get availableSlots() {
-        if (this.props.type === 'rent') {
+        if (this.props.type === 'rentListing') {
             return this.props.listing.available_users - this.props.listing.subscribed_users;
-        } else {
+        } else if(this.props.type === 'groupBuy') {
             return this.props.listing.total_required_users - this.props.listing.subscribed_users;
         }
     }
@@ -70,38 +70,47 @@ export class ListingCard extends Component {
     }
 
     handleView() {
-        if(this.props.type === 'rentedtool') {
-            this.props.onView(this.props.tool);
-            return;
+        if(this.props.type === 'rentListing') {
+            this.props.onView(this.props.listing);
         }
-        this.props.onView(this.props.listing);
+        else if(this.props.type === 'rentedtool') {
+            this.props.onView(this.props.tool);
+        }
     }
 
     handleAction() {
-        if(this.props.type === 'rentedtool') {
-            this.props.onAction(this.props.tool);
+        if(this.props.type === 'rentListing') {
+            if (!this.isOwnListing && !this.isFull) {
+                this.props.onAction(this.props.listing);
+            }
         }
-        else if (!this.isOwnListing && !this.isFull) {
-            this.props.onAction(this.props.listing);
+        else if(this.props.type === 'rentedtool') {
+            this.props.onAction(this.props.tool);
         }
     }
 
     getActionLabel() {
-        if (this.isOwnListing) {
-            return 'Your Listing';
-        }
-        if (this.isFull) {
-            return 'Full';
+        if(this.props.type === 'rentListing') {
+            if (this.isOwnListing) {
+                return 'Your Listing';
+            }
+            if (this.isFull) {
+                return 'Full';
+            }
+            return "Rent Now";
+
         }
         if(this.props.type === 'rentedtool') {
             return "View Credentials";
         }
-        return this.props.type === 'rent' ? 'Rent Now' : 'Join Group';
+        return "Join Group";
     }
 
     handleToggleIsActive() {
-        this.props.listing.is_active = !this.props.listing.is_active
-        this.props.onToggleIsActive(this.props.listing);
+        if(this.props.type === 'rentListing') {
+            this.props.listing.is_active = !this.props.listing.is_active
+            this.props.onToggleIsActive(this.props.listing);
+        }
     }
 
 }
