@@ -16,7 +16,6 @@
                 <div class="empty-state">
                     <i class="fa fa-spinner fa-spin"></i>
                     <h3>Loading rented tools... <t t-esc="state.loading" /></h3>
-                    <button t-on-click="tog">Resret Loading</button>
                 </div>
             </t>
             <t t-if="state.rentedTools?.length === 0">
