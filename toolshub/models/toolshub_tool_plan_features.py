@@ -6,7 +6,7 @@ class ToolshubToolPlanFeatures(models.Model):
 
     # Fields
     name = fields.Char(string="Name", required=True)
-    description = fields.Char(string="Description")
+    # description = fields.Char(string="Description")
     plan_id = fields.Many2one(string="Plan", comodel_name="toolshub.tool.plans", ondelete="cascade", required=True, domain="[('tool_id', '=', tool_id)]")
 
 
