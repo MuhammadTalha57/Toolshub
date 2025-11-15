@@ -14,7 +14,7 @@
             </t>
             
             <!-- Main App Container -->
-            <div id="toolshub-root" class="toolshub-app">
+            <div id="toolshub-root" class="toolshub-app ">
                 <owl-component name="toolshub.ToolshubApp"/>
             </div>
         </t>

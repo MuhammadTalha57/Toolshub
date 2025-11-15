@@ -35,7 +35,7 @@
             <t t-else="">
                 <div class="listings-grid">
                     <t t-foreach="state.listings" t-as="listing" t-key="listing.id">
-                        <t t-if="listing.is_active or listing.owner_id === props.user.id">
+                        <t t-if="(listing.is_active and !isFull(listing)) or listing.owner_id === props.user.id">
                             <ListingCard 
                                 listing="listing"
                                 type="'rentListing'"

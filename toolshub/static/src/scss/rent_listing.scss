@@ -1,0 +1,44 @@
+
+.rent-listing-full {
+    opacity: 0.6;
+    filter: grayscale(50%);
+    background-color: var(--bg-tertiary);
+    cursor: not-allowed;
+
+    box-shadow: var(--shadow-sm);
+    transform: none;
+}
+
+
+.rent-listing-full .listing-image {
+    opacity: 0.5;
+    filter: grayscale(100%);
+}
+
+.rent-listing-full .listing-content {
+    pointer-events: none;
+}
+
+/* Keep view details enabled for rented out listings */
+.rent-listing-full .listing-actions .btn-secondary {
+    pointer-events: auto;
+    cursor: pointer;
+    opacity: 1;
+}
+
+.listing-card.rent-listing-full::after {
+    content: 'Rented out';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 2rem;
+    font-size: 1rem;
+    font-weight: 700;
+    z-index: 2;
+    pointer-events: none;
+    letter-spacing: 1px;
+}

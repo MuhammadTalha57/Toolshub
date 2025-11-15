@@ -28,6 +28,15 @@ class StripePaymentController(http.Controller):
                     'error': '/processRentPayment called without providing listing'
                 }
             }
+        
+        if (not listing['unlimited_users']) and listing['available_users'] <= 0:
+            _logger.error(f"Attempted to rent fully rented listing listing ID = {listing.id}")
+            return {
+                'success': False,
+                'data': {
+                    'message': 'This listing has no available users'
+                }
+            }
 
         # Initialize Stripe
         stripe.api_key = request.env['ir.config_parameter'].sudo().get_param('stripe_api_key', '')

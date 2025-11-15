@@ -132,6 +132,10 @@ export class RentListings extends Component {
         return this.selectedTool?.plan_ids || [];
     }
 
+    isFull(listing) {
+        return listing.available_users <= 0;
+    }
+
     openCreateModal() {
         if(!this.props.user.stripe_connect_account_id) {
             this.state.showConnectIDModal = true;

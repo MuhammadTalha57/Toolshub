@@ -576,6 +576,15 @@ class ToolshubAPI(http.Controller):
                     }
                 }
             
+            if (not listing.unlimited_users) and listing.available_users <= 0:
+                _logger.error(f"Attempted to rent fully rented listing listing ID = {listing_id}")
+                return {
+                    'success': False,
+                    'data': {
+                        'message': 'This listing has no available users'
+                    }
+                }
+            
             # Get current user (lender)
             current_user = request.env.user
             

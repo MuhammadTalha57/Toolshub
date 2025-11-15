@@ -59,7 +59,7 @@ export class ListingCard extends Component {
 
     get isFull() {
         if(this.props.type === 'rentListing') {
-            return this.props.listing.available_users <= 0;
+            return  !this.props.listing.unlimited_users && this.props.listing.available_users <= 0;
         }
     }
 
