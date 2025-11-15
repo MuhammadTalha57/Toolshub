@@ -709,5 +709,79 @@ class ToolshubAPI(http.Controller):
             }
         }
 
-
+    @http.route('/toolshub/api/getRentedOutTools', type='json', auth='user', methods=['POST'])
+    def get_rented_out_tools(self, **kwargs):
+        """
+        Get all tools that the current user has rented out to others
+        """
+        _logger.info("HIT /toolshub/api/getRentedOutTools, Getting Rented Out Tools")
+        
+        try:
+            # Get current user
+            current_user = request.env.user
+            
+            # Query rented tools where the listing owner is the current user
+            RentedTools = request.env['toolshub.rented.tools'].sudo()
+            domain = [('rent_listing_id.owner_id', '=', current_user.id)]
+            
+            rented_out_tools = RentedTools.search(domain, order='id desc')
+            
+            _logger.debug(f"Found {len(rented_out_tools)} rented out tools for user {current_user.id}")
+            
+            # Format data
+            rented_out_tools_data = []
+            for rented_tool in rented_out_tools:
+                listing = rented_tool.rent_listing_id
+            
+                # Build listing object
+                listing_data = {
+                    'id': listing.id,
+                    'tool_id': listing.tool_id.id if listing.tool_id else None,
+                    'tool_name': listing.tool_id.name if listing.tool_id else '',
+                    'tool_img': listing.tool_id.icon,
+                    'tool_img_url': listing.tool_id.image_url,
+                    'plan_id': listing.plan_id.id if listing.plan_id else None,
+                    'plan_name': listing.plan_id.name if listing.plan_id else '',
+                    'unlimited_access': listing.plan_id.is_unlimited,
+                    'duration_years': listing.plan_id.duration_years,
+                    'duration_months': listing.plan_id.duration_months,
+                    'duration_days': listing.plan_id.duration_days,
+                    'is_active': listing.is_active,
+                    'price': listing.price,
+                    'currency_symbol': listing.currency_id.symbol if listing.currency_id else '$',
+                    'subscribers_count': listing.subscribers_count,
+                    'unlimited_users': listing.unlimited_users,
+                    'available_users': listing.available_users if not listing.unlimited_users else None,
+                    'owner_id': listing.owner_id.id if listing.owner_id else None,
+                    'owner_name': listing.owner_id.name if listing.owner_id else '',
+                    'owner_connect_account_id': listing.owner_id.stripe_connect_account_id
+                }
+            
+                rented_out_tools_data.append({
+                    'id': rented_tool.id,
+                    'remaining_usage': rented_tool.remaining_usage,
+                    'listing': listing_data,
+                    'lender_id': rented_tool.lender_id.id if rented_tool.lender_id else None,
+                    'lender_name': rented_tool.lender_id.name if rented_tool.lender_id else '',
+                    'is_active': rented_tool.is_active,
+                    'login': rented_tool.login,
+                    'password': rented_tool.password
+                })
+            
+            return {
+                'success': True,
+                'data': {
+                    'rented_out_tools': rented_out_tools_data
+                }
+            }
+            
+        except Exception as e:
+            _logger.error(f"Error getting rented out tools: {str(e)}")
+            return {
+                'success': False,
+                'data': {
+                    'message': 'Failed to get rented out tools',
+                    'error': str(e)
+                }
+            }
 
