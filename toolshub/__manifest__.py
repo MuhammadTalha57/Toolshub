@@ -1,7 +1,7 @@
 {
     "name": "Toolshub",
     "depends": [
-        "base", "web", "website"
+        "base", "web", "website", "mail"
     ],
     "application": True,
     "installable": True,
