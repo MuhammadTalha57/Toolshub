@@ -12,6 +12,9 @@
                     <group>
                         <field name="rent_listing_id"/>
                         <field name="lender_id"/>
+                        <field name="is_active"/>
+                        <field name="login"/>
+                        <field name="password"/>
                     </group>
                 </sheet>
             </form>

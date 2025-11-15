@@ -683,6 +683,7 @@ class ToolshubAPI(http.Controller):
                 }
             
                 rented_tools_data.append({
+                    'id': rented_tool.id,
                     'listing': listing_data,
                     'lender_id': rented_tool.lender_id.id if rented_tool.lender_id else None,
                     'is_active': rented_tool.is_active,

@@ -22,7 +22,7 @@ export class ToolshubApp extends Component {
         this.notification = useService("notification");
 
         this.state = useState({
-            currentPage: 'rent',
+            currentPage: 'rent-by-me',
             isAuthenticated: false,
             user: null,
             loading: true,

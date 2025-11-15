@@ -16,10 +16,11 @@
             <t t-if="state.loading">
                 <div class="empty-state">
                     <i class="fa fa-spinner fa-spin"></i>
-                    <h3>Loading rented tools...</h3>
+                    <h3>Loading rented tools... <t t-esc="state.loading" /></h3>
+                    <button t-on-click="tog">Resret Loading</button>
                 </div>
             </t>
-            <t t-elif="state.rentedTools?.length === 0">
+            <t t-if="state.rentedTools?.length === 0">
                 <div class="empty-state">
                     <i class="fa fa-inbox"></i>
                     <h3>No tools rented</h3>
