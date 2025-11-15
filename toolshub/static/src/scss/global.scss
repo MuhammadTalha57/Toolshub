@@ -460,6 +460,22 @@
     margin-bottom: 1rem;
 }
 
+.listing-feature {
+    display: inline-block;
+    background-color: var(--bg-tertiary);
+    color: var(--primary-color);
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.listing-features {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
 .listing-details {
     display: flex;
     flex-direction: column;
@@ -682,6 +698,12 @@
 
 .modal-title {
     font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.modal-subtitle {
+    font-size: 1.25rem;
     font-weight: 700;
     color: var(--text-primary);
 }
