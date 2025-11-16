@@ -151,12 +151,12 @@
                                 <div class="input-group">
                                     <span class="input-prefix">$</span>
                                     <input 
-                                        type="text"
+                                        type="number"
+                                        step="any"
                                         class="form-input no-spinner"
                                         placeholder="10.00"
                                         t-model="state.newListing.price"
                                         t-on-input="(ev) => this.updateField('price', ev)"
-                                        
                                         required="required"
                                     />
                                 </div>
