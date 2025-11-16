@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 class ToolshubRentedTools(models.Model):
     _name = "toolshub.rented.tools"
-    _description = "Model for Rented Toos."
+    _description = "Model for Rented Tools."
 
     # Fields
     rent_listing_id = fields.Many2one("toolshub.tool.rent.listings", string="Rent Listing", readonly=True, required=True)
@@ -44,10 +44,6 @@ class ToolshubRentedTools(models.Model):
                  'rented_date')
     def _compute_expiry_date(self):
         for record in self:
-            # if not record.rent_listing_id or not record.rent_listing_id.plan_id:
-            #     record.expiry_date = False
-            #     continue
-            
             plan = record.rent_listing_id.plan_id
             
             # If unlimited access, no expiry date

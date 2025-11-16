@@ -57,7 +57,6 @@ class ToolshubAPI(http.Controller):
                     'id': listing.id,
                     'tool_id': listing.tool_id.id if listing.tool_id else None,
                     'tool_name': listing.tool_id.name if listing.tool_id else '',
-                    'tool_img': listing.tool_id.icon,
                     'tool_img_url': listing.tool_id.image_url,
                     'plan_id': listing.plan_id.id if listing.plan_id else None,
                     'plan_name': listing.plan_id.name if listing.plan_id else '',
@@ -162,7 +161,6 @@ class ToolshubAPI(http.Controller):
                 tools_data.append({
                     'id': tool.id,
                     'name': tool.name,
-                    'icon': tool.icon,  # Base64 encoded image
                     'image_url': tool.image_url,
                     'plan_ids': plans_data,  # Now it's a proper list of dicts
                     'plans_count': len(plans_data)
@@ -267,7 +265,6 @@ class ToolshubAPI(http.Controller):
                     'name': plan.name,
                     'tool_id': plan.tool_id.id if plan.tool_id else None,
                     'tool_name': plan.tool_id.name if plan.tool_id else '',
-                    'tool_icon': plan.tool_id.icon if plan.tool_id else None,
                     'total_users': plan.total_users,
                     'unlimited_users': plan.unlimited_users,
                     'price': plan.price,
@@ -669,7 +666,6 @@ class ToolshubAPI(http.Controller):
                     'id': listing.id,
                     'tool_id': listing.tool_id.id if listing.tool_id else None,
                     'tool_name': listing.tool_id.name if listing.tool_id else '',
-                    'tool_img': listing.tool_id.icon,
                     'tool_img_url': listing.tool_id.image_url,
                     'plan_id': listing.plan_id.id if listing.plan_id else None,
                     'plan_name': listing.plan_id.name if listing.plan_id else '',
@@ -749,7 +745,6 @@ class ToolshubAPI(http.Controller):
                     'id': listing.id,
                     'tool_id': listing.tool_id.id if listing.tool_id else None,
                     'tool_name': listing.tool_id.name if listing.tool_id else '',
-                    'tool_img': listing.tool_id.icon,
                     'tool_img_url': listing.tool_id.image_url,
                     'plan_id': listing.plan_id.id if listing.plan_id else None,
                     'plan_name': listing.plan_id.name if listing.plan_id else '',

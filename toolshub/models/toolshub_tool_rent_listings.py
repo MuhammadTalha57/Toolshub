@@ -11,9 +11,9 @@ class ToolshubToolRentListings(models.Model):
     rented_tools_ids = fields.One2many("toolshub.rented.tools", "rent_listing_id", string="Rented Tools")
     subscribers_count = fields.Integer("Total Subscribers", compute="_compute_subscribers_count", store=True)
 
-    total_users = fields.Integer(strign="Total Users")
+    total_users = fields.Integer("Total Users")
     unlimited_users = fields.Boolean("Unlimited Users")
-    available_users = fields.Integer(string="Available Users", compute="_compute_available_users", store=True, readonly=True)
+    available_users = fields.Integer("Available Users", compute="_compute_available_users", store=True, readonly=True)
     is_active = fields.Boolean("Is Active", default=True)
 
     currency_id = fields.Many2one(string="Currency", comodel_name="res.currency", default=lambda self: self.env.company.currency_id)
@@ -62,6 +62,7 @@ class ToolshubToolRentListings(models.Model):
         if not self.unlimited_users:
             for record in self:
                 record.available_users = record.total_users - record.subscribers_count
+                record.is_active = record.is_active and (record.available_users > 0)
 
     # Calculating subscribers
     @api.depends('rented_tools_ids')
@@ -74,15 +75,9 @@ class ToolshubToolRentListings(models.Model):
     @api.onchange('unlimited_users')
     def _onchange_unlimited_users(self):
         self.total_users = 0
-        
 
-
-    def action_open_rent_wizard(self):
-        return {
-            'name': 'Rent Wizard',
-            'type': 'ir.actions.act_window',
-            'res_model': 'toolshub.rent.wizard',
-            'view_mode': 'form',
-            'target': 'new',  # this makes it a popup
-            'context': {'default_rent_listing_id': self.id}  # pass current listing
-        }
+    @api.constrains("is_active", "available_users")
+    def _check_is_active(self):
+        for record in self:
+            if record.is_active and not record.unlimited_users and record.available_users <= 0:
+                raise ValidationError("Listing can only be active if available users is greater than 0.")

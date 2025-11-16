@@ -25,6 +25,18 @@
         </field>
     </record>
 
+    <record id="toolshub_tool_rent_listings_list_view" model="ir.ui.view">
+        <field name="name">toolshub.tool.rent.listings.list.view</field>
+        <field name="model">toolshub.tool.rent.listings</field>
+        <field name="arch" type="xml">
+            <list string="Rent Listing">
+                <field name="tool_id"/>
+                <field name="plan_id"/>
+                <field name="owner_id"/>
+            </list>
+        </field>
+    </record>
+
     <!-- Tools Rent Listing Action -->
     <record id="toolshub_tool_rent_listings_action" model="ir.actions.act_window">
         <field name="name">Rent Listings</field>

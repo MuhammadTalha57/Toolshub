@@ -5,9 +5,9 @@
     <t t-name="toolshub.ListingCard">
 
         <t t-if="props.type === 'rentListing'">
-            <div class="listing-card scale-in" t-att-class="{ 'own-listing': isOwnListing, 'inactive': !isActive, 'rent-listing-full': isFull }">
+            <div class="listing-card scale-in" t-att-class="{ 'own-listing': isOwnListing, 'rent-listing-full': isFull, 'inactive': !isFull and !isActive }">
                 <div class="listing-image">
-                    <t t-if="props.listing.tool_img">
+                    <t t-if="props.listing.tool_img_url">
                         <img t-att-src="props.listing.tool_img_url" alt="image"/>
                     </t>
                     <t t-else="">
@@ -96,7 +96,7 @@
         <t t-elif="props.type === 'rentedTool'">
             <div class="listing-card scale-in" t-att-class="{'inactive': !isActive }">
                 <div class="listing-image">
-                    <t t-if="props.listing.tool_img">
+                    <t t-if="props.listing.tool_img_url">
                         <img t-att-src="props.listing.tool_img_url" alt="image"/>
                     </t>
                     <t t-else="">
@@ -151,7 +151,7 @@
         <t t-elif="props.type === 'rentedOutTool'">
             <div class="listing-card scale-in" t-att-class="{'inactive': !isActive }">
                 <div class="listing-image">
-                    <t t-if="props.listing.tool_img">
+                    <t t-if="props.listing.tool_img_url">
                         <img t-att-src="props.listing.tool_img_url" alt="image"/>
                     </t>
                     <t t-else="">
@@ -207,7 +207,7 @@
 
             <div class="listing-card scale-in" t-att-class="{ 'own-listing': isOwnListing, 'inactive': !isActive }">
                 <div class="listing-image">
-                    <t t-if="props.listing.tool_img">
+                    <t t-if="props.listing.tool_img_url">
                         <img t-att-src="props.listing.tool_img_url" alt="image"/>
                     </t>
                     <t t-else="">

@@ -6,7 +6,7 @@ class ToolshubToolPlanFeatures(models.Model):
 
     # Fields
     name = fields.Char(string="Name", required=True)
-    plan_id = fields.Many2one(string="Plan", comodel_name="toolshub.tool.plans", ondelete="cascade", required=True, domain="[('tool_id', '=', tool_id)]")
+    plan_id = fields.Many2one(string="Plan", comodel_name="toolshub.tool.plans", ondelete="cascade", required=True)
 
 
     # SQL Constraints
