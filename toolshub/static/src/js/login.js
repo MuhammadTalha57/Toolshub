@@ -3,6 +3,8 @@
 import { Component, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { ThemeToggle } from "./theme_toggle";
+import { rpc } from "@web/core/network/rpc";
+import { useService } from "@web/core/utils/hooks";
 
 export class Login extends Component {
     static template = "toolshub.Login";
@@ -12,6 +14,8 @@ export class Login extends Component {
     };
 
     setup() {
+        this.notification = useService("notification");
+
         this.state = useState({
             isLogin: true,
             username: '',
@@ -134,49 +138,66 @@ export class Login extends Component {
 
         try {
             console.log("=== SIGNUP ATTEMPT ===");
-            
-            const response = await fetch('/toolshub/api/signup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-                body: JSON.stringify({
-                    jsonrpc: '2.0',
-                    method: 'call',
-                    params: {
-                        name: this.state.username,
-                        email: this.state.email,
-                        password: this.state.password
-                    }
-                })
-            });
 
-            const data = await response.json();
+            const username = this.state.username;
+            const email = this.state.email;
+            const password = this.state.password;
+            const response = await rpc('/toolshub/api/signup', {username, email, password});
 
-            if (data.error) {
-                console.error("RPC Error:", data.error);
-                const errorMessage = data.error.data?.message || data.error.message || 'Signup failed';
-                this.state.error = errorMessage;
-                return;
-            }
-
-            const result = data.result;
-
-            if (result && result.success) {
-                console.log("✓ Signup successful:", result.data.message);
-                
-                // Show success message and switch to login mode
-                this.state.error = ''; // Clear any errors
-                alert(result.data.message); // Show activation email message
-                
+            if(response.success) {
+                this.notification.add("Please check your email to activate your account.", {type: 'success', title: 'Signup successful'});
+                this.state.error = '';
                 // Switch to login mode
                 this.state.isLogin = true;
                 this.clearForm();
-                
-            } else {
-                this.state.error = result?.data?.message || 'Signup failed';
             }
+            else {
+                this.notification.add("Please check your email to activate your account.", {type: 'success', title: 'Signup successful'})
+                this.state.error = response.data.message;
+            }
+            
+            // const response = await fetch('/toolshub/api/signup', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     credentials: 'include',
+            //     body: JSON.stringify({
+            //         jsonrpc: '2.0',
+            //         method: 'call',
+            //         params: {
+            //             name: this.state.username,
+            //             email: this.state.email,
+            //             password: this.state.password
+            //         }
+            //     })
+            // });
+
+            // const data = await response.json();
+
+            // if (data.error) {
+            //     console.error("RPC Error:", data.error);
+            //     const errorMessage = data.error.data?.message || data.error.message || 'Signup failed';
+            //     this.state.error = errorMessage;
+            //     return;
+            // }
+
+            // const result = data.result;
+
+            // if (result && result.success) {
+            //     console.log("✓ Signup successful:", result.data.message);
+                
+            //     // Show success message and switch to login mode
+            //     this.state.error = ''; // Clear any errors
+            //     alert(result.data.message); // Show activation email message
+                
+            //     // Switch to login mode
+            //     this.state.isLogin = true;
+            //     this.clearForm();
+                
+            // } else {
+            //     this.state.error = result?.data?.message || 'Signup failed';
+            // }
             
         } catch (error) {
             console.error("Signup Error:", error);

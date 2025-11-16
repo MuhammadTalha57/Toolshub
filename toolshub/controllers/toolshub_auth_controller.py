@@ -20,7 +20,7 @@ class ToolshubAuth(http.Controller):
         _logger.info("HIT /toolshub/api/signup, Creating New User")
         _logger.debug(f"Request kwargs: {kwargs}")
         
-        name = kwargs.get('name')
+        name = kwargs.get('username')
         email = kwargs.get('email')
         password = kwargs.get('password')
         

@@ -112,7 +112,7 @@
                         </t>
                     </div>
 
-                    <div class="o_auth_oauth_providers list-group mt-1 mb-1 text-start">
+                    <!-- <div class="o_auth_oauth_providers list-group mt-1 mb-1 text-start">
                         <a class="list-group-item list-group-item-action py-2" href="https://accounts.google.com/o/oauth2/auth?response_type=token&amp;client_id=513728936648-sqgg16jn5vv7v2qoldpm4cdrokim6ujs.apps.googleusercontent.com&amp;redirect_uri=http%3A%2F%2Fcolorimetrical-unreleasible-tomi.ngrok-free.dev%2Fauth_oauth%2Fsignin&amp;scope=openid+profile+email&amp;state=%7B%22d%22%3A+%22E-Commerce-CEP%22,+%22p%22%3A+3,+%22r%22%3A+%22http%253A%252F%252Fcolorimetrical-unreleasible-tomi.ngrok-free.dev%252Fweb%22%7D">
                             <i class="fa fa-fw fa-google"></i>
                             Log in with Google
@@ -120,7 +120,7 @@
                             <i class="fa fa-fw o_custom_icon"></i>
                             Log in with Odoo.com
                         </a>
-                    </div>
+                    </div> -->
                 </form>
             </div>
         </div>
