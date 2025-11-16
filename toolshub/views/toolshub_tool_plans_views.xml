@@ -35,7 +35,7 @@
                         <!-- For Monetary Widget -->
                         <field name="currency_id" invisible="True"/> 
 
-                        <!-- For Duration Page -->
+                        
                         <field name="is_unlimited"/> 
                         <notebook>
                             <page string="Duration" invisible="is_unlimited">
