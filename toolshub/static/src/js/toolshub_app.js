@@ -32,9 +32,58 @@ export class ToolshubApp extends Component {
 
         onWillStart(async () => {
             await this.checkUserSession();
+            await this.handleActivateRedirect();
         });
 
 
+    }
+
+    async handleActivateRedirect() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const tokenInfo = urlParams.get("token_info");
+        const tokenError = urlParams.get("token_error");
+
+        if(tokenInfo === 'already') {
+            this.notification.add("Your Account is Already Activated", {
+                type: "success",
+                title: "Already Activated",
+            });
+        }
+        else if(tokenInfo === 'activated') {
+            this.notification.add("Your Account is Activated", {
+                type: "success",
+                title: "Account Activated",
+            });
+        }
+        else if(tokenError === 'missing') {
+            this.notification.add("Activation Token is Missing", {
+                type: "error",
+                title: "Account Activation Failed",
+            });
+        }
+        else if(tokenError === 'invalid') {
+            this.notification.add("Activation Token is Invalid", {
+                type: "error",
+                title: "Account Activation Failed",
+            });
+        }
+        else if(tokenError === 'user_not_found') {
+            this.notification.add("Account Not Found", {
+                type: "error",
+                title: "Account Activation Failed",
+            });
+        }
+        else if(tokenError === 'failed') {
+            this.notification.add("Unexpected Error Occured", {
+                type: "error",
+                title: "Account Activation Failed",
+            });
+        }
+
+        // Clear URL params after handling them (only if any params were present)
+        if (tokenInfo || tokenError) {
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
     }
 
     async checkUserSession() {

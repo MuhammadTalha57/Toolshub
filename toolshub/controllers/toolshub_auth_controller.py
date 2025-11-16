@@ -35,8 +35,8 @@ class ToolshubAuth(http.Controller):
             }
         
         try:
-            # Check if email already exists
-            existing_user = request.env['res.users'].sudo().search([
+            # Check if email already exists (including inactive users)
+            existing_user = request.env['res.users'].with_context(active_test=False).sudo().search([
                 ('login', '=', email)
             ], limit=1)
             
@@ -49,7 +49,7 @@ class ToolshubAuth(http.Controller):
                     }
                 }
             
-            # Generate unique activation token
+            # Generate unique activation token (never expires)
             activation_token = secrets.token_urlsafe(32)
             _logger.debug(f"Generated activation token for {email}")
             
@@ -61,26 +61,22 @@ class ToolshubAuth(http.Controller):
             })
             _logger.debug(f"Partner created: ID {partner.id}")
             
-            # Create INACTIVE user
+            # Create INACTIVE user with activation token stored
             user = request.env['res.users'].sudo().create({
                 'login': email,
                 'password': password,
                 'partner_id': partner.id,
-                'active': True,
+                'active': False,
                 'groups_id': [(6, 0, [request.env.ref('base.group_portal').id])],
             })
-
-            user.with_context(active_test=False).sudo().write({'active': False})
-            _logger.debug(f"User deactivated: {email}")
             
             _logger.debug(f"Created inactive user: {email} (ID: {user.id})")
             _logger.info(f"User Created Successfully: {email}")
             
-            # Store activation token with user ID and expiry
-            expiry_time = datetime.now() + timedelta(hours=24)
+            # Store activation token with user ID (no expiry)
             request.env['ir.config_parameter'].sudo().set_param(
                 f'activation_token_{activation_token}',
-                f'{user.id}|{email}|{expiry_time.isoformat()}'
+                f'{user.id}|{email}'
             )
             
             # Send activation email
@@ -156,7 +152,7 @@ class ToolshubAuth(http.Controller):
                             
                             <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
                                 <p style="color: #999; font-size: 13px;">
-                                    ⏰ This link will expire in 24 hours
+                                    💡 This activation link does not expire
                                 </p>
                                 <p style="color: #999; font-size: 13px;">
                                     If you didn't create this account, please ignore this email.
@@ -189,7 +185,7 @@ class ToolshubAuth(http.Controller):
         try:
             if not token:
                 _logger.error("Missing activation token")
-                return request.redirect('/toolshub?error=missing_token')
+                return request.redirect('/toolshub?token_error=missing')
             
             # Get stored token data
             token_data = request.env['ir.config_parameter'].sudo().get_param(
@@ -197,40 +193,35 @@ class ToolshubAuth(http.Controller):
             )
             
             if not token_data:
-                _logger.error(f"Invalid or expired token: {token}")
-                return request.redirect('/toolshub?error=invalid_token')
+                _logger.error(f"Invalid token: {token}")
+                return request.redirect('/toolshub?token_error=invalid')
             
-            # Parse token data
-            user_id, email, expiry_time = token_data.split('|')
+            # Parse token data (no expiry field)
+            parts = token_data.split('|')
+            if len(parts) != 2:
+                _logger.error(f"Malformed token data: {token}")
+                return request.redirect('/toolshub?token_error=invalid')
+            
+            user_id, email = parts
             user_id = int(user_id)
             
             _logger.debug(f"Token data: user_id={user_id}, email={email}")
             
-            # Check if token expired
-            expiry = datetime.fromisoformat(expiry_time)
-            if datetime.now() > expiry:
-                _logger.error(f"Token expired for user {email}")
-                # Delete expired token
-                request.env['ir.config_parameter'].sudo().search([
-                    ('key', '=', f'activation_token_{token}')
-                ]).unlink()
-                return request.redirect('/toolshub?error=token_expired')
-            
-            # Activate the user
-            user = request.env['res.users'].sudo().browse(user_id)
+            # Get the user (search inactive users)
+            user = request.env['res.users'].with_context(active_test=False).sudo().browse(user_id)
             
             if not user.exists():
                 _logger.error(f"User not found: ID {user_id}")
-                return request.redirect('/toolshub?error=user_not_found')
+                return request.redirect('/toolshub?token_error=user_not_found')
             
             if user.active:
                 _logger.warning(f"User {email} already activated")
-                return request.redirect('/toolshub?info=already_activated')
+                return request.redirect('/toolshub?token_info=already')
             
             # Activate user
             user.write({'active': True})
             
-            # Delete used token
+            # Delete used token (one-time use)
             request.env['ir.config_parameter'].sudo().search([
                 ('key', '=', f'activation_token_{token}')
             ]).unlink()
@@ -238,77 +229,84 @@ class ToolshubAuth(http.Controller):
             _logger.info(f"User Activated Successfully: {email} (ID: {user_id})")
             
             # Redirect to login with success message
-            return request.redirect('/toolshub?activated=true')
+            return request.redirect('/toolshub?token_info=activated')
             
         except Exception as e:
             _logger.error(f"Activation error: {str(e)}")
-            return request.redirect('/toolshub?error=activation_failed')
+            return request.redirect('/toolshub?token_error=failed')
     
-    @http.route('/toolshub/api/resendActivation', type='json', auth='public', methods=['POST'], csrf=False)
-    def resend_activation(self, **kwargs):
-        """
-        Resend activation email
-        Expected params: email
-        """
-        _logger.info("HIT /toolshub/api/resendActivation, Resending Activation Email")
+    # @http.route('/toolshub/api/resendActivation', type='json', auth='public', methods=['POST'], csrf=False)
+    # def resend_activation(self, **kwargs):
+    #     """
+    #     Resend activation email
+    #     Expected params: email
+    #     """
+    #     _logger.info("HIT /toolshub/api/resendActivation, Resending Activation Email")
         
-        email = kwargs.get('email')
+    #     email = kwargs.get('email')
         
-        if not email:
-            _logger.error("Missing email parameter")
-            return {
-                'success': False,
-                'data': {
-                    'message': 'Email parameter is required'
-                }
-            }
+    #     if not email:
+    #         _logger.error("Missing email parameter")
+    #         return {
+    #             'success': False,
+    #             'data': {
+    #                 'message': 'Email parameter is required'
+    #             }
+    #         }
         
-        try:
-            # Find inactive user with this email
-            user = request.env['res.users'].sudo().search([
-                ('login', '=', email),
-                ('active', '=', False)
-            ], limit=1)
+    #     try:
+    #         # Find inactive user with this email
+    #         user = request.env['res.users'].with_context(active_test=False).sudo().search([
+    #             ('login', '=', email),
+    #             ('active', '=', False)
+    #         ], limit=1)
             
-            if not user:
-                _logger.error(f"No inactive account found for email: {email}")
-                return {
-                    'success': False,
-                    'data': {
-                        'message': 'No inactive account found with this email'
-                    }
-                }
+    #         if not user:
+    #             _logger.error(f"No inactive account found for email: {email}")
+    #             return {
+    #                 'success': False,
+    #                 'data': {
+    #                     'message': 'No inactive account found with this email'
+    #                 }
+    #             }
             
-            # Generate new token
-            activation_token = secrets.token_urlsafe(32)
-            expiry_time = datetime.now() + timedelta(hours=24)
+    #         # Delete old token if exists
+    #         old_tokens = request.env['ir.config_parameter'].sudo().search([
+    #             ('key', 'like', f'activation_token_%'),
+    #             ('value', 'like', f'{user.id}|{email}')
+    #         ])
+    #         old_tokens.unlink()
+    #         _logger.debug(f"Deleted {len(old_tokens)} old token(s) for {email}")
             
-            _logger.debug(f"Generated new activation token for {email}")
+    #         # Generate new token (no expiry)
+    #         activation_token = secrets.token_urlsafe(32)
             
-            # Store new token
-            request.env['ir.config_parameter'].sudo().set_param(
-                f'activation_token_{activation_token}',
-                f'{user.id}|{email}|{expiry_time.isoformat()}'
-            )
+    #         _logger.debug(f"Generated new activation token for {email}")
             
-            # Send email
-            self._send_activation_email(user, activation_token)
+    #         # Store new token
+    #         request.env['ir.config_parameter'].sudo().set_param(
+    #             f'activation_token_{activation_token}',
+    #             f'{user.id}|{email}'
+    #         )
             
-            _logger.info(f"Activation Email Resent Successfully to {email}")
+    #         # Send email
+    #         self._send_activation_email(user, activation_token)
             
-            return {
-                'success': True,
-                'data': {
-                    'message': 'Activation email sent! Please check your inbox.'
-                }
-            }
+    #         _logger.info(f"Activation Email Resent Successfully to {email}")
             
-        except Exception as e:
-            _logger.error(f"Resend activation error: {str(e)}")
-            return {
-                'success': False,
-                'data': {
-                    'message': 'Failed to resend activation email',
-                    'error': str(e)
-                }
-            }
+    #         return {
+    #             'success': True,
+    #             'data': {
+    #                 'message': 'Activation email sent! Please check your inbox.'
+    #             }
+    #         }
+            
+    #     except Exception as e:
+    #         _logger.error(f"Resend activation error: {str(e)}")
+    #         return {
+    #             'success': False,
+    #             'data': {
+    #                 'message': 'Failed to resend activation email',
+    #                 'error': str(e)
+    #             }
+    #         }
