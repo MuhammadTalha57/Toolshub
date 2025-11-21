@@ -86,11 +86,11 @@
                 </div>
 
                 <!-- Filter Actions -->
-                <div class="filters-actions">
+                <div class="filters-actions gap-3">
                     <button class="btn btn-secondary btn-sm" t-on-click="clearFilters">
                         <i class="fa fa-times"></i> Clear Filters
                     </button>
-                    <button class="btn btn-primary btn-sm" t-on-click="applyFilters" t-att-disabled="state.loading">
+                    <button class="btn btn-primary btn-sm w-auto" t-on-click="applyFilters" t-att-disabled="state.loading">
                         <i class="fa fa-search"></i> Search
                     </button>
                 </div>
