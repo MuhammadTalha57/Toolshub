@@ -372,6 +372,21 @@ export class RentListings extends Component {
         }
     }
 
+
+    clearFilters() {
+        console.log(this.state.filters);
+        this.state.filters = {
+            tool_name: null,
+            min_price: null,
+            max_price: null,
+            my_listings: false,
+        }
+    }
+    
+    async applyFilters() {
+        await this.loadRentListings();
+    }
+
 }
 
 registry.category("public_components").add("toolshub.RentListings", RentListings);
