@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, useState, onWillStart, nextTick } from "@odoo/owl";
+import { Component, useState, onMounted, nextTick } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
 import { Login } from "./login";
@@ -30,7 +30,7 @@ export class ToolshubApp extends Component {
             loading: true,
         });
 
-        onWillStart(async () => {
+        onMounted(async () => {
             await this.checkUserSession();
             await this.handleActivateRedirect();
         });

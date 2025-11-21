@@ -28,6 +28,12 @@ export class RentListings extends Component {
             creating: false,
             showConnectIDModal: false,
             connectAccountID: '',
+            filters: {
+                "tool_name": null,
+                "min_price": null,
+                "max_price": null,
+                "my_listings": null,
+            },
             validatingConnectAccountID: false,
             newListing: {
                 tool_id: '',
@@ -87,8 +93,7 @@ export class RentListings extends Component {
     async loadRentListings() {
         this.state.loading = true;
         try {
-
-            const listingResult = await rpc("/toolshub/api/getRentListings")
+            const listingResult = await rpc("/toolshub/api/getRentListings", {filters: this.state.filters});
 
             if(listingResult.success) {
                 this.state.listings = listingResult.data.listings

@@ -9,40 +9,34 @@ _logger.setLevel(logging.DEBUG)
 
 class ToolshubAPI(http.Controller):
     @http.route(['/toolshub/api/getRentListings'], type='json', auth='user', methods=['POST'])
-    def get_rent_listings(self, filters=None, limit=None, offset=0):
+    def get_rent_listings(self, filters):
         """
         Get rent listings with optional filters
         """
         _logger.info("HIT /toolshub/api/getRentListing, Getting Rent Listings")
+        user = request.env.user
 
         try:
             domain = []
             
             # Apply filters if provided
             if filters:
-                if filters.get('tool_id'):
-                    domain.append(('tool_id', '=', int(filters['tool_id'])))
-                if filters.get('owner_id'):
-                    domain.append(('owner_id', '=', int(filters['owner_id'])))
-                if filters.get('plan_id'):
-                    domain.append(('plan_id', '=', int(filters['plan_id'])))
+                if filters.get('tool_name'):
+                    domain.append(('tool_id.name', '=',filters['tool_name'] ))
                 if filters.get('min_price'):
                     domain.append(('price', '>=', float(filters['min_price'])))
                 if filters.get('max_price'):
                     domain.append(('price', '<=', float(filters['max_price'])))
-                if filters.get('unlimited_users') is not None:
-                    domain.append(('unlimited_users', '=', filters['unlimited_users']))
+                if not filters.get('my_listings'):
+                    domain.append(('owner_id', '!=', user.id))
             
             # Query listings
             RentListing = request.env['toolshub.tool.rent.listings'].sudo()
             
-            # Get total count
-            total_count = RentListing.search_count(domain)
+            # Get listing
+            listings = RentListing.search(domain, order='id desc')
             
-            # Get listings with pagination
-            listings = RentListing.search(domain, limit=limit, offset=offset, order='id desc')
-            
-            _logger.debug(f"Total Count of Rent Listings {total_count}")
+            _logger.debug(f"Total Count of Rent Listings {len(listings)}")
             _logger.debug(f"Rent Listings {listings}")
             
             # Format data
