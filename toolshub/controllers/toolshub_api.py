@@ -22,7 +22,7 @@ class ToolshubAPI(http.Controller):
             # Apply filters if provided
             if filters:
                 if filters.get('tool_name'):
-                    domain.append(('tool_id.name', '=',filters['tool_name'] ))
+                    domain.append(('tool_id.name', 'ilike',filters['tool_name'].strip() ))
                 if filters.get('min_price'):
                     domain.append(('price', '>=', float(filters['min_price'])))
                 if filters.get('max_price'):
