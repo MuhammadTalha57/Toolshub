@@ -69,17 +69,19 @@
                     </div>
 
                     <!-- My Listings Toggle -->
-                    <div class="filter-item filter-checkbox">
+                    <div class="filter-item">
                         <label class="filter-label">
-                            <i class="fa fa-user"></i> My Listings Only
+                            <i class="fa fa-user"></i> My Listings
                         </label>
-                        <label class="toggle-switch">
-                            <input 
-                                type="checkbox"
-                                t-model="state.filters.my_listings"
-                            />
-                            <span class="toggle-slider"></span>
-                        </label>
+                        <div class="input-group h-100">
+                            <label class="toggle-switch">
+                                <input 
+                                    type="checkbox"
+                                    t-model="state.filters.my_listings"
+                                />
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
                     </div>
                 </div>
 
