@@ -380,6 +380,7 @@ export class RentListings extends Component {
             max_price: null,
             my_listings: false,
         }
+        this.applyFilters();
     }
     
     async applyFilters() {

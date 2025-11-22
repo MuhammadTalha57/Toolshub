@@ -12,6 +12,65 @@
                 </div>
             </div>
 
+            <!-- Search and Filters Section -->
+            <div class="filters-container">
+                <div class="filters-grid">
+                    <!-- Tool Name Search -->
+                    <div class="filter-item">
+                        <label class="filter-label">
+                            <i class="fa fa-search"></i> Search Tool
+                        </label>
+                        <input 
+                            type="text"
+                            class="form-input"
+                            placeholder="Enter tool name..."
+                            t-model="state.filters.tool_name"
+                        />
+                    </div>
+
+                    <!-- Min Price -->
+                    <div class="filter-item">
+                        <label class="filter-label">
+                            <i class="fa fa-dollar-sign"></i> Min Price
+                        </label>
+                        <input 
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            class="form-input no-spinner"
+                            placeholder="0.00"
+                            t-model="state.filters.min_price"
+                        />
+                    </div>
+
+                    <!-- Max Price -->
+                    <div class="filter-item">
+                        <label class="filter-label">
+                            <i class="fa fa-dollar-sign"></i> Max Price
+                        </label>
+                        <input 
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            class="form-input no-spinner"
+                            placeholder="999.99"
+                            t-model="state.filters.max_price"
+                        />
+                    </div>
+                </div>
+
+                <!-- Filter Actions -->
+                <div class="filters-actions gap-3">
+                    <button class="btn btn-secondary btn-sm" t-on-click="clearFilters">
+                        <i class="fa fa-times"></i> Clear Filters
+                    </button>
+                    <button class="btn btn-primary btn-sm w-auto" t-on-click="applyFilters" t-att-disabled="state.loading">
+                        <i class="fa fa-search"></i> Search
+                    </button>
+                </div>
+            </div>
+
+
             <t t-if="state.loading">
                 <div class="empty-state">
                     <i class="fa fa-spinner fa-spin"></i>

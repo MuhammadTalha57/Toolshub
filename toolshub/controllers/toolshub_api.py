@@ -707,7 +707,7 @@ class ToolshubAPI(http.Controller):
         }
 
     @http.route('/toolshub/api/getRentedOutTools', type='json', auth='user', methods=['POST'])
-    def get_rented_out_tools(self, **kwargs):
+    def get_rented_out_tools(self, filters):
         """
         Get all tools that the current user has rented out to others
         """
@@ -720,6 +720,15 @@ class ToolshubAPI(http.Controller):
             # Query rented tools where the listing owner is the current user
             RentedTools = request.env['toolshub.rented.tools'].sudo()
             domain = [('rent_listing_id.owner_id', '=', current_user.id)]
+            
+            # Apply filters if provided
+            if filters:
+                if filters.get('tool_name'):
+                    domain.append(('rent_listing_id.tool_id.name', 'ilike',filters['tool_name'].strip() ))
+                if filters.get('min_price'):
+                    domain.append(('rent_listing_id.price', '>=', float(filters['min_price'])))
+                if filters.get('max_price'):
+                    domain.append(('rent_listing_id.price', '<=', float(filters['max_price'])))
             
             rented_out_tools = RentedTools.search(domain, order='id desc')
             
