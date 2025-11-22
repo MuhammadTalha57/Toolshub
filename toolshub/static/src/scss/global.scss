@@ -1078,6 +1078,7 @@ input[type="number"] {
     left: 1rem;
     color: var(--text-muted);
     font-weight: 600;
+    border-radius: 0.5rem 0 0 0.5rem; /* Round left corners only */
     pointer-events: none;
     z-index: 1;
 }
