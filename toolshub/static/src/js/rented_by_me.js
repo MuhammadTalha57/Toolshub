@@ -20,6 +20,11 @@ export class RentedByMe extends Component {
             showCredentialsModal: false,
             selectedListing: null,
             selectedTool: null,
+            filters: {
+                "tool_name": null,
+                "min_price": null,
+                "max_price": null,
+            },
         });
 
         onMounted(() => {
@@ -31,7 +36,7 @@ export class RentedByMe extends Component {
         this.state.loading = true;
         try {
 
-            const rentedToolsResult = await rpc("/toolshub/api/getRentedTools")
+            const rentedToolsResult = await rpc("/toolshub/api/getRentedTools", {filters: this.state.filters});
 
             if(rentedToolsResult.success) {
                 this.state.rentedTools = rentedToolsResult.data.rented_tools;
@@ -68,6 +73,19 @@ export class RentedByMe extends Component {
     viewCredentials(tool) {
         this.state.selectedTool = tool;
         this.state.showCredentialsModal = true;
+    }
+
+    clearFilters() {
+        this.state.filters = {
+            tool_name: null,
+            min_price: null,
+            max_price: null,
+        }
+        this.applyFilters();
+    }
+    
+    async applyFilters() {
+        await this.loadRentedTools();
     }
 
 }
