@@ -301,7 +301,7 @@ class ToolshubAPI(http.Controller):
         missing_fields = [field for field in required_fields if field not in kwargs]
         
         if missing_fields:
-            _logger.error("Missing Arguments while creating rent listing")
+            _logger.error("Missing Arguments while creating rent listing", missing_fields)
             return {
                 'success': False,
                 'data': {

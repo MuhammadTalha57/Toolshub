@@ -206,9 +206,8 @@ export class RentListings extends Component {
             tool_id: '',
             plan_id: '',
             price: 0,
-            available_users: 1,
-            duration_days: 30,
-            description: ''
+            total_users: 1,
+            unlimited_users: false
         };
     }
 

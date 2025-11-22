@@ -51,7 +51,7 @@ class ToolshubToolRentListings(models.Model):
     def _check_total_users_count(self):
         for record in self:
             if not record.unlimited_users:
-                if record.total_users > record.plan_id.total_users:
+                if (not record.plan_id.unlimited_users) and record.total_users > record.plan_id.total_users:
                     raise ValidationError("Total Users cannot exceed plan's total available users.")
 
 
