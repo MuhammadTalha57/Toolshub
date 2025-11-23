@@ -1,38 +1,41 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-
-    <!-- Main App Template -->
     <t t-name="toolshub.ToolshubApp">
-        <div class="toolshub-app">
+        <div class="min-h-screen bg-(--bg-secondary) transition-colors duration-300">
             <t t-if="state.loading">
-                <div class="empty-state">
-                    <i class="fa fa-spinner fa-spin"></i>
-                    <h3>Loading listings...</h3>
+                <div class="flex items-center justify-center min-h-screen">
+                    <div class="text-center">
+                        <i class="fa fa-spinner fa-spin text-6xl text-primary-600 dark:text-primary-400 mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-300">Loading...</h3>
+                    </div>
                 </div>
             </t>
             <t t-elif="!state.isAuthenticated">
-                <Login onLoginSuccess.bind="handleLoginSuccess" />
+                <div class="flex items-center justify-center min-h-screen">
+                    <div class="w-full">
+                        <Login onLoginSuccess.bind="handleLoginSuccess"/>
+                    </div>
+                </div>
             </t>
             <t t-else="">
                 <Navbar 
+                    user="state.user"
                     currentPage="state.currentPage"
                     onNavigate.bind="handleNavigate"
-                    user="state.user"
                     onLogout.bind="handleLogout"
                 />
-                <div class="toolshub-main">
+                <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
                     <t t-if="state.currentPage === 'rent'">
-                        <RentListings user="state.user" />
+                        <RentListings user="state.user"/>
                     </t>
                     <t t-elif="state.currentPage === 'rented-by-me'">
-                        <RentedByMe />
+                        <RentedByMe user="state.user"/>
                     </t>
                     <t t-elif="state.currentPage === 'rented-out'">
-                        <RentedOut />
+                        <RentedOut user="state.user"/>
                     </t>
-                </div>
+                </main>
             </t>
         </div>
     </t>
-    
 </templates>

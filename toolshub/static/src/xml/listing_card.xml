@@ -15,7 +15,7 @@
                     </t>
                 </div>
 
-                <div class="listing-content">
+                <div class="listing-content h-50">
                     <h3 class="listing-tool-name">
                         <t t-esc="props.listing.tool_name"/>
                     </h3>
