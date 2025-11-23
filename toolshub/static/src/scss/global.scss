@@ -34,6 +34,8 @@
     --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
     // --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
     --gradient-success: linear-gradient(135deg, #7abaf3 0%, hwb(183 60% 1%) 100%);
+    --btn-hover-color: #FFFFFF;
+    --btn-hover-bg: #262a38;
 }
 
 [data-theme="dark"] {
@@ -51,6 +53,9 @@
     --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
     --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --btn-hover-color: #FFFFFF;
+    --btn-hover-bg: #4f46e5;
+    
 }
 
 /* Global Styles */

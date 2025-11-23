@@ -76,3 +76,18 @@
     background: var(--gradient-primary);
     border-radius: 2px;
 }
+
+.nav-btn {
+    border-radius: 0.75rem;
+}
+
+.nav-btn-active {
+    border-bottom: 2px solid var(--btn-hover-bg);
+    cursor: default;
+}
+
+.nav-btn:hover {
+    background-color: var(--btn-hover-bg);
+    color: var(--btn-hover-color);
+
+}

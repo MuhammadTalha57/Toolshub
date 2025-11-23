@@ -1,35 +1,130 @@
-<!-- Navbar Template -->
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
     <t t-name="toolshub.Navbar">
-        <nav class="toolshub-navbar">
-            <div class="navbar-container">
-                <a href="#" class="navbar-logo">
-                    <i class="fa fa-tools"></i>
-                    <span>Toolshub</span>
-                </a>
-
-                <ul class="navbar-nav">
-                    <t t-foreach="pages" t-as="page" t-key="page.id">
-                        <li 
-                            class="nav-item"
-                            t-att-class="{ 'active': isActive(page.id) }"
-                            t-on-click="() => this.handleNavigate(page.id)"
-                        >
-                            <i t-att-class="'fa ' + page.icon"></i>
-                            <t t-esc="page.label"/>
-                        </li>
-                    </t>
-                </ul>
-
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                    <div style="color: var(--text-secondary);">
-                        <!-- <i class="fa fa-user-circle"></i> -->
-                        <t t-esc="props.user?.name || 'User'"/>
+        <nav class="bg-(--bg-secondary) shadow-lg sticky top-0 z-50 transition-colors duration-300">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16 sm:h-20">
+                    <!-- Logo -->
+                    <div class="flex items-center space-x-3 flex-shrink-0">
+                        <i class="fa fa-toolbox text-2xl sm:text-3xl text-(--text-primary)"></i>
+                        <span class="text-xl sm:text-2xl font-bold bg-clip-text ">
+                            Toolshub
+                        </span>
                     </div>
-                    <ThemeToggle />
-                    <button class="btn btn-secondary" t-on-click="handleLogout" style="padding: 0.5rem 1rem;">
-                        <i class="fa fa-sign-out-alt"></i> Logout
-                    </button>
+
+                    <!-- Desktop Navigation -->
+                    <div class="flex items-center space-x-1">
+                        <button
+                            t-on-click="() => this.props.onNavigate('rent')"
+                            t-att-class="{
+                                'px-4 py-2 rounded-lg font-medium transition-all duration-200)': true,
+                                'nav-btn-active': props.currentPage === 'rent',
+                                'nav-btn': props.currentPage !== 'rent'
+                            }"
+                        >
+                            <i class="fa fa-store mr-2"></i>Rent Tools
+                        </button>
+                        <button
+                            t-on-click="() => this.props.onNavigate('rented-by-me')"
+                            t-att-class="{
+                                'px-4 py-2 rounded-lg font-medium transition-all duration-200': true,
+                                'nav-btn-active': props.currentPage === 'rented-by-me',
+                                'nav-btn': props.currentPage !== 'rented-by-me'
+                            }"
+                        >
+                            <i class="fa fa-shopping-bag mr-2"></i>Rented by Me
+                        </button>
+                        <button
+                            t-on-click="() => this.props.onNavigate('rented-out')"
+                            t-att-class="{
+                                'px-4 py-2 rounded-lg font-medium transition-all duration-200': true,
+                                'nav-btn-active': props.currentPage === 'rented-out',
+                                'nav-btn': props.currentPage !== 'rented-out'
+                            }"
+                        >
+                            <i class="fa fa-hand-holding-usd mr-2"></i>Rented Out
+                        </button>
+                    </div>
+
+                    <!-- Right Section -->
+                    <div class="flex items-center space-x-3">
+                        <ThemeToggle/>
+                        
+                        <!-- User Menu -->
+                        <div class="relative">
+                            <button
+                                t-on-click="toggleUserMenu"
+                                class="flex items-center space-x-2 px-3 py-2 rounded-lg"
+                            >
+                                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-(--bg-secondary) flex items-center justify-center text-(--text-primary) font-semibold text-sm sm:text-base hover:bg-(--primary-color)">
+                                    <t t-esc="props.user?.name?.charAt(0)?.toUpperCase() || 'U'"/>
+                                </div>
+                                <i class="fa fa-chevron-down text-sm text-gray-600 dark:text-gray-300 hidden sm:block"></i>
+                            </button>
+
+                            <!-- Dropdown Menu -->
+                            <!-- <t t-if="state.showUserMenu">
+                                <div class="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 py-2 z-50">
+                                    <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                                        <p class="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate" t-esc="props.user?.name"/>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5" t-esc="props.user?.email"/>
+                                    </div>
+                                    <button
+                                        t-on-click="handleLogout"
+                                        class="w-full text-left px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200"
+                                    >
+                                        <i class="fa fa-sign-out-alt mr-2"></i>Logout
+                                    </button>
+                                </div>
+                            </t> -->
+                        </div>
+
+                        <!-- Mobile Menu Button -->
+                        <!-- <button
+                            t-on-click="toggleMobileMenu"
+                            class="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                        >
+                            <i t-att-class="state.showMobileMenu ? 'fa fa-times' : 'fa fa-bars'" class="text-xl text-gray-600 dark:text-gray-300"></i>
+                        </button> -->
+                    </div>
                 </div>
+
+                <!-- Mobile Navigation -->
+                <!-- <t t-if="state.showMobileMenu">
+                    <div class="md:hidden py-4 space-y-2 border-t border-gray-200 dark:border-gray-700">
+                        <button
+                            t-on-click="() => { this.props.onNavigate('rent'); this.state.showMobileMenu = false; }"
+                            t-att-class="{
+                                'w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-200': true,
+                                'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300': props.currentPage === 'rent',
+                                'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700': props.currentPage !== 'rent'
+                            }"
+                        >
+                            <i class="fa fa-store mr-2"></i>Rent Tools
+                        </button>
+                        <button
+                            t-on-click="() => { this.props.onNavigate('rented-by-me'); this.state.showMobileMenu = false; }"
+                            t-att-class="{
+                                'w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-200': true,
+                                'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300': props.currentPage === 'rented-by-me',
+                                'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700': props.currentPage !== 'rented-by-me'
+                            }"
+                        >
+                            <i class="fa fa-shopping-bag mr-2"></i>Rented by Me
+                        </button>
+                        <button
+                            t-on-click="() => { this.props.onNavigate('rented-out'); this.state.showMobileMenu = false; }"
+                            t-att-class="{
+                                'w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-200': true,
+                                'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300': props.currentPage === 'rented-out',
+                                'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700': props.currentPage !== 'rented-out'
+                            }"
+                        >
+                            <i class="fa fa-hand-holding-usd mr-2"></i>Rented Out
+                        </button>
+                    </div>
+                </t> -->
             </div>
         </nav>
     </t>
+</templates>
