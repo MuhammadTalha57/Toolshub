@@ -138,7 +138,7 @@ Create `odoo.conf` file:
 
 ```ini
 [options]
-addons_path = addons,path/to/Toolshub
+addons_path = addons,path/to/toolshub
 db_user = odoo
 db_password = odoo
 db_host = localhost
@@ -243,15 +243,15 @@ toolshub/
 ## 📸 Screenshots
 
 ### Login Page
-![Login Screen](docs/images/loginScreen.jpg)
+![Login Screen](docs/images/loginScreen.png)
 
 ### Rent Listings
-![Rent Listings](docs/images/RentListings1.jpg)
-![Rent Listings Filtered](docs/images/RentListings2.jpg)
+![Rent Listings](docs/images/RentListings1.png)
+![Rent Listings Filtered](docs/images/RentListings2.png)
 
 ### Rented Out Tools Dashboard
-![Rented Out](docs/images/RentedOut1.jpg)
-![Rented Out Details](docs/images/RentedOut2.jpg)
+![Rented Out](docs/images/RentedOut1.png)
+![Rented Out Details](docs/images/RentedOut2.png)
 
 ## 🔮 Future Enhancements
 
