@@ -1,4 +1,4 @@
-# ToolsHub 🛠️
+# ToolsHub
 
 > A C2C marketplace platform for software tool sharing built on Odoo 18
 
